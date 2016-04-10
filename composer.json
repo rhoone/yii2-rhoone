@@ -1,6 +1,6 @@
 {
     "name": "rhoone/yii2-rhoone",
-    "description": "rho one for yii2.",
+    "description": "Search-in-one.",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","rho","one","search"],
     "license": "BSD-3-Clause",
