@@ -1,6 +1,6 @@
 <?php
 
-/**
+/* *
  *  _   __ __ _____ _____ ___  ____  _____
  * | | / // // ___//_  _//   ||  __||_   _|
  * | |/ // /(__  )  / / / /| || |     | |
@@ -10,14 +10,24 @@
  * @license https://vistart.name/license/
  */
 
-namespace rhoone\widgets;
+namespace rhoone\models;
+
+use yii\base\Model;
 
 /**
- * Description of SearchResult
+ * Description of SearchForm
  *
  * @author vistart <i@vistart.name>
  */
-class SearchResult extends \yii\base\Widget
+class SearchForm extends Model
 {
-    //put your code here
+
+    public $keywords = '';
+
+    public function rules()
+    {
+        return [
+            ['keywords', 'string', 'max' => 255],
+        ];
+    }
 }

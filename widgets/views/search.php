@@ -22,5 +22,4 @@
  * 
  */
 ?>
-<?=
-\rhoone\widgets\SearchBox::widget()?>
+<?= \rhoone\widgets\SearchBoxWidget::widget() ?>

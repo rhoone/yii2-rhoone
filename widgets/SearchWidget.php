@@ -13,11 +13,11 @@
 namespace rhoone\widgets;
 
 /**
- * Description of Search
+ * Description of SearchWidget
  *
  * @author vistart <i@vistart.name>
  */
-class Search extends \yii\base\Widget
+class SearchWidget extends \yii\base\Widget
 {
     public function run()
     {

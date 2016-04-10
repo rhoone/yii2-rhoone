@@ -12,6 +12,8 @@
 
 namespace rhoone\controllers;
 
+use rhoone\models\SearchForm;
+use Yii;
 use yii\web\Controller;
 
 /**
@@ -32,6 +34,15 @@ class SearchController extends Controller
      */
     public function actionIndex($keywords = null)
     {
+        if (Yii::$app->request->getIsPost()) {
+            $model = new SearchForm();
+            if ($model->load(Yii::$app->request->post())) {
+                return $model->keywords;
+            }
+        }
+        if (empty($keywords)) {
+            
+        }
         return $keywords;
     }
 }
