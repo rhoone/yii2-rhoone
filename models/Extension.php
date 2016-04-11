@@ -17,6 +17,7 @@ use vistart\Models\models\BaseEntityModel;
 /**
  * Description of Extension
  *
+ * @property boolean $isEnabled
  * @author vistart <i@vistart.name>
  */
 class Extension extends BaseEntityModel
@@ -61,6 +62,15 @@ class Extension extends BaseEntityModel
     public function setIsEnabled($enabled)
     {
         $this->enabled = $enabled == true ? 1 : 0;
+    }
+
+    /**
+     * Get all extensions enabled.
+     * @return static[]
+     */
+    public static function findAllEnabled()
+    {
+        return static::find()->enabled()->all();
     }
 
     /**

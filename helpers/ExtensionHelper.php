@@ -15,6 +15,7 @@ namespace rhoone\helpers;
 use rhoone\models\Extension;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
+use Yii;
 
 /**
  * Description of ModuleHelper
@@ -27,6 +28,26 @@ class ExtensionHelper
     public static function all()
     {
         return Extension::find()->all();
+    }
+
+    /**
+     * 
+     * @return \rhoone\extension\Extension[]
+     */
+    public static function allEnabled()
+    {
+        $exts = Extension::findAllEnabled();
+        $extensions = [];
+        foreach ($exts as $ext) {
+            try {
+                $extension = static::get($ext->classname);
+            } catch (\Exception $ex) {
+                Yii::error($ex->getMessage());
+                continue;
+            }
+            $extensions[] = $extension;
+        }
+        return $extensions;
     }
 
     /**
@@ -128,7 +149,7 @@ class ExtensionHelper
 
         $dic = $extension->getDictionaries();
         if (empty($dic)) {
-            echo "Warning: This extension does not contain any dictionaries.\n";
+            Yii::warning("`$class` does not contain any dictionaries.\n");
         } else {
             
         }

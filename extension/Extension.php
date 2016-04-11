@@ -42,4 +42,13 @@ abstract class Extension extends \yii\base\Component
      * @return string search result.
      */
     abstract public function search($keywords);
+
+    /**
+     * Get module configuration array.
+     * @return array module configuration array.
+     */
+    public static function getModule()
+    {
+        throw new NotSupportedException('The extension\'s module has not been implemented.');
+    }
 }

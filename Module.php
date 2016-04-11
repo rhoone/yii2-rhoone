@@ -12,6 +12,9 @@
 
 namespace rhoone;
 
+use rhoone\helpers\ExtensionHelper;
+use Yii;
+
 /**
  * Description of Module
  *
@@ -30,9 +33,24 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
         if ($app instanceof \yii\web\Application) {
             $rules = [
                 'search' => $this->id . '/search/index',
-                'search/<keywords:\w+>' => $this->id . '/search/index' 
+                'search/<keywords:\w+>' => $this->id . '/search/index'
             ];
             $app->getUrlManager()->addRules($rules);
+            $extensions = $this->getEnabledExtensions();
+            foreach ($extensions as $ext) {
+                $moduleConfig = $ext->getModule();
+                $app->setModule($moduleConfig['id'], $moduleConfig);
+                $module = $app->getModule($moduleConfig['id']);
+                if ($module instanceof \yii\base\BootstrapInterface) {
+                    $app->bootstrap[] = $module->id;
+                    $module->bootstrap($app);
+                }
+            }
         }
+    }
+
+    protected function getEnabledExtensions()
+    {
+        return ExtensionHelper::allEnabled();
     }
 }

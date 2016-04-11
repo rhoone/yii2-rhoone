@@ -27,7 +27,7 @@ class ExtensionQuery extends BaseEntityQuery
      * @param mixed $enabled
      * @return \static
      */
-    public function enabled($enabled)
+    public function enabled($enabled = true)
     {
         return $this->andWhere(['enabled' => $enabled == true ? 1 : 0]);
     }
