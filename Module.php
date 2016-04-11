@@ -36,15 +36,15 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
                 'search/<keywords:\w+>' => $this->id . '/search/index'
             ];
             $app->getUrlManager()->addRules($rules);
-            $extensions = $this->getEnabledExtensions();
-            foreach ($extensions as $ext) {
-                $moduleConfig = $ext->getModule();
-                $app->setModule($moduleConfig['id'], $moduleConfig);
-                $module = $app->getModule($moduleConfig['id']);
-                if ($module instanceof \yii\base\BootstrapInterface) {
-                    $app->bootstrap[] = $module->id;
-                    $module->bootstrap($app);
-                }
+        }
+        $extensions = $this->getEnabledExtensions();
+        foreach ($extensions as $ext) {
+            $moduleConfig = $ext->getModule();
+            $app->setModule($moduleConfig['id'], $moduleConfig);
+            $module = $app->getModule($moduleConfig['id']);
+            if ($module instanceof \yii\base\BootstrapInterface) {
+                $app->bootstrap[] = $module->id;
+                $module->bootstrap($app);
             }
         }
     }
