@@ -38,9 +38,10 @@ class ExtensionManagerController extends Controller
     }
 
     /**
-     * Add a extension.
+     * Add an extension.
      * @param string $class Full-qualified name of a extension.
      * @param boolean $enable Whether enable the module after adding it.
+     * @return int
      */
     public function actionAdd($class, $enable = false)
     {
@@ -54,7 +55,27 @@ class ExtensionManagerController extends Controller
     }
 
     /**
-     * Remove a extension
+     * Enable an extension.
+     * @param string $class
+     * @return int
+     */
+    public function actionEnable($class)
+    {
+        return 0;
+    }
+
+    /**
+     * Disable an extension.
+     * @param string $class
+     * @return int
+     */
+    public function actionDisable($class)
+    {
+        return 0;
+    }
+
+    /**
+     * Remove an extension
      * @param string $class
      * @param boolean $force
      * @return int

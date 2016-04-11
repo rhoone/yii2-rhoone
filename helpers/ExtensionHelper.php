@@ -13,6 +13,7 @@
 namespace rhoone\helpers;
 
 use rhoone\models\Extension;
+use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 
 /**
@@ -39,16 +40,65 @@ class ExtensionHelper
     {
         $extension = static::validate($class);
 
+        unset($class);
+        $class = $extension->className();
         $name = $extension->extensionName();
+
+        if (Extension::find()->where(['classname' => $class])->exists()) {
+            throw new InvalidParamException('the class `' . $class . '` has been added.');
+        }
 
         $dic = $extension->getDictionaries();
 
-        $extension = new Extension(['classname' => $extension->className(), 'name' => $name, 'enabled' => $enable == true]);
+        unset($extension);
+        $extension = new Extension(['classname' => $class, 'name' => $name, 'enabled' => $enable == true]);
         return $extension->save();
     }
 
     /**
-     * 
+     * Enable extension.
+     * @param string $class
+     * @return boolean
+     * @throws InvalidParamException
+     * @throws InvalidConfigException
+     */
+    public static function enable($class)
+    {
+        $extension = static::validate($class);
+        $enabledExt = Extension::find()->where(['classname' => $extension->className()])->one();
+        if (!$enabledExt) {
+            throw new InvalidParamException("`" . $extension->className() . "` has not been added yet.\n");
+        }
+        if ($enabledExt->isEnabled) {
+            throw new InvalidParamException("`" . $extension->className() . "` has been enabled.\n");
+        }
+        $enabledExt->isEnabled = true;
+        if (!$enabledExt->save()) {
+            throw new InvalidConfigException("`" . $extension->className() . "` failed to enable.\n");
+        }
+        echo "`" . $extension->className() . "` is enabled.\n";
+        return true;
+    }
+
+    /**
+     * Get extension.
+     * @param string $class
+     * @return \rhoone\extension\Extension
+     * @throws InvalidParamException
+     */
+    public static function get($class)
+    {
+        $extension = static::validate($class);
+        $enabledExt = Extension::find()->where(['classname' => $extension->className()])->enabled(true)->one();
+        if (!$enabledExt) {
+            throw new InvalidParamException("`" . $extension->className() . "` has not been enabled.\n");
+        }
+        return $extension;
+    }
+
+    /**
+     * Validate extension.
+     * It will throw exception if error(s) occured.
      * @param string $class
      * @return \rhoone\extension\Extension
      * @throws InvalidParamException
@@ -58,7 +108,7 @@ class ExtensionHelper
         if (!is_string($class)) {
             throw new InvalidParamException('the class name is not a string.');
         }
-        
+
         if (!class_exists($class)) {
             if (strpos($class, "\\", strlen($class) - 1) === false) {
                 $class .= "\Extension";
@@ -76,16 +126,13 @@ class ExtensionHelper
             throw new InvalidParamException('the class `' . $class . '` is not an extension.');
         }
 
-        if (Extension::find()->where(['classname' => $class])->exists()) {
-            throw new InvalidParamException('the class `' . $class . '` has been added.');
-        }
-
         $dic = $extension->getDictionaries();
         if (empty($dic)) {
             echo "Warning: This extension does not contain any dictionaries.\n";
         } else {
             
         }
+
         return $extension;
     }
 
@@ -98,6 +145,10 @@ class ExtensionHelper
      */
     public static function remove($class, $force)
     {
+        $extension = static::validate($class);
+        unset($class);
+        $class = $extension->className();
+        unset($extension);
         $extension = Extension::find()->where(['classname' => $class])->one();
         if (!$extension) {
             throw new InvalidParamException('the class `' . $class . '` has not been added yet.');

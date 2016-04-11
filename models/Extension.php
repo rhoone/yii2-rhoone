@@ -24,7 +24,13 @@ class Extension extends BaseEntityModel
 
     public $idAttribute = false;
     public $enableIP = 0;
-    
+
+    public function init()
+    {
+        $this->queryClass = ExtensionQuery::className();
+        parent::init();
+    }
+
     public static function tableName()
     {
         return '{{%extension}}';
@@ -36,6 +42,7 @@ class Extension extends BaseEntityModel
             [['name', 'classname', 'description'], 'string', 'max' => 255],
             [['description'], 'default', 'value' => ''],
             [['name', 'classname'], 'required'],
+            [['classname'], 'unique'],
             [['enabled', 'monopolized', 'default'], 'boolean', 'trueValue' => 1, 'falseValue' => 0],
             [['enabled', 'monopolized', 'default'], 'default', 'value' => 0],
         ];
@@ -44,5 +51,25 @@ class Extension extends BaseEntityModel
     public function rules()
     {
         return array_merge($this->getExtensionRules(), parent::rules());
+    }
+
+    public function getIsEnabled()
+    {
+        return $this->enabled == true;
+    }
+
+    public function setIsEnabled($enabled)
+    {
+        $this->enabled = $enabled == true ? 1 : 0;
+    }
+
+    /**
+     * @inheritdoc
+     * Friendly to IDE.
+     * @return ExtensionQuery
+     */
+    public static function find()
+    {
+        return parent::find();
     }
 }
