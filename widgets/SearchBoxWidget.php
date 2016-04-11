@@ -20,8 +20,10 @@ namespace rhoone\widgets;
 class SearchBoxWidget extends \yii\base\Widget
 {
 
+    public $keywords;
+
     public function run()
     {
-        return $this->render('search-box');
+        return $this->render('search-box', ['keywords' => $this->keywords]);
     }
 }

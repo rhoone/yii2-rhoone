@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  _   __ __ _____ _____ ___  ____  _____
  * | | / // // ___//_  _//   ||  __||_   _|
@@ -9,15 +8,13 @@
  * @copyright Copyright (c) 2016 vistart
  * @license https://vistart.name/license/
  */
+/* @var $keywords string */
+/* @var $results string[] */
+$this->title = 'Search';
+?>
 
-namespace rhoone\helpers;
-
-/**
- * Description of ExtensionHelper
- *
- * @author vistart <i@vistart.name>
- */
-class ExtensionHelper extends BaseExtensionHelper
-{
-    //put your code here
-}
+<div class="row">
+    <div class="col-md-12">
+        <?= \rhoone\widgets\SearchWidget::widget(['keywords' => $keywords, 'results' => $results]) ?>
+    </div>
+</div>

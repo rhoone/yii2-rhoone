@@ -10,20 +10,28 @@
  * @license https://vistart.name/license/
  */
 
-namespace rhoone\widgets;
+namespace rhoone\helpers;
 
 /**
- * Description of SearchResultWidget
+ * Description of BaseDictionaryHelper
  *
  * @author vistart <i@vistart.name>
  */
-class SearchResultWidget extends \yii\base\Widget
+class BaseDictionaryHelper
 {
-
-    public $results;
-
-    public function run()
+    public static function get()
     {
-        return $this->render('search-result', ['results' => $this->results]);
+        
+    }
+
+    /**
+     * 
+     * @param mixed $keywords
+     * @param mixed $extension
+     * @return
+     */
+    public static function match($keywords, $extension)
+    {
+        
     }
 }

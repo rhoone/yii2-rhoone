@@ -12,8 +12,11 @@
 
 namespace rhoone\controllers;
 
+use rhoone\helpers\DictionaryHelper as DicHelper;
+use rhoone\helpers\ExtensionHelper as ExtHelper;
 use rhoone\models\SearchForm;
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 
 /**
@@ -37,12 +40,12 @@ class SearchController extends Controller
         if (Yii::$app->request->getIsPost()) {
             $model = new SearchForm();
             if ($model->load(Yii::$app->request->post())) {
-                return $model->keywords;
+                return $this->redirect(Url::toRoute('/search'));
             }
         }
         if (empty($keywords)) {
             
         }
-        return $keywords;
+        return $this->render('index', ['keywords' => $keywords, 'results' => ExtHelper::search($keywords)]);
     }
 }

@@ -8,6 +8,8 @@
  * @copyright Copyright (c) 2016 vistart
  * @license https://vistart.name/license/
  */
+/* @var $keywords string */
+/* @var $results string[] */
 ?>
 <!--
 <input id="search" type="text" class="form-control" aria-label="Search for your wanted." value="open, search, elastic" oninput="rho_one.search_box_changed(0)">
@@ -22,4 +24,5 @@
  * 
  */
 ?>
-<?= \rhoone\widgets\SearchBoxWidget::widget() ?>
+<?= \rhoone\widgets\SearchBoxWidget::widget(['keywords' => $keywords]) ?>
+<?= \rhoone\widgets\SearchResultWidget::widget(['results' => $results]) ?>

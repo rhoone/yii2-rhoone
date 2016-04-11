@@ -22,12 +22,13 @@ use rhoone\models\SearchForm;
 class SearchFormWidget extends \yii\base\Widget
 {
 
+    public $keywords;
     public $searchForm;
 
     public function init()
     {
         if (empty($this->searchForm)) {
-            $this->searchForm = new SearchForm(['keywords' => '']);
+            $this->searchForm = new SearchForm(['keywords' => $this->keywords]);
         }
     }
 

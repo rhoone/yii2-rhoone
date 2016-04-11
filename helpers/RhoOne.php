@@ -10,20 +10,14 @@
  * @license https://vistart.name/license/
  */
 
-namespace rhoone\widgets;
+namespace rhoone\helpers;
 
 /**
- * Description of SearchResultWidget
+ * Description of RhoOne
  *
  * @author vistart <i@vistart.name>
  */
-class SearchResultWidget extends \yii\base\Widget
+class RhoOne extends BaseRhoOne
 {
-
-    public $results;
-
-    public function run()
-    {
-        return $this->render('search-result', ['results' => $this->results]);
-    }
+    
 }

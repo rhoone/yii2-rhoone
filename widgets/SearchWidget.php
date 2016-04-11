@@ -19,8 +19,12 @@ namespace rhoone\widgets;
  */
 class SearchWidget extends \yii\base\Widget
 {
+
+    public $keywords;
+    public $results;
+
     public function run()
     {
-        return $this->render('search');
+        return $this->render('search', ['keywords' => $this->keywords, 'results' => $this->results]);
     }
 }
