@@ -22,8 +22,8 @@ use Yii;
  * @property string $word
  *
  * @property-read Extension $extension
- * @property-read Synonmys $synonmys
- * @property-write string|Synonmys $synonmys
+ * @property-read Synonyms $synonyms
+ * @property-write string|Synonyms $synonyms
  * @author vistart <i@vistart.name>
  */
 class Headword extends BaseEntityModel
@@ -90,21 +90,21 @@ class Headword extends BaseEntityModel
      * 
      * @return type
      */
-    public function getSynonmys()
+    public function getSynonyms()
     {
-        return $this->hasMany(Synonmys::className(), ['headword_guid' => 'guid'])->inverseOf('headword');
+        return $this->hasMany(Synonyms::className(), ['headword_guid' => 'guid'])->inverseOf('headword');
     }
 
     /**
-     * 
+     * Add a headword.
      * @param string $word
      * @param Extension $extension
-     * @return boolean|\rhoone\models\Headword
+     * @return false|\static
      */
     public static function add($word, $extension)
     {
         $headword = Headword::find()->where(['word' => $word, 'extension_guid' => $extension->guid])->one();
-        if (!$headword) {
+        if ($headword) {
             Yii::warning($word . ' exists.', __METHOD__);
             return false;
         }
@@ -132,23 +132,29 @@ class Headword extends BaseEntityModel
     }
 
     /**
-     * Add synonmys.
-     * @param string|string[]|Synonmys|Synonmys[] $synonmys
+     * Add synonyms.
+     * @param string|string[]|Synonyms|Synonyms[] $synonyms
      */
-    public function setSynonmys($synonmys)
+    public function setSynonyms($synonyms)
     {
-        if (is_string($synonmys)) {
-            $model = new Synonmys(['word' => $synonmys, 'headword' => $this]);
-            return $model->save();
+        if (is_string($synonyms)) {
+            $model = new Synonyms(['word' => $synonyms, 'headword' => $this]);
+            if (!$model->save()) {
+                if (YII_ENV == YII_ENV_DEV || YII_ENV == YII_ENV_TEST) {
+                    print_r($model->errors);
+                }
+                return false;
+            }
+            return true;
         }
-        if ($synonmys instanceof Synonmys) {
-            $synonmys->headword = $this;
-            return $synonmys->save();
+        if ($synonyms instanceof Synonyms) {
+            $synonyms->headword = $this;
+            return $synonyms->save();
         }
-        if (is_array($synonmys)) {
-            foreach ($synonmys as $syn) {
-                if (!$this->setSynonmys($syn)) {
-                    Yii::error('Synonmys failed to add.', __METHOD__);
+        if (is_array($synonyms)) {
+            foreach ($synonyms as $syn) {
+                if (!$this->setSynonyms($syn)) {
+                    Yii::error('Synonyms failed to add.', __METHOD__);
                 }
             }
         }
@@ -156,27 +162,31 @@ class Headword extends BaseEntityModel
     }
 
     /**
-     * Remove synonmys.
-     * @param string|string[]|Synonmys|Synonmys[] $synonmys
+     * Remove synonyms.
+     * @param string|string[]|Synonyms|Synonyms[] $synonyms
      * @return boolean
      */
-    public function removeSynonmys($synonmys)
+    public function removeSynonyms($synonyms)
     {
-        if (is_string($synonmys)) {
-            $model = Synonmys::find()->where(['word' => $synonmys, 'headword_guid' => $this->guid])->one();
+        if (is_string($synonyms)) {
+            $model = Synonyms::find()->where(['word' => $synonyms, 'headword_guid' => $this->guid])->one();
             if (!$model) {
-                Yii::warning($synonmys . ' does not exist.', __METHOD__);
+                Yii::warning($synonyms . ' does not exist.', __METHOD__);
                 return false;
             }
             return $model->delete() == 1;
         }
-        if ($synonmys instanceof Synonmys) {
-            return $synonmys->delete() == 1;
+        if ($synonyms instanceof Synonyms) {
+            return $synonyms->delete() == 1;
         }
     }
 
-    public function removeAllSynonmys()
+    /**
+     * 
+     * @return int
+     */
+    public function removeAllSynonyms()
     {
-        return Synonmys::deleteAll(['headword_guid' => $this->guid]);
+        return Synonyms::deleteAll(['headword_guid' => $this->guid]);
     }
 }

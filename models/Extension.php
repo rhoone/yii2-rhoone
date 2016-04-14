@@ -12,6 +12,7 @@
 
 namespace rhoone\models;
 
+use rhoone\helpers\DictionaryHelper;
 use vistart\Models\models\BaseEntityModel;
 
 /**
@@ -91,5 +92,44 @@ class Extension extends BaseEntityModel
     public function getHeadwords()
     {
         return $this->hasMany(Headword::className(), ['extension_guid' => 'guid'])->inverseOf('extension');
+    }
+
+    /**
+     * Add headword.
+     * @param string|Headword $headword
+     * @return false|Headword
+     */
+    public function setHeadword($headword)
+    {
+        if (is_string($headword)) {
+            return Headword::add($headword, $this);
+        }
+        if ($headword instanceof Headword) {
+            return Headword::add($headword->word, $this);
+        }
+    }
+
+    /**
+     * Add headwords.
+     * @param string[]|Headword[] $headwords
+     * @return mixed
+     */
+    public function setHeadwords($headwords)
+    {
+        $results = [];
+        foreach ($headwords as $headword) {
+            $results[] = $this->setHeadword($headword);
+        }
+        return $results;
+    }
+
+    /**
+     * 
+     * @param mixed $dictionary
+     * @return boolean
+     */
+    public function addDictionary($dictionary)
+    {
+        return DictionaryHelper::add($this, $dictionary);
     }
 }

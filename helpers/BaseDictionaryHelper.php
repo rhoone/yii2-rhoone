@@ -13,6 +13,7 @@
 namespace rhoone\helpers;
 
 use rhoone\models\Extension;
+use rhoone\models\Headword;
 use yii\base\InvalidParamException;
 use Yii;
 
@@ -35,6 +36,9 @@ class BaseDictionaryHelper
         if (is_array($dictionary)) {
             return static::validateArray($dictionary);
         }
+        if ($dictionary === null) {
+            return true;
+        }
         throw new InvalidParamException("Dictionary invalid.");
     }
 
@@ -45,21 +49,21 @@ class BaseDictionaryHelper
      */
     public static function validateArray($dictionary)
     {
-        foreach ($dictionary as $headword => $synonmys) {
+        foreach ($dictionary as $headword => $synonyms) {
             if (!is_string($headword)) {
                 Yii::error($headword . 'is not string.', __METHOD__);
                 unset($dictionary[$headword]);
                 continue;
             }
-            if (!is_array($synonmys) && is_string($synonmys)) {
-                $synonmys = (array) $synonmys;
+            if (!is_array($synonyms) && is_string($synonyms)) {
+                $synonyms = (array) $synonyms;
             } else {
-                Yii::error($headword . ' does not contain any valid synonmys.', __METHOD__);
+                Yii::error($headword . ' does not contain any valid synonyms.', __METHOD__);
             }
-            foreach ($synonmys as $key => $syn) {
+            foreach ($synonyms as $key => $syn) {
                 if (!is_string($syn)) {
-                    unset($synonmys[$key]);
-                    Yii::error($headword . ' contains an invalid synonmys.' . __METHOD__);
+                    unset($synonyms[$key]);
+                    Yii::error($headword . ' contains an invalid synonyms.' . __METHOD__);
                 }
             }
         }
@@ -96,13 +100,13 @@ class BaseDictionaryHelper
             }
             if (is_array($dictionary)) {
                 $validatedDic = static::validateArray($dictionary);
-                foreach ($validatedDic as $word) {
-                    $headword = \rhoone\models\Headword::add($word, $extension);
+                foreach ($validatedDic as $word => $synonyms) {
+                    $headword = Headword::add($word, $extension);
                     if (!$headword) {
                         Yii::error($word . ' failed to add.', __METHOD__);
                         continue;
                     }
-                    
+                    $headword->synonyms = $synonyms;
                 }
             }
         } catch (Exception $ex) {

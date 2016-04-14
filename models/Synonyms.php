@@ -15,7 +15,7 @@ namespace rhoone\models;
 use vistart\Models\models\BaseEntityModel;
 
 /**
- * Description of Synonmys
+ * Description of Synonyms
  * 
  * @property string $headword_guid
  * 
@@ -23,7 +23,7 @@ use vistart\Models\models\BaseEntityModel;
  *
  * @author vistart <i@vistart.name>
  */
-class Synonmys extends BaseEntityModel
+class Synonyms extends BaseEntityModel
 {
 
     public $idAttribute = false;
@@ -31,7 +31,7 @@ class Synonmys extends BaseEntityModel
 
     public static function tableName()
     {
-        return '{{%synonmys}}';
+        return '{{%synonyms}}';
     }
 
     public function rules()

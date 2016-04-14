@@ -73,7 +73,21 @@ class BaseExtensionHelper
 
         unset($extension);
         $extension = new Extension(['classname' => $class, 'name' => $name, 'enabled' => $enable == true]);
-        return $extension->save();
+        $transaction = Yii::$app->getDb()->beginTransaction();
+        try {
+            if (!$extension->save()) {
+                throw new InvalidParamException('`' . $class . '` failed to added.');
+            }
+            if (!$extension->addDictionary($dic)) {
+                throw new InvalidParamException('`' . $class . '');
+            }
+            $transaction->commit();
+        } catch (\Exception $ex) {
+            $transaction->rollBack();
+            throw $ex;
+            return false;
+        }
+        return true;
     }
 
     /**
