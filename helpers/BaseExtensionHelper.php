@@ -29,6 +29,11 @@ class BaseExtensionHelper
     {
         return Extension::find()->all();
     }
+    
+    public static function allEnabledModels()
+    {
+        return Extension::findAllEnabled();
+    }
 
     /**
      * 
@@ -36,7 +41,7 @@ class BaseExtensionHelper
      */
     public static function allEnabled()
     {
-        $exts = Extension::findAllEnabled();
+        $exts = static::allEnabledModels();
         $extensions = [];
         foreach ($exts as $ext) {
             try {
@@ -208,13 +213,19 @@ class BaseExtensionHelper
     /**
      * 
      * @param mixed $keywords
-     * @param mixed $extensions
+     * @param Extension|Extension[] $extensions
      * @return \rhoone\extension\Extension[]
      */
-    public static function match($keywords, $extensions = null)
+    public static function allMatched($keywords, $extensions = null)
     {
         $exts = static::allEnabled();
-        foreach ($exts as $ext) {
+        if (empty($extensions)) {
+            $extensions = static::allEnabledModels();
+        }
+        $matchedSynonyms = DictionaryHelper::match($keywords);
+        foreach ($extensions as $key => $extension) {
+        }
+        foreach ($exts as $key => $ext) {
             
         }
         return $exts;
@@ -223,7 +234,7 @@ class BaseExtensionHelper
     /**
      * 
      * @param mixed $keywords
-     * @param mixed $extensions
+     * @param Extension|Extension[] $extensions
      * @return array|null
      */
     public static function search($keywords, $extensions = null)
@@ -231,7 +242,7 @@ class BaseExtensionHelper
         if (!is_string($keywords) || strlen($keywords) == 0) {
             return null;
         }
-        $exts = static::match($keywords, $extensions);
+        $exts = static::allMatched($keywords, $extensions);
         $results = [];
         foreach ($exts as $ext) {
             $results[] = $ext->search($keywords);

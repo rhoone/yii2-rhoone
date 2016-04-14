@@ -62,6 +62,15 @@ class ExtensionController extends Controller
      */
     public function actionEnable($class)
     {
+        $model = ExtensionHelper::getModel($class);
+        if (!$model) {
+            throw new Exception('`' . $class . '` does not exist.');
+        }
+        $model->isEnabled = true;
+        if (!$model->save()) {
+            throw new Exception('Failed to enable `' . $class . '`.');
+        }
+        echo "`$class` has been enabled.";
         return 0;
     }
 
@@ -72,6 +81,15 @@ class ExtensionController extends Controller
      */
     public function actionDisable($class)
     {
+        $model = ExtensionHelper::getModel($class);
+        if (!$model) {
+            throw new Exception('`' . $class . '` does not exist.');
+        }
+        $model->isEnabled = false;
+        if (!$model->save()) {
+            throw new Exception('Failed to disable `' . $class . '`.');
+        }
+        echo "`$class` has been disabled.";
         return 0;
     }
 
@@ -181,8 +199,30 @@ class ExtensionController extends Controller
      * @param string $class
      * @param string $word
      */
-    public function actionMatchSynonyms($class, $word)
+    public function actionMatchSynonyms($class, $word = null)
     {
-        
+        $model = ExtensionHelper::getModel($class);
+        if (!$model) {
+            throw new Exception('`' . $class . '` does not exist.');
+        }
+        foreach ($model->synonyms as $synonyms) {
+            echo $synonyms->word . "\r\n";
+        }
+        return 0;
+    }
+
+    /**
+     * 
+     * @param string $class
+     */
+    public function actionExist($class)
+    {
+        $model = ExtensionHelper::getModel($class);
+        if ($model) {
+            echo "`$class` existed.";
+        } else {
+            echo "`$class` does not exist.";
+        }
+        return 0;
     }
 }

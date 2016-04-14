@@ -97,6 +97,11 @@ class Extension extends BaseEntityModel
         return $this->hasMany(Headword::className(), ['extension_guid' => 'guid'])->inverseOf('extension');
     }
 
+    public function getSynonyms()
+    {
+        return $this->hasMany(Synonyms::className(), ['headword_guid' => 'guid'])->via('headwords');
+    }
+
     /**
      * Add headword.
      * @param string|Headword $headword

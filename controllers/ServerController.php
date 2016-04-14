@@ -42,7 +42,7 @@ class ServerController extends Controller
     /**
      * Disable a server.
      */
-    public function actionDisable()
+    public function actionDisable($server)
     {
         
     }
@@ -50,7 +50,7 @@ class ServerController extends Controller
     /**
      * Enable a server.
      */
-    public function actionEnable()
+    public function actionEnable($server)
     {
         
     }
@@ -58,7 +58,7 @@ class ServerController extends Controller
     /**
      * Remove a server.
      */
-    public function actionRemove()
+    public function actionRemove($server)
     {
         
     }

@@ -77,13 +77,15 @@ class BaseDictionaryHelper
 
     /**
      * 
-     * @param Extension $extension
-     * @param string $keywords
+     * @param string|string[] $keywords
      * @return
      */
-    public static function match($extension, $keywords)
+    public static function match($keywords)
     {
-        
+        if (is_string($keywords)) {
+            $keywords = (array) $keywords;
+        }
+        return \rhoone\models\Synonyms::find()->word($keywords)->all();
     }
 
     /**

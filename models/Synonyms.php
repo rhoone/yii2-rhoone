@@ -76,4 +76,19 @@ class Synonyms extends BaseEntityModel
     {
         return $this->headword_guid = $headword->guid;
     }
+
+    public function init()
+    {
+        $this->queryClass = SynonymsQuery::className();
+        parent::init();
+    }
+
+    /**
+     * 
+     * @return SynonymsQuery
+     */
+    public static function find()
+    {
+        return parent::find();
+    }
 }
