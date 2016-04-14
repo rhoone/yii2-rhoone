@@ -13,6 +13,7 @@
 namespace rhoone\models;
 
 use vistart\Models\models\BaseEntityModel;
+use Yii;
 
 /**
  * Description of Synonyms

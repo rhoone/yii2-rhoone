@@ -19,7 +19,10 @@ use vistart\Models\models\BaseEntityModel;
  * Description of Extension
  *
  * @property boolean $isEnabled
+ * @property-write string|eadword $headword
  * @property-read Headword[] $headwords
+ * @property-write string|Headword[] $headwords
+ * @property-write array $dictionary
  * @author vistart <i@vistart.name>
  */
 class Extension extends BaseEntityModel
@@ -128,8 +131,13 @@ class Extension extends BaseEntityModel
      * @param mixed $dictionary
      * @return boolean
      */
-    public function addDictionary($dictionary)
+    public function setDictionary($dictionary)
     {
         return DictionaryHelper::add($this, $dictionary);
+    }
+
+    public function addDictionary($dictionary)
+    {
+        return $this->setDictionary($dictionary);
     }
 }

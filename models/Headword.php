@@ -13,6 +13,7 @@
 namespace rhoone\models;
 
 use vistart\Models\models\BaseEntityModel;
+use yii\base\InvalidParamException;
 use Yii;
 
 /**
@@ -100,12 +101,13 @@ class Headword extends BaseEntityModel
      * @param string $word
      * @param Extension $extension
      * @return false|\static
+     * @throws InvalidParamException
      */
     public static function add($word, $extension)
     {
         $headword = Headword::find()->where(['word' => $word, 'extension_guid' => $extension->guid])->one();
         if ($headword) {
-            Yii::warning($word . ' exists.', __METHOD__);
+            throw new InvalidParamException('The word: `' . $word . '` has existed.');
             return false;
         }
         $headword = new Headword(['word' => $word, 'extension' => $extension]);
@@ -138,16 +140,16 @@ class Headword extends BaseEntityModel
     public function setSynonyms($synonyms)
     {
         if (is_string($synonyms)) {
-            $model = new Synonyms(['word' => $synonyms, 'headword' => $this]);
-            if (!$model->save()) {
-                if (YII_ENV == YII_ENV_DEV || YII_ENV == YII_ENV_TEST) {
-                    print_r($model->errors);
-                }
-                return false;
+            if (Synonyms::find()->where(['word' => $synonyms, 'headword_guid' => $this->guid])->exists()) {
+                throw new InvalidParamException('The synonyms: `' . $synonyms . '` has existed.');
             }
-            return true;
+            $model = new Synonyms(['word' => $synonyms, 'headword' => $this]);
+            return $model->save();
         }
         if ($synonyms instanceof Synonyms) {
+            if (Synonyms::find()->where(['word' => $synonyms->word, 'headword_guid' => $this->guid])->exists()) {
+                throw new InvalidParamException('The synonyms: `' . $synonyms->word . '` has existed.');
+            }
             $synonyms->headword = $this;
             return $synonyms->save();
         }

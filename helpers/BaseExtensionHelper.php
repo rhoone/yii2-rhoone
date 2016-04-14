@@ -132,6 +132,18 @@ class BaseExtensionHelper
     }
 
     /**
+     * 
+     * @param string $class
+     * @return Extension
+     */
+    public static function getModel($class)
+    {
+        $extension = static::validate($class);
+        $model = Extension::findOne(['classname' => $extension->className()]);
+        return $model;
+    }
+
+    /**
      * Validate extension.
      * It will throw exception if error(s) occured.
      * @param string $class
