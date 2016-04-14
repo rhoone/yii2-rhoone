@@ -10,23 +10,25 @@
  */
 /* @var $results string[] */
 ?>
-<div class="row">
-    <div class="col-md-2">
-        
-    </div>
-    <div class="col-md-10">
-        <div class="searchResults">
-            <?php foreach ($results as $key => $result): ?>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <?= $key ?>
+<?php if (!empty($results)) : ?>
+    <div class="row">
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-10">
+            <div class="searchResults">
+                <?php foreach ($results as $key => $result): ?>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <?= $key ?>
+                        </div>
+                        <hr/>
+                        <div class="panel-body">
+                            <?= $result ?>
+                        </div>
                     </div>
-                    <hr/>
-                    <div class="panel-body">
-                        <?= $result ?>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
-</div>
+<?php endif; ?>

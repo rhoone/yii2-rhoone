@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  _   __ __ _____ _____ ___  ____  _____
  * | | / // // ___//_  _//   ||  __||_   _|
@@ -10,11 +11,13 @@
  */
 /* @var $keywords string */
 /* @var $results string[] */
+use rhoone\widgets\SearchWidget;
+
 $this->title = 'Search';
 ?>
 
 <div class="row">
     <div class="col-md-12">
-        <?= \rhoone\widgets\SearchWidget::widget(['keywords' => $keywords, 'results' => $results]) ?>
+        <?= SearchWidget::widget(['keywords' => $keywords, 'results' => $results]) ?>
     </div>
 </div>

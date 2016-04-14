@@ -19,10 +19,9 @@ namespace rhoone\helpers;
  */
 class BaseSubordinateHelper
 {
+
     public static function getRegistered()
     {
         
     }
-    
-    
 }

@@ -69,7 +69,7 @@ class BaseExtensionHelper
             throw new InvalidParamException('the class `' . $class . '` has been added.');
         }
 
-        $dic = $extension->getDictionaries();
+        $dic = $extension->getDictionary();
 
         unset($extension);
         $extension = new Extension(['classname' => $class, 'name' => $name, 'enabled' => $enable == true]);
@@ -149,9 +149,9 @@ class BaseExtensionHelper
             throw new InvalidParamException('the class `' . $class . '` is not an extension.');
         }
 
-        $dic = $extension->getDictionaries();
+        $dic = $extension->getDictionary();
         if (empty($dic)) {
-            Yii::warning("`$class` does not contain any dictionaries.\n", get_called_class() . '::' . 'validate');
+            Yii::warning("`$class` does not contain a dictionary.\n", __METHOD__);
         } else {
             
         }
@@ -198,10 +198,13 @@ class BaseExtensionHelper
      * 
      * @param mixed $keywords
      * @param mixed $extensions
-     * @return array
+     * @return array|null
      */
     public static function search($keywords, $extensions = null)
     {
+        if (!is_string($keywords) || strlen($keywords) == 0) {
+            return null;
+        }
         $exts = static::match($keywords, $extensions);
         $results = [];
         foreach ($exts as $ext) {

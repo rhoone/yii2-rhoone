@@ -18,6 +18,7 @@ use vistart\Models\models\BaseEntityModel;
  * Description of Extension
  *
  * @property boolean $isEnabled
+ * @property-read Headword[] $headwords
  * @author vistart <i@vistart.name>
  */
 class Extension extends BaseEntityModel
@@ -81,5 +82,14 @@ class Extension extends BaseEntityModel
     public static function find()
     {
         return parent::find();
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function getHeadwords()
+    {
+        return $this->hasMany(Headword::className(), ['extension_guid' => 'guid'])->inverseOf('extension');
     }
 }

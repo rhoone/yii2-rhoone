@@ -91,4 +91,9 @@ class ExtensionController extends Controller
         echo "The extension `" . $class . "` is removed.\n";
         return 0;
     }
+
+    public function actionAddHeadword($class, $word)
+    {
+        
+    }
 }

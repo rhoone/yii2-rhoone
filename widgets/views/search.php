@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  _   __ __ _____ _____ ___  ____  _____
  * | | / // // ___//_  _//   ||  __||_   _|
@@ -10,6 +11,8 @@
  */
 /* @var $keywords string */
 /* @var $results string[] */
+use rhoone\widgets\SearchBoxWidget;
+use rhoone\widgets\SearchResultWidget;
 ?>
 <!--
 <input id="search" type="text" class="form-control" aria-label="Search for your wanted." value="open, search, elastic" oninput="rho_one.search_box_changed(0)">
@@ -24,5 +27,5 @@
  * 
  */
 ?>
-<?= \rhoone\widgets\SearchBoxWidget::widget(['keywords' => $keywords]) ?>
-<?= \rhoone\widgets\SearchResultWidget::widget(['results' => $results]) ?>
+<?= SearchBoxWidget::widget(['keywords' => $keywords]) ?>
+<?= SearchResultWidget::widget(['results' => $results]) ?>
