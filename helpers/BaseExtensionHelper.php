@@ -63,7 +63,7 @@ class BaseExtensionHelper
 
         unset($class);
         $class = $extension->className();
-        $name = $extension->extensionName();
+        $name = $extension->name();
 
         if (Extension::find()->where(['classname' => $class])->exists()) {
             throw new InvalidParamException('the class `' . $class . '` has been added.');
@@ -127,10 +127,10 @@ class BaseExtensionHelper
     public static function validate($class)
     {
         if (!is_string($class)) {
-            Yii::error('the class name is not a string.', get_called_class() . '::' . 'validate');
+            Yii::error('the class name is not a string.', __METHOD__);
             throw new InvalidParamException('the class name is not a string.');
         }
-        Yii::trace('validate extension: `' . $class . '`', get_called_class() . '::' . 'validate');
+        Yii::trace('validate extension: `' . $class . '`', __METHOD__);
 
         if (!class_exists($class)) {
             if (strpos($class, "\\", strlen($class) - 1) === false) {

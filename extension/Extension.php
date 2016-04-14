@@ -22,7 +22,7 @@ use yii\base\NotSupportedException;
 abstract class Extension extends \yii\base\Component
 {
 
-    public static function extensionName()
+    public static function name()
     {
         throw new NotSupportedException('The extension\'s name has not been specified.');
     }

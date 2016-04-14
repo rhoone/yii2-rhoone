@@ -21,7 +21,7 @@ use yii\console\Exception;
  *
  * @author vistart <i@vistart.name>
  */
-class ExtensionManagerController extends Controller
+class ExtensionController extends Controller
 {
 
     /**
