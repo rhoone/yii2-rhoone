@@ -48,21 +48,22 @@ class BaseDictionaryHelper
         foreach ($dictionary as $headword => $synonmys) {
             if (!is_string($headword)) {
                 Yii::error($headword . 'is not string.', __METHOD__);
+                unset($dictionary[$headword]);
                 continue;
-                ;
             }
             if (!is_array($synonmys) && is_string($synonmys)) {
                 $synonmys = (array) $synonmys;
             } else {
                 Yii::error($headword . ' does not contain any valid synonmys.', __METHOD__);
             }
-            foreach ($synonmys as $syn) {
+            foreach ($synonmys as $key => $syn) {
                 if (!is_string($syn)) {
+                    unset($synonmys[$key]);
                     Yii::error($headword . ' contains an invalid synonmys.' . __METHOD__);
                 }
             }
         }
-        return true;
+        return $dictionary;
     }
 
     public static function get()
@@ -85,9 +86,28 @@ class BaseDictionaryHelper
      * 
      * @param Extension $extension
      * @param array $dictionary
+     * @return boolean
      */
     public static function add($extension, $dictionary)
     {
-        
+        try {
+            if (!static::validate($dictionary)) {
+                throw new InvalidParamException('Dictionary invalid.');
+            }
+            if (is_array($dictionary)) {
+                $validatedDic = static::validateArray($dictionary);
+                foreach ($validatedDic as $word) {
+                    $headword = \rhoone\models\Headword::add($word, $extension);
+                    if (!$headword) {
+                        Yii::error($word . ' failed to add.', __METHOD__);
+                        continue;
+                    }
+                    
+                }
+            }
+        } catch (Exception $ex) {
+            return false;
+        }
+        return true;
     }
 }

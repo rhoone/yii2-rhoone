@@ -13,12 +13,17 @@
 namespace rhoone\models;
 
 use vistart\Models\models\BaseEntityModel;
+use Yii;
 
 /**
  * Description of Headword
+ * 
+ * @property string $extension_guid
+ * @property string $word
  *
  * @property-read Extension $extension
  * @property-read Synonmys $synonmys
+ * @property-write string|Synonmys $synonmys
  * @author vistart <i@vistart.name>
  */
 class Headword extends BaseEntityModel
@@ -74,10 +79,104 @@ class Headword extends BaseEntityModel
 
     /**
      * 
+     * @param Extension $extension
+     */
+    public function setExtension($extension)
+    {
+        return $this->extension_guid = $extension->guid;
+    }
+
+    /**
+     * 
      * @return type
      */
     public function getSynonmys()
     {
         return $this->hasMany(Synonmys::className(), ['headword_guid' => 'guid'])->inverseOf('headword');
+    }
+
+    /**
+     * 
+     * @param string $word
+     * @param Extension $extension
+     * @return boolean|\rhoone\models\Headword
+     */
+    public static function add($word, $extension)
+    {
+        $headword = Headword::find()->where(['word' => $word, 'extension_guid' => $extension->guid])->one();
+        if (!$headword) {
+            Yii::warning($word . ' exists.', __METHOD__);
+            return false;
+        }
+        $headword = new Headword(['word' => $word, 'extension' => $extension]);
+        if ($headword->save()) {
+            return $headword;
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param string $word
+     * @param Extension $extension
+     * @return boolean
+     */
+    public static function remove($word, $extension)
+    {
+        $headword = Headword::find()->where(['word' => $word, 'extension_guid' => $extension->guid])->one();
+        if (!$headword) {
+            Yii::warning($word . ' does not exist.', __METHOD__);
+            return false;
+        }
+        return $headword->delete() == 1;
+    }
+
+    /**
+     * Add synonmys.
+     * @param string|string[]|Synonmys|Synonmys[] $synonmys
+     */
+    public function setSynonmys($synonmys)
+    {
+        if (is_string($synonmys)) {
+            $model = new Synonmys(['word' => $synonmys, 'headword' => $this]);
+            return $model->save();
+        }
+        if ($synonmys instanceof Synonmys) {
+            $synonmys->headword = $this;
+            return $synonmys->save();
+        }
+        if (is_array($synonmys)) {
+            foreach ($synonmys as $syn) {
+                if (!$this->setSynonmys($syn)) {
+                    Yii::error('Synonmys failed to add.', __METHOD__);
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Remove synonmys.
+     * @param string|string[]|Synonmys|Synonmys[] $synonmys
+     * @return boolean
+     */
+    public function removeSynonmys($synonmys)
+    {
+        if (is_string($synonmys)) {
+            $model = Synonmys::find()->where(['word' => $synonmys, 'headword_guid' => $this->guid])->one();
+            if (!$model) {
+                Yii::warning($synonmys . ' does not exist.', __METHOD__);
+                return false;
+            }
+            return $model->delete() == 1;
+        }
+        if ($synonmys instanceof Synonmys) {
+            return $synonmys->delete() == 1;
+        }
+    }
+
+    public function removeAllSynonmys()
+    {
+        return Synonmys::deleteAll(['headword_guid' => $this->guid]);
     }
 }

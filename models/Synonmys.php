@@ -16,6 +16,10 @@ use vistart\Models\models\BaseEntityModel;
 
 /**
  * Description of Synonmys
+ * 
+ * @property string $headword_guid
+ * 
+ * @property Headword $headword
  *
  * @author vistart <i@vistart.name>
  */
@@ -61,5 +65,14 @@ class Synonmys extends BaseEntityModel
     public function getHeadword()
     {
         return $this->hasOne(Headword::className(), ['guid' => 'headword_guid']);
+    }
+
+    /**
+     * 
+     * @param Headword $headword
+     */
+    public function setHeadword($headword)
+    {
+        return $this->headword_guid = $headword->guid;
     }
 }
