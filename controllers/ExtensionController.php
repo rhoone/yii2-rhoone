@@ -62,15 +62,11 @@ class ExtensionController extends Controller
      */
     public function actionEnable($class)
     {
-        $model = ExtensionHelper::getModel($class);
-        if (!$model) {
-            throw new Exception('`' . $class . '` does not exist.');
+        try {
+            ExtensionHelper::enable($class);
+        } catch (\Exception $ex) {
+            throw new Exception($ex->getMessage());
         }
-        $model->isEnabled = true;
-        if (!$model->save()) {
-            throw new Exception('Failed to enable `' . $class . '`.');
-        }
-        echo "`$class` has been enabled.";
         return 0;
     }
 
@@ -81,15 +77,11 @@ class ExtensionController extends Controller
      */
     public function actionDisable($class)
     {
-        $model = ExtensionHelper::getModel($class);
-        if (!$model) {
-            throw new Exception('`' . $class . '` does not exist.');
+        try {
+            ExtensionHelper::disable($class);
+        } catch (\Exception $ex) {
+            throw new Exception($ex->getMessage());
         }
-        $model->isEnabled = false;
-        if (!$model->save()) {
-            throw new Exception('Failed to disable `' . $class . '`.');
-        }
-        echo "`$class` has been disabled.";
         return 0;
     }
 

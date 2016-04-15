@@ -29,7 +29,7 @@ class BaseExtensionHelper
     {
         return Extension::find()->all();
     }
-    
+
     public static function allEnabledModels()
     {
         return Extension::findAllEnabled();
@@ -90,7 +90,6 @@ class BaseExtensionHelper
         } catch (\Exception $ex) {
             $transaction->rollBack();
             throw $ex;
-            return false;
         }
         return true;
     }
@@ -117,6 +116,24 @@ class BaseExtensionHelper
             throw new InvalidConfigException("`" . $extension->className() . "` failed to enable.\n");
         }
         echo "`" . $extension->className() . "` is enabled.\n";
+        return true;
+    }
+
+    public static function disable($class)
+    {
+        $extension = static::validate($class);
+        $enabledExt = Extension::find()->where(['classname' => $extension->className()])->one();
+        if (!$enabledExt) {
+            throw new InvalidParamException("~" . $extension->className() . "` has not been added yet.\n");
+        }
+        if (!$enabledExt->isEnabled) {
+            throw new InvalidParamException("`" . $extension->className() . "` has been disabled.\n");
+        }
+        $enabledExt->isEnabled = false;
+        if (!$enabledExt->save()) {
+            throw new InvalidConfigException("`" . $extension->className() . "` failed to disable.\n");
+        }
+        echo "`" . $extension->className() . "` is disabled.\n";
         return true;
     }
 
@@ -224,6 +241,7 @@ class BaseExtensionHelper
         }
         $matchedSynonyms = DictionaryHelper::match($keywords);
         foreach ($extensions as $key => $extension) {
+            
         }
         foreach ($exts as $key => $ext) {
             
