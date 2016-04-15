@@ -14,6 +14,7 @@ namespace rhoone\helpers;
 
 use rhoone\models\Extension;
 use rhoone\models\Headword;
+use rhoone\models\Synonyms;
 use yii\base\InvalidParamException;
 use Yii;
 
@@ -115,5 +116,34 @@ class BaseDictionaryHelper
             return false;
         }
         return true;
+    }
+
+    /**
+     * 
+     * @param Extension $extension
+     * @param string $word
+     */
+    public static function addHeadword($extension, $word)
+    {
+        return $extension->setHeadword($word);
+    }
+
+    /**
+     * 
+     * @param Extension $extension
+     * @param string|Headword $word
+     */
+    public static function removeHeadword($extension, $word)
+    {
+        return $extension->removeHeadword($word);
+    }
+
+    /**
+     * 
+     * @param Extension $extension
+     */
+    public static function removeAllHeadwords($extension)
+    {
+        return $extension->removeAllHeadwords();
     }
 }

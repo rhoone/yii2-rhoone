@@ -35,6 +35,24 @@ class ExtensionController extends Controller
         if (empty($extensions)) {
             echo "<empty list>";
         }
+        echo"|";
+        echo sprintf("%28s", "Class Name");echo"|";
+        echo sprintf("%4s", "Enb");echo"|";
+        echo sprintf("%4s", "Mnp");echo"|";
+        echo sprintf("%4s", "Dft");echo"|";
+        echo sprintf("%20s", "Create Time");echo"|";
+        echo sprintf("%20s", "Update Time");echo"|";
+        echo "\r\n";
+        foreach ($extensions as $extension) {
+            echo"|";
+            echo sprintf("%28s", $extension->classname);echo"|";
+            echo sprintf("%4d", $extension->isEnabled);echo"|";
+            echo sprintf("%4d", $extension->monopolized);echo"|";
+            echo sprintf("%4d", $extension->default);echo"|";
+            echo sprintf("%20s", $extension->createdAt);echo"|";
+            echo sprintf("%20s", $extension->updatedAt);echo"|";
+            echo "\r\n";
+        }
         return 0;
     }
 

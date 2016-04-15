@@ -33,6 +33,12 @@ class Headword extends BaseEntityModel
     public $idAttribute = false;
     public $enableIP = 0;
 
+    public function init()
+    {
+        $this->queryClass = HeadwordQuery::className();
+        parent::init();
+    }
+
     /**
      * @inheritdoc
      */
@@ -178,7 +184,7 @@ class Headword extends BaseEntityModel
             }
             return $model->delete() == 1;
         }
-        if ($synonyms instanceof Synonyms) {
+        if ($synonyms instanceof Synonyms && $synonyms->headword == $this) {
             return $synonyms->delete() == 1;
         }
     }
@@ -190,5 +196,15 @@ class Headword extends BaseEntityModel
     public function removeAllSynonyms()
     {
         return Synonyms::deleteAll(['headword_guid' => $this->guid]);
+    }
+
+    /**
+     * @inheritdoc
+     * Friendly to IDE.
+     * @return HeadwordQuery
+     */
+    public static function find()
+    {
+        return parent::find();
     }
 }

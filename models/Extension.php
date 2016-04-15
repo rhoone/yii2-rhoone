@@ -97,6 +97,10 @@ class Extension extends BaseEntityModel
         return $this->hasMany(Headword::className(), ['extension_guid' => 'guid'])->inverseOf('extension');
     }
 
+    /**
+     * 
+     * @return SynonymsQuery
+     */
     public function getSynonyms()
     {
         return $this->hasMany(Synonyms::className(), ['headword_guid' => 'guid'])->via('headwords');
@@ -115,6 +119,30 @@ class Extension extends BaseEntityModel
         if ($headword instanceof Headword) {
             return Headword::add($headword->word, $this);
         }
+    }
+
+    /**
+     * Remove headword.
+     * @param string|Headword $word
+     */
+    public function removeHeadword($word)
+    {
+        if (is_string($word)) {
+            $headword = $this->getHeadwords()->word($word)->one();
+            return $headword && $headword->delete() == 1;
+        }
+        if ($word instanceof Headword && $word->extension == $this) {
+            return $word->delete() == 1;
+        }
+    }
+
+    /**
+     * 
+     * @return int
+     */
+    public function removeAllHeadwords()
+    {
+        return Headword::deleteAll(['extension_guid' => $this->guid]);
     }
 
     /**
@@ -141,6 +169,11 @@ class Extension extends BaseEntityModel
         return DictionaryHelper::add($this, $dictionary);
     }
 
+    /**
+     * 
+     * @param mixed $dictionary
+     * @return boolean
+     */
     public function addDictionary($dictionary)
     {
         return $this->setDictionary($dictionary);
