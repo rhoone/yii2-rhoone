@@ -79,7 +79,7 @@ class BaseDictionaryHelper
     /**
      * 
      * @param string|string[] $keywords
-     * @return
+     * @return \rhoone\models\Synonyms[]
      */
     public static function match($keywords)
     {

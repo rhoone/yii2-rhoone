@@ -21,6 +21,7 @@ use Yii;
  * @property string $headword_guid
  * 
  * @property Headword $headword
+ * @property-read Extension $extension
  *
  * @author vistart <i@vistart.name>
  */
@@ -75,6 +76,14 @@ class Synonyms extends BaseEntityModel
     public function setHeadword($headword)
     {
         return $this->headword_guid = $headword->guid;
+    }
+
+    /**
+     * @return ExtensionQuery
+     */
+    public function getExtension()
+    {
+        return $this->hasOne(Extension::className(), ['guid' => 'extension_guid'])->via('headword');
     }
 
     public function init()

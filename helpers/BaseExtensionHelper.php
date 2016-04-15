@@ -235,16 +235,19 @@ class BaseExtensionHelper
      */
     public static function allMatched($keywords, $extensions = null)
     {
-        $exts = static::allEnabled();
-        if (empty($extensions)) {
-            $extensions = static::allEnabledModels();
-        }
+        $exts = [];
         $matchedSynonyms = DictionaryHelper::match($keywords);
-        foreach ($extensions as $key => $extension) {
-            
-        }
-        foreach ($exts as $key => $ext) {
-            
+        Yii::info("matched synonyms count: " . count($matchedSynonyms), __METHOD__);
+        foreach ($matchedSynonyms as $key => $synonyms) {
+            Yii::info("matched synonyms: `" . $synonyms->word . "`, it's GUID :`" . $synonyms->guid . "`", __METHOD__);
+            $extension = $synonyms->extension;
+            Yii::info("matched class name: `" . $extension->className() . "`", __METHOD__);
+            if (!$extension->isEnabled) {
+                Yii::warning("But it is not enabled.");
+                continue;
+            }
+            $classname = $extension->classname;
+            $exts[] = new $classname();
         }
         return $exts;
     }
@@ -257,7 +260,9 @@ class BaseExtensionHelper
      */
     public static function search($keywords, $extensions = null)
     {
+        Yii::trace("Begin searching...", __METHOD__);
         if (!is_string($keywords) || strlen($keywords) == 0) {
+            Yii::warning('Empty keywords!', __METHOD__);
             return null;
         }
         $exts = static::allMatched($keywords, $extensions);

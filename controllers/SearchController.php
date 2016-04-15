@@ -40,7 +40,7 @@ class SearchController extends Controller
         if (Yii::$app->request->getIsPost()) {
             $model = new SearchForm();
             if ($model->load(Yii::$app->request->post())) {
-                return $this->redirect(Url::toRoute('/search'));
+                return $this->redirect(Url::toRoute(['/search', 'keywords' => $model->keywords]));
             }
         }
         if (empty($keywords)) {
