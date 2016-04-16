@@ -11,6 +11,8 @@
  */
 /* @var $model rhoone\models\SearchForm */
 /* @var $this yii\web\View */
+/* @var $search_form_id string */
+/* @var $search_result_id string */
 use rhoone\assets\RhooneAsset;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
@@ -19,7 +21,8 @@ use yii\helpers\Url;
 RhooneAsset::register($this);
 $search_url = Url::toRoute('/search');
 $js = <<<EOT
-    rhoone.search_box_selector = "#search-input-field";
+    rhoone.search_box_selector = "#$search_form_id";
+    rhoone.search_result_selector = "#$search_result_id";
     rhoone.search_url = "$search_url";
     rhoone.search_start_handler = function() {
         NProgress.start();

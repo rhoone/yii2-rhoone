@@ -24,6 +24,8 @@ class SearchFormWidget extends \yii\base\Widget
 
     public $keywords;
     public $searchForm;
+    public $search_form_id = "search-input-field";
+    public $search_result_id = "search-result-container";
 
     public function init()
     {
@@ -34,6 +36,6 @@ class SearchFormWidget extends \yii\base\Widget
 
     public function run()
     {
-        return $this->render('search-form', ['model' => $this->searchForm]);
+        return $this->render('search-form', ['model' => $this->searchForm, 'search_form_id' => $this->search_form_id, 'search_result_id' => $this->search_result_id]);
     }
 }

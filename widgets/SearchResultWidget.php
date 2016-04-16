@@ -21,9 +21,10 @@ class SearchResultWidget extends \yii\base\Widget
 {
 
     public $results;
+    public $search_result_id = "search-result-container";
 
     public function run()
     {
-        return $this->render('search-result', ['results' => $this->results]);
+        return $this->render('search-result', ['results' => $this->results, 'search_result_id' => $this->search_result_id]);
     }
 }

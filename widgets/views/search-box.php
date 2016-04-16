@@ -13,6 +13,8 @@ use rhoone\assets\NprogressAsset;
 use rhoone\assets\RhooneAsset;
 
 /* @var $keywords string */
+/* @var $search_form_id string */
+/* @var $search_result_id string */
 NprogressAsset::register($this);
 RhooneAsset::register($this);
 ?>
@@ -22,12 +24,12 @@ RhooneAsset::register($this);
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
-                <?= \rhoone\widgets\SearchFormWidget::widget(['keywords' => $keywords]) ?>
+                <?= \rhoone\widgets\SearchFormWidget::widget(['keywords' => $keywords, 'search_form_id' => $search_form_id, 'search_result_id' => $search_result_id]) ?>
             </div>
             <div class="col-md-3">
             </div>
         </div>
-        <?php if (YII_ENV == YII_ENV_DEV): ?>
+        <?php if (false && YII_ENV == YII_ENV_DEV): ?>
             <p>
                 <button class='button play' id='b-0'></button>
                 <i>NProgress</i><b>.start()</b>
@@ -56,6 +58,12 @@ RhooneAsset::register($this);
     </div>
 </div>
 <?php
+$dev = <<<EOT
+    $("#b-0").click(function() { NProgress.start(); });
+    $("#b-40").click(function() { NProgress.set(0.4); });
+    $("#b-inc").click(function() { NProgress.inc(); });
+    $("#b-100").click(function() { NProgress.done(); });
+EOT;
 $js = <<<EOT
     $('body').show();
     $('.version').text(NProgress.version);
@@ -63,10 +71,7 @@ $js = <<<EOT
     NProgress.start();
     setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 1000);
 
-    $("#b-0").click(function() { NProgress.start(); });
-    $("#b-40").click(function() { NProgress.set(0.4); });
-    $("#b-inc").click(function() { NProgress.inc(); });
-    $("#b-100").click(function() { NProgress.done(); });
 EOT;
 $this->registerJs($js, \yii\web\View::POS_READY);
+$this->registerJs($dev, \yii\web\View::POS_READY);
 ?>

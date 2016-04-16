@@ -21,9 +21,11 @@ class SearchBoxWidget extends \yii\base\Widget
 {
 
     public $keywords;
+    public $search_form_id = "search-input-field";
+    public $search_result_id = "search-result-container";
 
     public function run()
     {
-        return $this->render('search-box', ['keywords' => $this->keywords]);
+        return $this->render('search-box', ['keywords' => $this->keywords, 'search_form_id' => $this->search_form_id, 'search_result_id' => $this->search_result_id]);
     }
 }

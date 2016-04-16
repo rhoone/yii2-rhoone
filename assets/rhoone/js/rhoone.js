@@ -11,6 +11,7 @@
 rhoone = (function ($) {
     var pub = {
         search_box_selector: "#search",
+        search_result_selector: "#result",
         search_url: '/search',
         search_counter: 0,
         search_timeout: 1000, // in millisecond.
@@ -52,7 +53,11 @@ rhoone = (function ($) {
         },
         run: function () {
             $(this.search_box_selector).focus();
-            $(this.search_box_selector).on("keyup", function (e) {
+            $(this.search_box_selector).bind("input", function (e) {
+                //console.log($(e.currentTarget).val());
+                rhoone.search_box_changed(0);
+            });
+            $(this.search_box_selector).bind("propertychanged", function (e) {
                 //console.log($(e.currentTarget).val());
                 rhoone.search_box_changed(0);
             });
