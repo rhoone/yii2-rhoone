@@ -13,30 +13,49 @@ rhoone = (function ($) {
         search_box_selector: "#search",
         search_url: '/search',
         search_counter: 0,
-        search_timeout: null,
+        search_timeout: 1000, // in millisecond.
+        search_timeout_callback: null,
+        search_start_handler: null,
+        search_done_handler: null,
         alert: function (content) {
             window.alert(content);
         },
         search_box_changed: function (counter)
         {
-            this.search_counter = 0;
-            this.search_timeout = setTimeout("rho_one.search_delay()", 100);
+            this.search_counter = counter;
+            if (this.search_timeout_callback) {
+                clearTimeout(this.search_timeout_callback);
+            }
+            this.search_timeout_callback = setTimeout("rhoone.search_delay()", 500);
         },
         search_delay: function ()
         {
-            if (this.search_counter < 1000) {
-                this.search_counter += 100;
-                console.log(pub.search_counter);
-                this.search_timeout = setTimeout("rho_one.search_delay()", 100);
+            if (this.search_counter < this.search_timeout) {
+                this.search_counter += 500;
+                //console.log(pub.search_counter);
+                this.search_timeout_callback = setTimeout("rhoone.search_delay()", 500);
             } else {
                 this.search_counter = 0;
-                clearTimeout(this.search_timeout);
+                clearTimeout(this.search_timeout_callback);
                 value = $(this.search_box_selector).val();
-                this.post_keywords(value);
+                if (value.length > 0) {
+                    this.post_keywords(value);
+                }
             }
+            $(this.search_box_selector).focus();
         },
         post_keywords: function (keywords) {
-            this.post(this.search_url, {keywords: keywords});
+            if ($.isFunction(this.search_start_handler)) {
+                this.search_start_handler();
+            }
+            this.post(this.search_url, {keywords: keywords}, this.search_done_handler);
+        },
+        run: function () {
+            $(this.search_box_selector).focus();
+            $(this.search_box_selector).on("keyup", function (e) {
+                //console.log($(e.currentTarget).val());
+                rhoone.search_box_changed(0);
+            });
         },
         /**
          * 
