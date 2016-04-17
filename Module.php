@@ -34,8 +34,8 @@ class Module extends \yii\base\Module implements BootstrapInterface
         if ($app instanceof \yii\web\Application) {
             Yii::trace('Adding URL Rules.', __METHOD__);
             $rules = [
+                's/<keywords:\w+>' => $this->id . '/search/index',
                 'search' => $this->id . '/search/index',
-                'search/<keywords:\w+>' => $this->id . '/search/index',
                 'subordinate/register' => $this->id . '/subordinate/register',
                 'register-subordinate' => $this->id . '/subordinate/register-subordinate',
                 'subordinate/deregister' => $this->id . '/subordinate/deregister',

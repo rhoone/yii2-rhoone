@@ -20,9 +20,11 @@ use yii\helpers\Url;
 
 RhooneAsset::register($this);
 $search_url = Url::toRoute('/search');
+$search_button_id = "search-submit";
 $js = <<<EOT
     rhoone.search_box_selector = "#$search_form_id";
     rhoone.search_result_selector = "#$search_result_id";
+    rhoone.search_button_selector = "#$search_button_id";
     rhoone.search_url = "$search_url";
     rhoone.search_start_handler = function() {
         NProgress.start();
@@ -30,7 +32,7 @@ $js = <<<EOT
     rhoone.search_done_handler = function() {
         NProgress.done();
     };
-    rhoone.run();
+    rhoone.init();
 EOT;
 $this->registerJs($js);
 ?>
@@ -44,7 +46,7 @@ $form = ActiveForm::begin([
 ?>
 <div class="form-group form-group-search">
     <?= $form->field($model, 'keywords', ['template' => '{input}'])->textInput(['class' => 'form-control form-search', 'id' => 'search-input-field', 'placeholder' => 'Search for all.']) ?>
-    <?= Html::submitButton('Search', ['id' => 'search-submit', 'class' => 'btn btn-default btn-sm form-button-search']); ?>
+    <?= Html::button('Search', ['id' => "$search_button_id", 'class' => 'btn btn-default btn-sm form-button-search']); ?>
 </div>
 <?php
 ActiveForm::end();

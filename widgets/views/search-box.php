@@ -65,13 +65,14 @@ $dev = <<<EOT
     $("#b-100").click(function() { NProgress.done(); });
 EOT;
 $js = <<<EOT
-    $('body').show();
-    $('.version').text(NProgress.version);
-    NProgress.configure({parent:'.panel-heading'});
+    NProgress.configure({ showSpinner: false });
+    NProgress.configure({ parent:'.panel-heading' });
     NProgress.start();
     setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 1000);
 
 EOT;
 $this->registerJs($js, \yii\web\View::POS_READY);
-$this->registerJs($dev, \yii\web\View::POS_READY);
+if (YII_ENV == YII_ENV_DEV) {
+    $this->registerJs($dev, \yii\web\View::POS_READY);
+}
 ?>

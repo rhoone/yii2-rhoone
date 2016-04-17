@@ -12,6 +12,7 @@ rhoone = (function ($) {
     var pub = {
         search_box_selector: "#search",
         search_result_selector: "#result",
+        search_button_selector: "#search-submit",
         search_url: '/search',
         search_counter: 0,
         search_timeout: 1000, // in millisecond.
@@ -21,6 +22,11 @@ rhoone = (function ($) {
         alert: function (content) {
             window.alert(content);
         },
+        /**
+         * 
+         * @param {integer} counter
+         * @returns {undefined}
+         */
         search_box_changed: function (counter)
         {
             this.search_counter = counter;
@@ -29,6 +35,10 @@ rhoone = (function ($) {
             }
             this.search_timeout_callback = setTimeout("rhoone.search_delay()", 500);
         },
+        /**
+         * 
+         * @returns {undefined}
+         */
         search_delay: function ()
         {
             if (this.search_counter < this.search_timeout) {
@@ -36,31 +46,60 @@ rhoone = (function ($) {
                 //console.log(pub.search_counter);
                 this.search_timeout_callback = setTimeout("rhoone.search_delay()", 500);
             } else {
-                this.search_counter = 0;
-                clearTimeout(this.search_timeout_callback);
-                value = $(this.search_box_selector).val();
-                if (value.length > 0) {
-                    this.post_keywords(value);
-                }
+                this.search();
             }
             $(this.search_box_selector).focus();
         },
+        /**
+         * Post keywords to Server.
+         * @param {string} keywords
+         * @returns {jqXHR}
+         */
         post_keywords: function (keywords) {
             if ($.isFunction(this.search_start_handler)) {
                 this.search_start_handler();
             }
-            this.post(this.search_url, {keywords: keywords}, this.search_done_handler);
+            return this.post(this.search_url, {keywords: keywords}, this.search_done_handler);
         },
-        run: function () {
+        /**
+         * 
+         * @returns {undefined}
+         */
+        init: function () {
             $(this.search_box_selector).focus();
-            $(this.search_box_selector).bind("input", function (e) {
-                //console.log($(e.currentTarget).val());
-                rhoone.search_box_changed(0);
-            });
-            $(this.search_box_selector).bind("propertychanged", function (e) {
-                //console.log($(e.currentTarget).val());
-                rhoone.search_box_changed(0);
-            });
+            if (this.search_box_selector && $(this.search_box_selector)) {
+                $(this.search_box_selector).bind("input", function (e) {
+                    //console.log($(e.currentTarget).val());
+                    rhoone.search_box_changed(0);
+                });
+                $(this.search_box_selector).bind("propertychanged", function (e) {
+                    //console.log($(e.currentTarget).val());
+                    rhoone.search_box_changed(0);
+                });
+            }
+            if (this.search_button_selector && $(this.search_button_selector)) {
+                $(this.search_button_selector).bind("click", function () {
+                    return rhoone.search(true);
+                });
+            }
+        },
+        /**
+         * Search.
+         * @param {type} reload True if you want to reload the search result.
+         * @returns {jqXHR|Boolean} False if search process failed.
+         */
+        search: function (reload) {
+            this.search_counter = 0;
+            clearTimeout(this.search_timeout_callback);
+            value = $.trim($(this.search_box_selector).val());
+            if (!reload && value === oldKeywords) {
+                return false;
+            }
+            oldKeywords = value;
+            if (value.length > 0) {
+                return this.post_keywords(value);
+            }
+            return false;
         },
         /**
          * 
@@ -126,6 +165,7 @@ rhoone = (function ($) {
             }
         }
     };
+    var oldKeywords = "";
     return pub;
 })(jQuery);
 
