@@ -15,7 +15,10 @@
 /* @var $search_result_id string */
 use rhoone\widgets\SearchBoxWidget;
 use rhoone\widgets\SearchResultWidget;
+use yii\widgets\Pjax;
 
 ?>
 <?= SearchBoxWidget::widget(['keywords' => $keywords, 'search_form_id' => $search_form_id, 'search_result_id' => $search_result_id]) ?>
+<?php Pjax::begin() ?>
 <?= SearchResultWidget::widget(['results' => $results, 'search_result_id' => $search_result_id]) ?>
+<?php Pjax::end() ?>
