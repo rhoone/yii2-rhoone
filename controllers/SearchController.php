@@ -48,7 +48,7 @@ class SearchController extends Controller
                 $model->keywords = "";
             }
             if (Yii::$app->request->getIsAjax() && Yii::$app->request->getIsPjax()) {
-                return $this->actionResult($model->keywords);
+                return $this->actionResult($model->keywords, ExtHelper::search($keywords));
             }
         }
         if (!is_string($keywords)) {
@@ -60,9 +60,9 @@ class SearchController extends Controller
         return $this->render('index', ['keywords' => $keywords, 'results' => ExtHelper::search($keywords)]);
     }
 
-    public function actionResult($keywords = null)
+    public function actionResult($keywords = null, $results = null)
     {
-        return SearchWidget::widget(['keywords' => $keywords]);
+        return SearchWidget::widget(['keywords' => $keywords, 'results' => $results]);
     }
 
     /**

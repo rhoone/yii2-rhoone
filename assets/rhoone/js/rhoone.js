@@ -20,6 +20,7 @@ rhoone = (function ($) {
         search_counter: 0,
         search_timeout: 1000, // in millisecond.
         search_timeout_callback: null,
+        keywords: null,
         alert: function (content) {
             window.alert(content);
         },
@@ -30,6 +31,7 @@ rhoone = (function ($) {
          */
         search_box_changed: function (counter)
         {
+            this.keywords = $.trim($(this.search_box_selector).val());
             this.search_counter = counter;
             if (this.search_timeout_callback) {
                 clearTimeout(this.search_timeout_callback);
@@ -89,12 +91,11 @@ rhoone = (function ($) {
          */
         search: function (reload) {
             this.search_counter = 0;
-            value = $.trim($(this.search_box_selector).val());
-            if (!reload && (value === oldKeywords || value === "")) {
+            if (!reload && (this.keywords === oldKeywords || this.keywords === "")) {
                 return false;
             }
-            oldKeywords = value;
-            if (value.length > 0) {
+            oldKeywords = this.keywords;
+            if (this.keywords.length > 0) {
                 $(this.search_form_selector).submit();
                 return true;
             }
@@ -102,7 +103,7 @@ rhoone = (function ($) {
         },
         submit_search_handler: function (e) {
             clearTimeout(rhoone.search_timeout_callback);
-            rhoone.search_url = rhoone.search_url_pattern.replace("{{%keywords}}", oldKeywords);
+            rhoone.search_url = rhoone.search_url_pattern.replace("{{%keywords}}", rhoone.keywords);
             $(rhoone.search_form_selector).attr("action", rhoone.search_url);
             return true;
         },

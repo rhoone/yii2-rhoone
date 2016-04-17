@@ -241,13 +241,13 @@ class BaseExtensionHelper
         foreach ($matchedSynonyms as $key => $synonyms) {
             Yii::info("matched synonyms: `" . $synonyms->word . "`, it's GUID :`" . $synonyms->guid . "`", __METHOD__);
             $extension = $synonyms->extension;
-            Yii::info("matched class name: `" . $extension->className() . "`", __METHOD__);
             if (!$extension->isEnabled) {
                 Yii::warning("But it is not enabled.");
                 continue;
             }
             $classname = $extension->classname;
             $exts[] = new $classname();
+            Yii::info("matched class name: `" . $classname . "`", __METHOD__);
         }
         return $exts;
     }
