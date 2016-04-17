@@ -15,7 +15,9 @@ namespace rhoone\controllers;
 use rhoone\helpers\DictionaryHelper as DicHelper;
 use rhoone\helpers\ExtensionHelper as ExtHelper;
 use rhoone\models\SearchForm;
+use rhoone\widgets\SearchWidget;
 use Yii;
+use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use yii\web\Controller;
 
@@ -37,15 +39,44 @@ class SearchController extends Controller
      */
     public function actionIndex($keywords = null)
     {
+        Yii::info("is POST: " . (string) Yii::$app->request->getIsPost(), __METHOD__);
+        Yii::info("is AJAX: " . (string) Yii::$app->request->getIsAjax(), __METHOD__);
+        Yii::info("is PJAX: " . (string) Yii::$app->request->getIsPjax(), __METHOD__);
         if (Yii::$app->request->getIsPost()) {
             $model = new SearchForm();
-            if ($model->load(Yii::$app->request->post())) {
-                return $this->redirect(Url::toRoute(['index', 'keywords' => $model->keywords]));
+            if (!$model->load(Yii::$app->request->post())) {
+                $model->keywords = "";
+            }
+            if (Yii::$app->request->getIsAjax() && Yii::$app->request->getIsPjax()) {
+                return $this->actionResult($model->keywords);
             }
         }
-        if (empty($keywords)) {
-            
+        if (!is_string($keywords)) {
+            $keywords = "";
+        }
+        if (strlen($keywords) > 255) {
+            $keywords = substr(trim($keywords), 0, 255);
         }
         return $this->render('index', ['keywords' => $keywords, 'results' => ExtHelper::search($keywords)]);
+    }
+
+    public function actionResult($keywords = null)
+    {
+        return SearchWidget::widget(['keywords' => $keywords]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'search' => ['post', 'get'],
+                ],
+            ],
+        ];
     }
 }

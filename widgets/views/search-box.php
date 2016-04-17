@@ -14,7 +14,9 @@ use rhoone\assets\RhooneAsset;
 
 /* @var $keywords string */
 /* @var $search_form_id string */
+/* @var $search_input_id string */
 /* @var $search_result_id string */
+/* @var $search_submit_id string */
 NprogressAsset::register($this);
 RhooneAsset::register($this);
 ?>
@@ -24,7 +26,16 @@ RhooneAsset::register($this);
         <div class="row">
             <div class="col-md-3"></div>
             <div class="col-md-6">
-                <?= \rhoone\widgets\SearchFormWidget::widget(['keywords' => $keywords, 'search_form_id' => $search_form_id, 'search_result_id' => $search_result_id]) ?>
+                <?=
+                \rhoone\widgets\SearchFormWidget::widget(
+                    [
+                        'keywords' => $keywords,
+                        'search_form_id' => $search_form_id,
+                        'search_input_id' => $search_input_id,
+                        'search_result_id' => $search_result_id,
+                        'search_submit_id' => $search_submit_id,
+                ])
+                ?>
             </div>
             <div class="col-md-3">
             </div>
@@ -65,14 +76,11 @@ $dev = <<<EOT
     $("#b-100").click(function() { NProgress.done(); });
 EOT;
 $js = <<<EOT
-    NProgress.configure({ showSpinner: false });
-    NProgress.configure({ parent:'.panel-heading' });
-    NProgress.start();
-    setTimeout(function() { NProgress.done(); $('.fade').removeClass('out'); }, 1000);
-
+    NProgress.configure({ showSpinner: false , parent:'.panel-heading'});
 EOT;
 $this->registerJs($js, \yii\web\View::POS_READY);
+/**
 if (YII_ENV == YII_ENV_DEV) {
     $this->registerJs($dev, \yii\web\View::POS_READY);
-}
+}*/
 ?>

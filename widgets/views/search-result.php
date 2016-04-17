@@ -9,6 +9,7 @@
  * @license https://vistart.name/license/
  */
 /* @var $results string[] */
+/* @var $search_result_id string */
 ?>
 <?php if (!empty($results)) : ?>
     <div class="row">

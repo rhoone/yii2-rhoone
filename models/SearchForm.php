@@ -27,6 +27,8 @@ class SearchForm extends Model
     public function rules()
     {
         return [
+            ['keywords', 'required'],
+            ['keywords', 'trim'],
             ['keywords', 'string', 'max' => 255],
         ];
     }

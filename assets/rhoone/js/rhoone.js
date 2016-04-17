@@ -10,15 +10,16 @@
 
 rhoone = (function ($) {
     var pub = {
-        search_box_selector: "#search",
-        search_result_selector: "#result",
-        search_button_selector: "#search-submit",
+        search_form_selector: false,
+        search_box_selector: false,
+        search_result_selector: false,
+        search_button_selector: false,
+        search_box_focused: false,
         search_url: '/search',
+        search_url_pattern: '/s/{{%keywords}}',
         search_counter: 0,
         search_timeout: 1000, // in millisecond.
         search_timeout_callback: null,
-        search_start_handler: null,
-        search_done_handler: null,
         alert: function (content) {
             window.alert(content);
         },
@@ -56,18 +57,19 @@ rhoone = (function ($) {
          * @returns {jqXHR}
          */
         post_keywords: function (keywords) {
-            if ($.isFunction(this.search_start_handler)) {
-                this.search_start_handler();
-            }
-            return this.post(this.search_url, {keywords: keywords}, this.search_done_handler);
+            return this.post(this.search_url, {keywords: keywords});
         },
         /**
          * 
          * @returns {undefined}
          */
         init: function () {
-            $(this.search_box_selector).focus();
-            if (this.search_box_selector && $(this.search_box_selector)) {
+            if (this.search_form_selector && this.search_box_selector && $(this.search_box_selector)) {
+                if (!this.search_box_focused) {
+                    $(this.search_box_selector).focus();
+                    this.search_box_focused = true;
+                }
+                $(this.search_form_selector).submit(this.submit_search_handler);
                 $(this.search_box_selector).bind("input", function (e) {
                     //console.log($(e.currentTarget).val());
                     rhoone.search_box_changed(0);
@@ -76,11 +78,8 @@ rhoone = (function ($) {
                     //console.log($(e.currentTarget).val());
                     rhoone.search_box_changed(0);
                 });
-            }
-            if (this.search_button_selector && $(this.search_button_selector)) {
-                $(this.search_button_selector).bind("click", function () {
-                    return rhoone.search(true);
-                });
+            } else {
+                return false;
             }
         },
         /**
@@ -92,14 +91,20 @@ rhoone = (function ($) {
             this.search_counter = 0;
             clearTimeout(this.search_timeout_callback);
             value = $.trim($(this.search_box_selector).val());
-            if (!reload && value === oldKeywords) {
+            if (!reload && (value === oldKeywords || value === "")) {
                 return false;
             }
             oldKeywords = value;
             if (value.length > 0) {
-                return this.post_keywords(value);
+                $(this.search_form_selector).submit();
+                return true;
             }
             return false;
+        },
+        submit_search_handler: function (e) {
+            rhoone.search_url = rhoone.search_url_pattern.replace("{{%keywords}}", value);
+            $(rhoone.search_form_selector).attr("action", rhoone.search_url);
+            return true;
         },
         /**
          * 
