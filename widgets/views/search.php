@@ -40,7 +40,7 @@ $js = <<<EOT
     rhoone.init();
 EOT;
 ?>
-<?php Pjax::begin(['id' => "pjax-$search_result_id", 'linkSelector' => "#$search_submit_id", 'formSelector' => "#$search_form_id", 'timeout' => 5000]) ?>
+<?php Pjax::begin(['id' => "pjax-$search_result_id", 'linkSelector' => false, 'formSelector' => "#$search_form_id", 'timeout' => 5000]) ?>
 
 <?=
 

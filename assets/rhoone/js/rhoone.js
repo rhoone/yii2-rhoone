@@ -89,7 +89,6 @@ rhoone = (function ($) {
          */
         search: function (reload) {
             this.search_counter = 0;
-            clearTimeout(this.search_timeout_callback);
             value = $.trim($(this.search_box_selector).val());
             if (!reload && (value === oldKeywords || value === "")) {
                 return false;
@@ -102,7 +101,8 @@ rhoone = (function ($) {
             return false;
         },
         submit_search_handler: function (e) {
-            rhoone.search_url = rhoone.search_url_pattern.replace("{{%keywords}}", value);
+            clearTimeout(rhoone.search_timeout_callback);
+            rhoone.search_url = rhoone.search_url_pattern.replace("{{%keywords}}", oldKeywords);
             $(rhoone.search_form_selector).attr("action", rhoone.search_url);
             return true;
         },
