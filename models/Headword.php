@@ -13,6 +13,7 @@
 namespace rhoone\models;
 
 use vistart\Models\models\BaseEntityModel;
+use vistart\helpers\Number;
 use yii\base\InvalidParamException;
 use Yii;
 
@@ -23,6 +24,7 @@ use Yii;
  * @property string $word
  *
  * @property-read Extension $extension
+ * @property-write string|Extension $extension
  * @property-read Synonyms $synonyms
  * @property-write string|Synonyms $synonyms
  * @author vistart <i@vistart.name>
@@ -76,7 +78,7 @@ class Headword extends BaseEntityModel
     }
 
     /**
-     * 
+     * Get extension query.
      * @return ExtensionQuery
      */
     public function getExtension()
@@ -85,17 +87,23 @@ class Headword extends BaseEntityModel
     }
 
     /**
-     * 
-     * @param Extension $extension
+     * Set extension.
+     * @param Extension|string $extension
      */
     public function setExtension($extension)
     {
-        return $this->extension_guid = $extension->guid;
+        if (is_string($extension) && preg_match(Number::GUID_REGEX, $extension)) {
+            return $this->extension_guid = $extension;
+        }
+        if ($extension instanceof Extension) {
+            return $this->extension_guid = $extension->guid;
+        }
+        return false;
     }
 
     /**
-     * 
-     * @return type
+     * Get synonyms query.
+     * @return SynonymsQuery
      */
     public function getSynonyms()
     {
@@ -140,8 +148,12 @@ class Headword extends BaseEntityModel
     }
 
     /**
+     * 
      * Add synonyms.
      * @param string|string[]|Synonyms|Synonyms[] $synonyms
+     * String if it is a synonyms string, or Synonyms instance.
+     * @return boolean
+     * @throws InvalidParamException
      */
     public function setSynonyms($synonyms)
     {
@@ -190,8 +202,8 @@ class Headword extends BaseEntityModel
     }
 
     /**
-     * 
-     * @return int
+     * Remove all synonyms.
+     * @return integer the number of synonyms deleted.
      */
     public function removeAllSynonyms()
     {

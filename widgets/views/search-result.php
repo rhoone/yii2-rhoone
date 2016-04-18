@@ -12,10 +12,7 @@
 /* @var $search_result_id string */
 ?>
 <div class="row">
-    <div class="col-md-2">
-
-    </div>
-    <div class="col-md-10">
+    <div class="col-md-12">
         <?php if (!empty($results)) : ?>
             <?php foreach ($results as $key => $result): ?>
                 <div class="panel panel-default">

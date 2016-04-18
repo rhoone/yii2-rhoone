@@ -103,7 +103,9 @@ rhoone = (function ($) {
         },
         submit_search_handler: function (e) {
             clearTimeout(rhoone.search_timeout_callback);
-            rhoone.search_url = rhoone.search_url_pattern.replace("{{%keywords}}", rhoone.keywords);
+            $encoded = html_encode(rhoone.keywords);
+            rhoone.search_url = rhoone.search_url_pattern.replace("{{%keywords}}", $encoded);
+            $("title").html($encoded);
             $(rhoone.search_form_selector).attr("action", rhoone.search_url);
             return true;
         },
@@ -172,6 +174,32 @@ rhoone = (function ($) {
         }
     };
     var oldKeywords = "";
+    function html_encode(str) {
+        var s = "";
+        if (str.length == 0)
+            return "";
+        s = str.replace(/&/g, "&gt;");
+        s = s.replace(/</g, "&lt;");
+        s = s.replace(/>/g, "&gt;");
+        s = s.replace(/ /g, "&nbsp;");
+        s = s.replace(/\'/g, "&#39;");
+        s = s.replace(/\"/g, "&quot;");
+        s = s.replace(/\n/g, "<br>");
+        return s;
+    }
+    function html_decode(str) {
+        var s = "";
+        if (str.length == 0)
+            return "";
+        s = str.replace(/&gt;/g, "&");
+        s = s.replace(/&lt;/g, "<");
+        s = s.replace(/&gt;/g, ">");
+        s = s.replace(/&nbsp;/g, " ");
+        s = s.replace(/&#39;/g, "\'");
+        s = s.replace(/&quot;/g, "\"");
+        s = s.replace(/<br>/g, "\n");
+        return s;
+    }
     return pub;
 })(jQuery);
 
