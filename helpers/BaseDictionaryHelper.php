@@ -146,4 +146,52 @@ class BaseDictionaryHelper
     {
         return $extension->removeAllHeadwords();
     }
+
+    /**
+     * Normalize the keywords.
+     * @param string|integer|string[] $keywords Search keywords.
+     * If this parameter is a string, it will return the first 255 characters.
+     * the number will directly convert to numeric string.
+     * If number appears in keywords array, it will be converted to string;
+     * if another type appears in keywords array, it will be skipped.
+     * @return string|string[]|null
+     */
+    public static function normalizeKeywords($keywords = null)
+    {
+        if ((!is_string($keywords) && !is_numeric($keywords) && !is_array($keywords)) || $keywords === null) {
+            return null;
+        }
+        if (is_numeric($keywords)) {
+            $keywords = (string) $keywords;
+        }
+        if (is_string($keywords)) {
+            return substr($keywords, 0, 255);
+        }
+        $normalized = [];
+        if (is_array($keywords)) {
+            foreach ($keywords as $key => $word) {
+                if (is_string($word) || is_numeric($word) && $word !== null) {
+                    $normalized[$key] = static::normalizeKeywords($word);
+                }
+            }
+        }
+        return $normalized;
+    }
+
+    /**
+     * Semantically segment the keywords.
+     * @param string|string[] $keywords
+     * @return string[]|null
+     */
+    public static function segment($keywords)
+    {
+        $keywords = static::normalizeKeywords($keywords);
+        if (is_string($keywords)) {
+            $keywords = (array) $keywords;
+        }
+        if (is_array($keywords)) {
+            return $keywords;
+        }
+        return null;
+    }
 }

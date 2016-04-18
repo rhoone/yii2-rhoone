@@ -176,7 +176,7 @@ rhoone = (function ($) {
     var oldKeywords = "";
     function html_encode(str) {
         var s = "";
-        if (str.length == 0)
+        if (str.length === 0)
             return "";
         s = str.replace(/&/g, "&gt;");
         s = s.replace(/</g, "&lt;");
@@ -189,7 +189,7 @@ rhoone = (function ($) {
     }
     function html_decode(str) {
         var s = "";
-        if (str.length == 0)
+        if (str.length === 0)
             return "";
         s = str.replace(/&gt;/g, "&");
         s = s.replace(/&lt;/g, "<");

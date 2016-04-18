@@ -246,7 +246,24 @@ class BaseExtensionHelper
     }
 
     /**
-     * Get all matched external extensions.
+     * Get all registered extensions which is default.
+     * @param boolean $enabled
+     * @param boolean $monopolized
+     * @param mixed $except
+     * @return Extension[]
+     */
+    public static function allDefaultModels($enabled = null, $monopolized = null, $except = null)
+    {
+        $query = Extension::find()->isDefault()->enabled($enabled)->monopolized($monopolized);
+        if (!empty($except) && is_array($except)) {
+            $noModel = Extension::buildNoInitModel();
+            $query = $query->andWhere(['not in', $noModel->guidAttribute, $except]);
+        }
+        return $query->all();
+    }
+
+    /**
+     * Get all matched external extensions (include default extensions).
      * @param mixed $keywords Normalized keywords.
      * @param Extension|Extension[] $extensions
      * @return ExternalExt[]
@@ -254,6 +271,7 @@ class BaseExtensionHelper
     public static function allMatched($keywords, $extensions = null)
     {
         $exts = [];
+        $extGuids = [];
         $matchedSynonyms = DictionaryHelper::match($keywords);
         Yii::info("matched synonyms count: " . count($matchedSynonyms), __METHOD__);
         foreach ($matchedSynonyms as $key => $synonyms) {
@@ -266,56 +284,16 @@ class BaseExtensionHelper
                 continue;
             }
             $exts[] = new $classname();
+            $extGuids[] = $extension->guid;
+        }
+        $defaults = static::allDefaultModels(true, null, $extGuids);
+        foreach ($defaults as $default) {
+            $classname = $default->classname;
+            Yii::info("default class name: `" . $classname . "`", __METHOD__);
+            $exts[] = new $classname();
+            $extGuids[] = $default->guid;
         }
         return $exts;
-    }
-
-    /**
-     * Normalize the keywords.
-     * @param string|integer|string[] $keywords Search keywords.
-     * If this parameter is a string, it will return the first 255 characters.
-     * the number will directly convert to numeric string.
-     * If number appears in keywords array, it will be converted to string;
-     * if another type appears in keywords array, it will be skipped.
-     * @return string|string[]|null
-     */
-    public static function normalizeKeywords($keywords = null)
-    {
-        if ((!is_string($keywords) && !is_numeric($keywords) && !is_array($keywords)) || $keywords === null) {
-            return null;
-        }
-        if (is_numeric($keywords)) {
-            $keywords = (string) $keywords;
-        }
-        if (is_string($keywords)) {
-            return substr($keywords, 0, 255);
-        }
-        $normalized = [];
-        if (is_array($keywords)) {
-            foreach ($keywords as $key => $word) {
-                if (is_string($word) || is_numeric($word) && $word !== null) {
-                    $normalized[$key] = static::normalizeKeywords($word);
-                }
-            }
-        }
-        return $normalized;
-    }
-
-    /**
-     * Semantically segment the keywords.
-     * @param string|string[] $keywords
-     * @return string[]|null
-     */
-    public static function segment($keywords)
-    {
-        $keywords = static::normalizeKeywords($keywords);
-        if (is_string($keywords)) {
-            $keywords = (array) $keywords;
-        }
-        if (is_array($keywords)) {
-            return $keywords;
-        }
-        return null;
     }
 
     /**

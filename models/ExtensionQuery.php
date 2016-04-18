@@ -29,6 +29,25 @@ class ExtensionQuery extends BaseEntityQuery
      */
     public function enabled($enabled = true)
     {
-        return $this->andWhere(['enabled' => $enabled == true ? 1 : 0]);
+        if (is_bool($enabled)) {
+            return $this->andWhere(['enabled' => $enabled == true ? 1 : 0]);
+        }
+        return $this;
+    }
+
+    public function isDefault($default = true)
+    {
+        if (is_bool($default)) {
+            return $this->andWhere(['default' => $default == true ? 1 : 0]);
+        }
+        return $this;
+    }
+
+    public function monopolized($monopolized = true)
+    {
+        if (is_bool($monopolized)) {
+            return $this->andWhere(['monopolized' => $monopolized == true ? 1 : 0]);
+        }
+        return $this;
     }
 }
