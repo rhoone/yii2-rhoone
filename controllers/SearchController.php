@@ -47,6 +47,7 @@ class SearchController extends Controller
             if (!$model->load(Yii::$app->request->post())) {
                 $model->keywords = "";
             }
+            Yii::info("keywords: `" . $model->keywords . "`", __METHOD__);
             if (Yii::$app->request->getIsAjax() && Yii::$app->request->getIsPjax()) {
                 return $this->actionResult($model->keywords, ExtHelper::search($keywords));
             }
@@ -57,6 +58,7 @@ class SearchController extends Controller
         if (strlen($keywords) > 255) {
             $keywords = substr(trim($keywords), 0, 255);
         }
+        Yii::info("keywords: `" . $keywords . "`", __METHOD__);
         return $this->render('index', ['keywords' => $keywords, 'results' => ExtHelper::search($keywords)]);
     }
 

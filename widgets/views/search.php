@@ -23,6 +23,7 @@ use yii\widgets\Pjax;
 <?php
 
 $current_url = Url::current();
+$base_url = Url::base();
 
 $js = <<<EOT
     rhoone.search_form_selector = "#$search_form_id";
@@ -30,7 +31,7 @@ $js = <<<EOT
     rhoone.search_result_selector = "#$search_result_id";
     rhoone.search_button_selector = "#$search_submit_id";
     rhoone.search_url = "$current_url";
-    rhoone.search_url_pattern = '/s/{{%keywords}}';
+    rhoone.search_url_pattern = '$base_url/s/{{%keywords}}';
     $('#pjax-$search_result_id').on('pjax:start', function() {
         NProgress.start();
     });
