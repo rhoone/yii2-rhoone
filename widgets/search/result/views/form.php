@@ -9,10 +9,11 @@
  * @copyright Copyright (c) 2016 vistart
  * @license https://vistart.name/license/
  */
-use rhoone\widgets\search\PanelWidget;
-use rhoone\widgets\search\ResultWidget;
+use yii\widgets\ActiveForm;
 
-/* @var $panelConfig array */
-echo PanelWidget::widget($panelConfig);
-/* @var $resultConfig array */
-echo ResultWidget::widget($resultConfig);
+/* @var $formConfig array */
+/* @var $keywordsFieldConfig array */
+$form = ActiveForm::begin($formConfig);
+/* @var $form ActiveForm */
+echo $form->field($form, 'keywords')->hiddenInput($keywordsFieldConfig);
+ActiveForm::end();

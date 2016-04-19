@@ -9,10 +9,21 @@
  * @copyright Copyright (c) 2016 vistart
  * @license https://vistart.name/license/
  */
-use rhoone\widgets\search\PanelWidget;
-use rhoone\widgets\search\ResultWidget;
 
-/* @var $panelConfig array */
-echo PanelWidget::widget($panelConfig);
-/* @var $resultConfig array */
-echo ResultWidget::widget($resultConfig);
+namespace rhoone\widgets\search;
+
+use yii\base\Widget;
+
+/**
+ * Description of PanelWidget
+ *
+ * @author vistart <i@vistart.name>
+ */
+class PanelWidget extends Widget
+{
+
+    public function run()
+    {
+        return $this->render('panel');
+    }
+}
