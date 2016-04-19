@@ -22,8 +22,18 @@ use yii\base\Widget;
 class PanelWidget extends Widget
 {
 
+    public $formConfig;
+
+    public function init()
+    {
+        if (!is_array($this->formConfig)) {
+            $this->formConfig = [
+            ];
+        }
+    }
+
     public function run()
     {
-        return $this->render('panel');
+        return $this->render('panel', ['formConfig' => $this->formConfig]);
     }
 }

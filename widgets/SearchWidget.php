@@ -12,10 +12,6 @@
 
 namespace rhoone\widgets;
 
-use rhoone\widgets\search\ResultWidget;
-use rhoone\widgets\search\result\FormWidget;
-use rhoone\widgets\search\result\ContainerWidget;
-
 /**
  * Description of SearchWidget
  *

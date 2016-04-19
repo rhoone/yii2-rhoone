@@ -15,6 +15,7 @@ namespace rhoone\widgets\search;
 use rhoone\widgets\search\result\FormWidget;
 use rhoone\widgets\search\result\ContainerWidget;
 use yii\base\Widget;
+use yii\helpers\Url;
 
 /**
  * Description of ResultWidget
@@ -44,10 +45,8 @@ class ResultWidget extends Widget
     public $formConfig;
 
     const INIT_PJAX_ID = "pjax-search-result";
+    const INIT_PJAX_TIMEOUT = 5000;
 
-    /**
-     * 
-     */
     public function init()
     {
         if (!is_array($this->containerConfig)) {
@@ -59,6 +58,8 @@ class ResultWidget extends Widget
             $this->formConfig = [
                 'id' => FormWidget::INIT_FORM_ID,
                 'action' => Url::current(),
+                'enableClientScript' => false,
+                'enableClientValidation' => false,
             ];
         }
         if (!is_array($this->pjaxConfig)) {
@@ -66,15 +67,11 @@ class ResultWidget extends Widget
                 'id' => self::INIT_PJAX_ID,
                 'linkSelector' => false,
                 'formSelector' => "#" . $this->formConfig['id'],
-                'timeout' => 5000,
+                'timeout' => self::INIT_PJAX_TIMEOUT,
             ];
         }
     }
 
-    /**
-     * 
-     * @return type
-     */
     public function run()
     {
         return $this->render('result', ['pjaxConfig' => $this->pjaxConfig, 'containerConfig' => $this->containerConfig, 'formConfig' => $this->formConfig]);

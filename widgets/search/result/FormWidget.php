@@ -52,6 +52,8 @@ class FormWidget extends Widget
             $this->formConfig = [
                 'id' => self::INIT_FORM_ID,
                 'action' => Url::current(),
+                'enableClientScript' => false,
+                'enableClientValidation' => false,
             ];
         }
         if (!isset($this->formConfig['id'])) {

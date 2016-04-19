@@ -17,7 +17,7 @@ use rhoone\widgets\search\result\FormWidget;
 /* @var $containerConfig array */
 /* @var $formConfig array */
 
-Pjax::begin($pjaxConfig);
-ContainerWidget::widget(['containerConfig' => $containerConfig]);
-FormWidget::widget(['formConfig' => $formConfig]);
+$pjax = Pjax::begin($pjaxConfig);
+echo ContainerWidget::widget(['containerConfig' => $containerConfig]);
+echo FormWidget::widget(['formConfig' => $formConfig]);
 Pjax::end();

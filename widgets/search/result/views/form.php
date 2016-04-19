@@ -13,7 +13,8 @@ use yii\widgets\ActiveForm;
 
 /* @var $formConfig array */
 /* @var $keywordsFieldConfig array */
+/* @var $model mixed */
 $form = ActiveForm::begin($formConfig);
 /* @var $form ActiveForm */
-echo $form->field($form, 'keywords')->hiddenInput($keywordsFieldConfig);
+echo $form->field($model, 'keywords', ['template' => '{input}'])->hiddenInput($keywordsFieldConfig);
 ActiveForm::end();
