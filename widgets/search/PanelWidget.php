@@ -27,8 +27,7 @@ class PanelWidget extends Widget
     public function init()
     {
         if (!is_array($this->formConfig)) {
-            $this->formConfig = [
-            ];
+            $this->formConfig = [];
         }
     }
 

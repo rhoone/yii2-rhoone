@@ -28,6 +28,7 @@ $submit_id = $submitConfig['id'];
 $js = <<<EOT
     function search_input_changed(e) {
         rhoone.search.keywords = $.trim($("#$input_id").val());
+        rhoone.search.delay_start();
     }
     $("#$form_id").submit(function(){
         rhoone.search.start();

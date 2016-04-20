@@ -20,25 +20,30 @@ namespace rhoone\widgets;
 class SearchWidget extends \yii\base\Widget
 {
 
-    public $keywords;
-    public $results;
+    public $model;
     public $panelConfig;
     public $resultConfig;
 
     public function init()
     {
+        if (!is_array($this->panelConfig)) {
+            $this->panelConfig = [];
+        }
         if (empty($this->panelConfig)) {
             $this->panelConfig['formConfig'] = null;
         }
-        if (empty($this->resultConfig)) {
-            $this->resultConfig['pjaxConfig'] = null;
-            $this->resultConfig['containerConfig'] = null;
-            $this->resultConfig['formConfig'] = null;
+        $this->panelConfig['formConfig']['model'] = $this->model;
+        if (!is_array($this->resultConfig)) {
+            $this->resultConfig = [];
         }
+        $this->resultConfig['formConfig']['model'] = $this->model;
     }
 
     public function run()
     {
-        return $this->render('search', ['panelConfig' => $this->panelConfig, 'resultConfig' => $this->resultConfig,]);
+        return $this->render('search', [
+                'panelConfig' => $this->panelConfig,
+                'resultConfig' => $this->resultConfig,
+        ]);
     }
 }

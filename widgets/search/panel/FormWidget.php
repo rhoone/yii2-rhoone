@@ -14,7 +14,7 @@ namespace rhoone\widgets\search\panel;
 
 use Yii;
 use yii\base\Widget;
-use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 /**
  * Description of FormWidget
@@ -24,41 +24,58 @@ use yii\helpers\Url;
 class FormWidget extends Widget
 {
 
-    public $modelClass;
+    public $model;
     public $formConfig;
     public $inputConfig;
     public $submitConfig;
-    private $_model;
 
     public function init()
     {
-        if (empty($this->modelClass) || !class_exists($this->modelClass)) {
-            $this->modelClass = \rhoone\models\SearchForm::className();
-        }
-        $modelClass = $this->modelClass;
-        $this->_model = new $modelClass();
         if (!is_array($this->formConfig)) {
-            $this->formConfig = [
-                'id' => 'search-form',
-                'action' => Url::toRoute(['index', 'keywords' => $this->_model->keywords]),
-                'enableClientScript' => false,
-                'enableClientValidation' => false,
-            ];
+            $this->formConfig = [];
+        }
+        if (is_array($this->formConfig)) {
+            $this->formConfig = ArrayHelper::merge(static::getFormConfig(), $this->formConfig);
         }
         if (!is_array($this->inputConfig)) {
-            $this->inputConfig = [
-                'class' => 'form-control form-search',
-                'id' => 'search-input-field',
-                'placeholder' => 'Search for all.'
-            ];
+            $this->inputConfig = [];
+        }
+        if (is_array($this->inputConfig)) {
+            $this->inputConfig = ArrayHelper::merge(static::getInputConfig(), $this->inputConfig);
         }
         if (!is_array($this->submitConfig)) {
-            $this->submitConfig = [
-                'id' => "search-submit",
-                'class' => 'btn btn-default btn-sm form-button-search',
-            ];
+            $this->submitConfig = [];
+        }
+        if (is_array($this->submitConfig)) {
+            $this->submitConfig = ArrayHelper::merge(static::getSubmitConfig(), $this->submitConfig);
         }
         $this->registerTranslations();
+    }
+
+    public static function getInputConfig()
+    {
+        return [
+            'class' => 'form-control form-search',
+            'id' => 'search-input-field',
+            'placeholder' => 'Search for everything we know.'
+        ];
+    }
+
+    public static function getFormConfig()
+    {
+        return [
+            'id' => 'search-form',
+            'enableClientScript' => false,
+            'enableClientValidation' => false,
+        ];
+    }
+
+    public static function getSubmitConfig()
+    {
+        return [
+            'id' => "search-submit",
+            'class' => 'btn btn-default btn-sm form-button-search',
+        ];
     }
 
     public function registerTranslations()
@@ -78,7 +95,7 @@ class FormWidget extends Widget
     public function run()
     {
         return $this->render('form', [
-                'model' => $this->_model,
+                'model' => $this->model,
                 'formConfig' => $this->formConfig,
                 'inputConfig' => $this->inputConfig,
                 'submitConfig' => $this->submitConfig

@@ -16,20 +16,6 @@ use yii\widgets\ActiveForm;
 /* @var $keywordsFieldConfig array */
 /* @var $model mixed */
 /* @var $this yii\web\View */
-$formId = $formConfig['id'];
-$keywordsInputId = $keywordsFieldConfig['id'];
-$js = <<<EOT
-    $("#$formId").submit(function(e) {
-        //alert($("#$keywordsInputId").val());
-        //return false;
-    });
-    $(document).bind("rhoone:search_start", function(e) {
-        $("#$keywordsInputId").attr("value", rhoone.search.keywords);
-        $("#$formId").attr("action", "/s/" + $("#$keywordsInputId").val());
-        $("#$formId").submit();
-    });
-EOT;
-$this->registerJs($js);
 
 $form = ActiveForm::begin($formConfig);
 /* @var $form ActiveForm */

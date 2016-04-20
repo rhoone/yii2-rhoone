@@ -42,8 +42,8 @@ class SearchController extends Controller
         Yii::info("is POST: " . (string) Yii::$app->request->getIsPost(), __METHOD__);
         Yii::info("is AJAX: " . (string) Yii::$app->request->getIsAjax(), __METHOD__);
         Yii::info("is PJAX: " . (string) Yii::$app->request->getIsPjax(), __METHOD__);
+        $model = new SearchForm();
         if (Yii::$app->request->getIsPost()) {
-            $model = new SearchForm();
             if (!$model->load(Yii::$app->request->post())) {
                 $model->keywords = "";
             }
@@ -59,12 +59,13 @@ class SearchController extends Controller
             $keywords = substr(trim($keywords), 0, 255);
         }
         Yii::info("keywords: `" . $keywords . "`", __METHOD__);
-        return $this->render('index', ['keywords' => $keywords, 'results' => ExtHelper::search($keywords)]);
+        $model->keywords = $keywords;
+        return $this->render('index', ['model' => $model, 'results' => ExtHelper::search($keywords)]);
     }
 
     public function actionResult($keywords = null, $results = null)
     {
-        return SearchWidget::widget(['keywords' => $keywords, 'results' => $results]);
+        return SearchWidget::widget(['model' => new SearchForm(['keywords' => $keywords]), 'resultConfig' => ['results' => $results]]);
     }
 
     /**

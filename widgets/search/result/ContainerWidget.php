@@ -14,6 +14,7 @@ namespace rhoone\widgets\search\result;
 
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
+use yii\helpers\ArrayHelper;
 
 /**
  * The container of search result.
@@ -39,13 +40,21 @@ class ContainerWidget extends Widget
     public function init()
     {
         if (!is_array($this->containerConfig)) {
-            $this->containerConfig = [
-                'id' => self::INIT_CONTAINER_ID,
-            ];
+            $this->containerConfig = [];
+        }
+        if (is_array($this->containerConfig)) {
+            $this->containerConfig = ArrayHelper::merge(static::getContainerConfig(), $this->containerConfig);
         }
         if (!isset($this->containerConfig['id'])) {
             throw new InvalidConfigException('The ID of container should be set.');
         }
+    }
+
+    public static function getContainerConfig()
+    {
+        return [
+            'id' => self::INIT_CONTAINER_ID,
+        ];
     }
 
     public function run()
