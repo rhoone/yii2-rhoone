@@ -13,8 +13,11 @@ rhoone.search = (function ($) {
         oldKeywords: null,
         keywords: "",
         delay_callback: null,
-        start: function () {
-            if ((typeof this.keywords).toLowerCase() === "string" && this.keywords.length > 0 && this.keywords !== this.oldKeywords) {
+        start: function (reload) {
+            if (typeof reload === "undefined") {
+                reload = false;
+            }
+            if (reload || ((typeof this.keywords).toLowerCase() === "string" && this.keywords.length > 0 && this.keywords !== this.oldKeywords)) {
                 this.oldKeywords = this.keywords;
                 $(document).trigger("rhoone:search_start");
             }
