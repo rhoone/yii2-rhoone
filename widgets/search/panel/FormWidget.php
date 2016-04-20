@@ -49,6 +49,9 @@ class FormWidget extends Widget
         if (is_array($this->submitConfig)) {
             $this->submitConfig = ArrayHelper::merge(static::getSubmitConfig(), $this->submitConfig);
         }
+        if (empty($this->model) && class_exists('\rhoone\models\SearchForm')) {
+            $this->model = new \rhoone\models\SearchForm();
+        }
         $this->registerTranslations();
     }
 

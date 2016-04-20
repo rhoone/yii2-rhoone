@@ -67,6 +67,9 @@ class FormWidget extends Widget
         if (!isset($this->keywordsFieldConfig['id'])) {
             throw new InvalidConfigException('The ID of keywords field should be set.');
         }
+        if (empty($this->model) && class_exists('\rhoone\models\SearchForm')) {
+            $this->model = new \rhoone\models\SearchForm();
+        }
     }
 
     public static function getFormConfig()
