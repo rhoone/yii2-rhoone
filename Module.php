@@ -26,12 +26,34 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
     public $controllerNamespace = 'rhoone\controllers';
 
+    public function init()
+    {
+        parent::init();
+        $this->registerTranslations();
+    }
+
+    public function registerTranslations()
+    {
+        Yii::$app->i18n->translations['rhoone*'] = [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'sourceLanguage' => 'en-US',
+            'basePath' => '@rhoone/messages',
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public function bootstrap($app)
     {
         if ($app instanceof \yii\web\Application) {
+            $this->addRules($app);
+        }
+        $count = $this->bootstrapExtensions($app);
+    }
+    
+    public function addRules($app)
+    {
             Yii::trace('Adding URL Rules.', __METHOD__);
             $rules = [
                 's/<keywords:.*>' => $this->id . '/search/index',
@@ -42,8 +64,6 @@ class Module extends \yii\base\Module implements BootstrapInterface
                 'deregister-subordinate' => $this->id . '/subordinate/deregister-subordinate',
             ];
             $app->getUrlManager()->addRules($rules);
-        }
-        $count = $this->bootstrapExtensions($app);
     }
 
     /**
