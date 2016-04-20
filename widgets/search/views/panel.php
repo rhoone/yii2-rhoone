@@ -17,6 +17,9 @@ $js = <<<EOT
     NProgress.configure({ showSpinner: false , parent:'.panel-heading'});
     NProgress.start();
     setTimeout(function(){NProgress.done();}, 1000);
+    $(document).bind("rhoone:search_start", NProgress.start);
+    $(document).bind("rhoone:search_cancel", NProgress.done);
+    $(document).bind("rhoone:search_end", NProgress.done);
 EOT;
 $this->registerJs($js);
 /* @var $formConfig array */

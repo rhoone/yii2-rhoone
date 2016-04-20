@@ -18,20 +18,28 @@ use yii\widgets\ActiveForm;
 /* @var $inputConfig array */
 /* @var $submitConfig array */
 /* @var $this View */
-$form = ActiveForm::begin($formConfig);
-/* @var $form yii\widgets\ActiveForm */
-$form_id = $form->id;
+
+$form_id = $formConfig['id'];
 $input_id = $inputConfig['id'];
 $submit_id = $submitConfig['id'];
 /**
  * 
  */
 $js = <<<EOT
-    $("#$form_id").submit(function(){return false;});
-    $("#$input_id").bind("input", function (e) {});
-    $("#$input_id").bind("propertychanged", function (e) {});
+    function search_input_changed(e) {
+        rhoone.search.keywords = $.trim($("#$input_id").val());
+    }
+    $("#$form_id").submit(function(){
+        rhoone.search.start();
+        return false;
+    });
+    $("#$input_id").bind("input", search_input_changed);
+    $("#$input_id").bind("propertychanged", search_input_changed);
 EOT;
 $this->registerJs($js);
+
+$form = ActiveForm::begin($formConfig);
+/* @var $form yii\widgets\ActiveForm */
 ?>
 <div class="form-group form-group-search">
     <?= $form->field($model, 'keywords', ['template' => '{input}'])->textInput($inputConfig) ?>

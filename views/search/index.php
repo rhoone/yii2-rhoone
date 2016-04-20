@@ -18,6 +18,6 @@ $this->title = 'Search';
 
 <div class="row">
     <div class="col-md-12">
-        <?= SearchWidget::widget(['keywords' => $keywords, 'results' => $results]) ?>
+        <?= SearchWidget::widget() ?>
     </div>
 </div>

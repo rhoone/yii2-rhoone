@@ -47,7 +47,6 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public function bootstrap($app)
     {
         if ($app instanceof \yii\web\Application) {
-            $this->setAliases(['@rhoone' => __DIR__]);
             $this->addRules($app);
         }
         $count = $this->bootstrapExtensions($app);

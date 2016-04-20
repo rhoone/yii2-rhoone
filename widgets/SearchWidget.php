@@ -20,6 +20,8 @@ namespace rhoone\widgets;
 class SearchWidget extends \yii\base\Widget
 {
 
+    public $keywords;
+    public $results;
     public $panelConfig;
     public $resultConfig;
 

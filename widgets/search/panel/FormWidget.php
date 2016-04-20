@@ -56,7 +56,6 @@ class FormWidget extends Widget
             $this->submitConfig = [
                 'id' => "search-submit",
                 'class' => 'btn btn-default btn-sm form-button-search',
-                'data-pjax' => 1
             ];
         }
         $this->registerTranslations();

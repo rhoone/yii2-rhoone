@@ -16,7 +16,12 @@ use rhoone\widgets\search\result\FormWidget;
 /* @var $pjaxConfig array */
 /* @var $containerConfig array */
 /* @var $formConfig array */
-
+/* @var $this yii\web\View */
+$js = <<<EOT
+    $(document).bind("pjax:complete", rhoone.search.end);
+    $(document).bind("pjax:timeout", rhoone.search.cancel);
+EOT;
+$this->registerJs($js);
 $pjax = Pjax::begin($pjaxConfig);
 echo ContainerWidget::widget(['containerConfig' => $containerConfig]);
 echo FormWidget::widget(['formConfig' => $formConfig]);
