@@ -9,18 +9,23 @@
  * @license https://vistart.name/license/
  */
 /* @var $containerConfig array */
-/* @var $result mixed */
+/* @var $results mixed */
 ?>
 <div
 <?php foreach ($containerConfig as $key => $value): ?>
     <?= " $key=\"$value\"" ?>
 <?php endforeach; ?>
     class="search-result-container">
-    <?php if (is_array($result)): ?>
-        <?php foreach ($result as $r): ?>
-            <?= $r ?>
+        <?php if (is_string($results) || is_numeric($results)): ?>
+            <?php $results = (array) $results; ?>
+        <?php endif; ?>
+        <?php if (is_array($results)): ?>
+            <?php foreach ($results as $r): ?>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <?= $r ?>
+                </div>
+            </div>
         <?php endforeach; ?>
-    <?php elseif (is_string($result) || is_numeric($result)) : ?>
-        <?= $result ?>
     <?php endif; ?>
 </div>

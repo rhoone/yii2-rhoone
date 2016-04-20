@@ -26,6 +26,19 @@ $submit_id = $submitConfig['id'];
  * 
  */
 $js = <<<EOT
+    function html_encode(str) {
+        var s = "";
+        if (str.length === 0)
+            return "";
+        s = str.replace(/&/g, "&gt;");
+        s = s.replace(/</g, "&lt;");
+        s = s.replace(/>/g, "&gt;");
+        s = s.replace(/ /g, "&nbsp;");
+        s = s.replace(/\'/g, "&#39;");
+        s = s.replace(/\"/g, "&quot;");
+        s = s.replace(/\\n/g, "<br>");
+        return s;
+    }
     function search_input_changed(e) {
         rhoone.search.keywords = $.trim($("#$input_id").val());
         rhoone.search.delay_start();
@@ -36,6 +49,15 @@ $js = <<<EOT
     });
     $("#$input_id").bind("input", search_input_changed);
     $("#$input_id").bind("propertychanged", search_input_changed);
+    rhoone.search.keywords = $.trim($("#$input_id").val());
+    if (rhoone.search.keywords !== "") {
+        $("title").html("Search: " + html_encode(rhoone.search.keywords));
+    }
+    $(document).bind("rhoone:search_start", function(e) {
+        $("title").html("Search: " + html_encode(rhoone.search.keywords));
+    });
+    $("#$input_id").focus();
+    
 EOT;
 $this->registerJs($js);
 

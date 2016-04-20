@@ -33,7 +33,7 @@ class ContainerWidget extends Widget
      * Search Result.
      * @var string|string[] 
      */
-    public $result;
+    public $results;
 
     const INIT_CONTAINER_ID = "search-result-container";
 
@@ -59,6 +59,6 @@ class ContainerWidget extends Widget
 
     public function run()
     {
-        return $this->render('container', ['containerConfig' => $this->containerConfig, 'result' => $this->result]);
+        return $this->render('container', ['containerConfig' => $this->containerConfig, 'results' => $this->results]);
     }
 }

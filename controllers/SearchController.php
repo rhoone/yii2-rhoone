@@ -65,7 +65,7 @@ class SearchController extends Controller
 
     public function actionResult($keywords = null, $results = null)
     {
-        return SearchWidget::widget(['model' => new SearchForm(['keywords' => $keywords]), 'resultConfig' => ['results' => $results]]);
+        return SearchWidget::widget(['model' => new SearchForm(['keywords' => $keywords]), 'resultConfig' => ['containerConfig' =>['results' => $results]]]);
     }
 
     /**
