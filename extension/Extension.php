@@ -49,6 +49,6 @@ abstract class Extension extends \yii\base\Component
      */
     public static function getModule()
     {
-        throw new NotSupportedException('The extension\'s module has not been implemented.');
+        return null;
     }
 }

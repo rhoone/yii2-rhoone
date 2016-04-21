@@ -13,8 +13,9 @@
 namespace rhoone;
 
 use rhoone\helpers\ExtensionHelper;
-use yii\base\BootstrapInterface;
 use Yii;
+use yii\base\Application;
+use yii\base\BootstrapInterface;
 
 /**
  * Description of Module
@@ -49,21 +50,53 @@ class Module extends \yii\base\Module implements BootstrapInterface
         if ($app instanceof \yii\web\Application) {
             $this->addRules($app);
         }
+        $count = $this->registerComponents($app);
+        Yii::info("$count component(s) registered.", __METHOD__);
         $count = $this->bootstrapExtensions($app);
+        Yii::info("$count extension(s) bootstrapped.", __METHOD__);
+        $extMgr = Yii::$app->rhoone->extensionManager;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
     }
-    
+
+    /**
+     * 
+     * @param Application $app
+     */
+    public function registerComponents($app)
+    {
+        $count = 0;
+        foreach ($this->coreComponents() as $id => $component) {
+            try {
+                $app->set($id, $component);
+            } catch (\Exception $ex) {
+                Yii::error("`$id` failed to register: " . $ex->getMessage(), __METHOD__);
+                continue;
+            }
+            Yii::info("`$id` registered.", __METHOD__);
+            $count++;
+        }
+        return $count;
+    }
+
+    public function coreComponents()
+    {
+        return [
+            'rhoone' => ['class' => 'rhoone\base\Rhoone'], // Required.
+        ];
+    }
+
     public function addRules($app)
     {
-            Yii::trace('Adding URL Rules.', __METHOD__);
-            $rules = [
-                's/<keywords:.*>' => $this->id . '/search/index',
-                'search' => $this->id . '/search/index',
-                'subordinate/register' => $this->id . '/subordinate/register',
-                'register-subordinate' => $this->id . '/subordinate/register-subordinate',
-                'subordinate/deregister' => $this->id . '/subordinate/deregister',
-                'deregister-subordinate' => $this->id . '/subordinate/deregister-subordinate',
-            ];
-            $app->getUrlManager()->addRules($rules);
+        Yii::trace('Adding URL Rules.', __METHOD__);
+        $rules = [
+            's/<keywords:.*>' => $this->id . '/search/index',
+            'search' => $this->id . '/search/index',
+            'subordinate/register' => $this->id . '/subordinate/register',
+            'register-subordinate' => $this->id . '/subordinate/register-subordinate',
+            'subordinate/deregister' => $this->id . '/subordinate/deregister',
+            'deregister-subordinate' => $this->id . '/subordinate/deregister-subordinate',
+        ];
+        $app->getUrlManager()->addRules($rules);
     }
 
     /**
@@ -76,21 +109,39 @@ class Module extends \yii\base\Module implements BootstrapInterface
         $extensions = $this->getEnabledExtensions();
         if (empty($extensions)) {
             Yii::info('No extensions enabled.', __METHOD__);
-        } else {
-            Yii::info(count($extensions) . ' extensions enabled.', __METHOD__);
+            return 0;
         }
+        $extMgr = Yii::$app->rhoone->extensionManager;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
+        foreach ($extMgr->getExtensions() as $id => $extension) {
+            if ($extMgr->$id instanceof BootstrapInterface) {
+                try {
+                    $component->bootstrap($app);
+                } catch (\Exception $ex) {
+                    Yii::error($ex->getMessage(), __METHOD__);
+                    continue;
+                }
+            }
+        }
+        Yii::info(count($extensions) . ' extensions enabled.', __METHOD__);
+
+        $count = 0;
         foreach ($extensions as $ext) {
             $moduleConfig = $ext->getModule();
-            Yii::info($moduleConfig['id'] . ' enabled.', __METHOD__);
+            if (empty($moduleConfig)) {
+                continue;
+            }
+            Yii::info("`" . $moduleConfig['id'] . '` enabled.', __METHOD__);
             $app->setModule($moduleConfig['id'], $moduleConfig);
             $module = $app->getModule($moduleConfig['id']);
             if ($module instanceof BootstrapInterface) {
                 $app->bootstrap[] = $module->id;
                 Yii::trace('Bootstrap with ' . $module->className() . '::' . 'bootstrap()', __METHOD__);
                 $module->bootstrap($app);
+                $count++;
             }
         }
-        return count($extensions);
+        return $count;
     }
 
     protected function getEnabledExtensions()
