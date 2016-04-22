@@ -21,6 +21,10 @@ use yii\base\NotSupportedException;
  */
 abstract class Extension extends \yii\base\Component
 {
+    public static function id()
+    {
+        throw new NotSupportedException('The extension\'s id has not been specified.');
+    }
 
     public static function name()
     {
@@ -49,6 +53,6 @@ abstract class Extension extends \yii\base\Component
      */
     public static function getModule()
     {
-        throw new NotSupportedException('The extension\'s module has not been implemented.');
+        return null;
     }
 }

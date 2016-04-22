@@ -80,6 +80,7 @@ class BaseExtensionHelper
         unset($class);
         $class = $extension->className();
         $name = $extension->name();
+        $id = $extension->id();
 
         if (Extension::find()->where(['classname' => $class])->exists()) {
             throw new InvalidParamException('the class `' . $class . '` has been added.');
@@ -88,7 +89,7 @@ class BaseExtensionHelper
         $dic = $extension->getDictionary();
 
         unset($extension);
-        $extension = new Extension(['classname' => $class, 'name' => $name, 'enabled' => $enable == true]);
+        $extension = new Extension(['id' => $id, 'classname' => $class, 'name' => $name, 'enabled' => $enable == true]);
         $transaction = Yii::$app->getDb()->beginTransaction();
         try {
             if (!$extension->save()) {

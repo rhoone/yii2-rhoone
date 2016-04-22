@@ -14,10 +14,19 @@ namespace rhoone\models;
 
 use rhoone\helpers\DictionaryHelper;
 use vistart\Models\models\BaseEntityModel;
+use Yii;
+use yii\helpers\Json;
 
 /**
  * Description of Extension
  *
+ * @property string $name
+ * @property string $classname
+ * @property string $config_array Configuration Array in JSON.
+ * Please DO NOT access it directly, use $config instead.
+ * @property string $description
+ * 
+ * @property array $config
  * @property boolean $isEnabled
  * @property-write string|eadword $headword
  * @property-read Headword[] $headwords
@@ -28,7 +37,8 @@ use vistart\Models\models\BaseEntityModel;
 class Extension extends BaseEntityModel
 {
 
-    public $idAttribute = false;
+    public $idPreassigned = true;
+    public $idAttributeLength = 255;
     public $enableIP = 0;
 
     public function init()
@@ -45,10 +55,12 @@ class Extension extends BaseEntityModel
     public function getExtensionRules()
     {
         return [
-            [['name', 'classname', 'description'], 'string', 'max' => 255],
+            [['id', 'name', 'classname', 'description'], 'string', 'max' => 255],
+            [['config_array'], 'string', 'max' => 65535],
             [['description'], 'default', 'value' => ''],
-            [['name', 'classname'], 'required'],
-            [['classname'], 'unique'],
+            [['config_array'], 'default', 'value' => Json::encode([])],
+            [['id', 'name', 'classname'], 'required'],
+            [['id', 'classname'], 'unique'],
             [['enabled', 'monopolized', 'default'], 'boolean', 'trueValue' => 1, 'falseValue' => 0],
             [['enabled', 'monopolized', 'default'], 'default', 'value' => 0],
         ];
@@ -57,6 +69,26 @@ class Extension extends BaseEntityModel
     public function rules()
     {
         return array_merge($this->getExtensionRules(), parent::rules());
+    }
+
+    public function getConfig()
+    {
+        try {
+            return Json::decode($this->config_array);
+        } catch (\Exception $ex) {
+            Yii::error($ex->getMessage(), __METHOD__);
+            return [];
+        }
+    }
+
+    public function setConfig($config = null)
+    {
+        try {
+            $this->config_array = Json::encode($config);
+        } catch (\Exception $ex) {
+            Yii::error($ex->getMessage(), __METHOD__);
+            $this->config_array = Json::encode([]);
+        }
     }
 
     public function getIsEnabled()
