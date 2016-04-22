@@ -12,12 +12,16 @@
 
 namespace rhoone\base;
 
+use rhoone\extension\Extension;
 use Yii;
 use yii\di\ServiceLocator;
 
 /**
- * Description of Rhoone
+ * rhoone component.
  *
+ * @property-read ExtensionManager $ext
+ * @property-read DictionaryManager $dic
+ * @property-read Extension[] $extensions
  * @author vistart <i@vistart.name>
  */
 class Rhoone extends ServiceLocator
@@ -31,8 +35,18 @@ class Rhoone extends ServiceLocator
     }
 
     /**
+     * Returns the list of the extension definitions or the loaded extension instances.
+     * @param boolean $returnDefinitions whether to return extension definitions instead of the loaded extension instances.
+     * @return Extension[]
+     */
+    public function getExtensions($returnDefinitions = true)
+    {
+        return $this->getExt()->getComponents($returnDefinitions);
+    }
+
+    /**
      * 
-     * @return type
+     * @return integer
      */
     public function registerComponents()
     {
@@ -49,10 +63,51 @@ class Rhoone extends ServiceLocator
         return $count;
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function coreComponents()
     {
         return [
             'ext' => ['class' => 'rhoone\base\ExtensionManager'],
+            'dic' => ['class' => 'rhoone\base\DictionaryManager'],
         ];
+    }
+
+    /**
+     * 
+     * @return ExtensionManager
+     */
+    public function getExt()
+    {
+        return $this->get("ext");
+    }
+
+    /**
+     * 
+     * @return DictionaryManager
+     */
+    public function getDic()
+    {
+        return $this->get("dic");
+    }
+
+    /**
+     * Search for result to the keywords.
+     * @param string|string[] $keywords
+     */
+    public function search($keywords = "")
+    {
+        Yii::trace("Begin searching...", __METHOD__);
+        if ((is_string($keywords) && strlen($keywords) == 0) || (is_array($keywords) && empty($keywords)) || !is_numeric($keywords)){
+            Yii::warning('Empty keywords!', __METHOD__);
+            return null;
+        }
+        $result = "";
+        foreach ($this->extensions as $extension) {
+            $result .= $extension->search($keywords);
+        }
+        return $result;
     }
 }

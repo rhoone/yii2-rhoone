@@ -29,15 +29,15 @@ class ExtensionManager extends ServiceLocator
     public function init()
     {
         parent::init();
-        $count = $this->loadEnabled();
-        Yii::info("$count extension(s) loaded.");
+        $count = $this->load();
+        Yii::info("$count rhoone extension(s) loaded.", __METHOD__);
     }
 
     /**
-     * 
-     * @param string $ext
+     * Load enabled extension(s).
+     * @param ExtModel|string|null $ext
      */
-    protected function loadEnabled($ext = null)
+    public function load($ext = null)
     {
         if ($ext !== null && empty($ext)) {
             return 0;
@@ -60,29 +60,19 @@ class ExtensionManager extends ServiceLocator
                 Yii::error("`$ext` does not exist.", __METHOD__);
                 return 0;
             }
-            return $this->loadEnabled($ext);
+            return $this->load($ext);
         }
         if ($ext === null) {
             $count = 0;
-            $exts = ExtModel::findAllEnabled();
+            $exts = ExtModel::find()->enabled()->all();
             if (empty($exts)) {
                 return 0;
             }
             foreach ($exts as $ext) {
-                $count += $this->loadEnabled($ext);
+                $count += $this->load($ext);
             }
             return $count;
         }
         return 0;
-    }
-
-    /**
-     * Returns the list of the extension definitions or the loaded extension instances.
-     * @param boolean $returnDefinitions whether to return extension definitions instead of the loaded extension instances.
-     * @return array the list of the extension definitions or the loaded extension instances (ID => definition or instance).
-     */
-    public function getExtensions($returnDefinitions = true)
-    {
-        return $this->getComponents($returnDefinitions);
     }
 }

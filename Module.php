@@ -12,7 +12,6 @@
 
 namespace rhoone;
 
-use rhoone\helpers\ExtensionHelper;
 use Yii;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
@@ -104,9 +103,9 @@ class Module extends \yii\base\Module implements BootstrapInterface
      */
     protected function bootstrapExtensions($app)
     {
-        $extMgr = Yii::$app->rhoone->ext;
-        /* @var $extMgr \rhoone\base\ExtensionManager */
-        $extensions = $extMgr->extensions;
+        $rhoone = Yii::$app->rhoone;
+        /* @var $rhoone \rhoone\base\Rhoone */
+        $extensions = $rhoone->extensions;
         if (empty($extensions)) {
             return 0;
         }
