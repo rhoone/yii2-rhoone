@@ -54,8 +54,6 @@ class Module extends \yii\base\Module implements BootstrapInterface
         Yii::info("$count component(s) registered.", __METHOD__);
         $count = $this->bootstrapExtensions($app);
         Yii::info("$count extension(s) bootstrapped.", __METHOD__);
-        $extMgr = Yii::$app->rhoone->extensionManager;
-        /* @var $extMgr \rhoone\base\ExtensionManager */
     }
 
     /**
@@ -106,24 +104,22 @@ class Module extends \yii\base\Module implements BootstrapInterface
      */
     protected function bootstrapExtensions($app)
     {
-        $extensions = $this->getEnabledExtensions();
+        $extMgr = Yii::$app->rhoone->ext;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
+        $extensions = $extMgr->extensions;
         if (empty($extensions)) {
-            Yii::info('No extensions enabled.', __METHOD__);
             return 0;
         }
-        $extMgr = Yii::$app->rhoone->extensionManager;
-        /* @var $extMgr \rhoone\base\ExtensionManager */
-        foreach ($extMgr->getExtensions() as $id => $extension) {
-            if ($extMgr->$id instanceof BootstrapInterface) {
+        foreach ($extensions as $id => $extension) {
+            if ($extension instanceof BootstrapInterface) {
                 try {
-                    $component->bootstrap($app);
+                    $extension->bootstrap($app);
                 } catch (\Exception $ex) {
                     Yii::error($ex->getMessage(), __METHOD__);
                     continue;
                 }
             }
         }
-        Yii::info(count($extensions) . ' extensions enabled.', __METHOD__);
 
         $count = 0;
         foreach ($extensions as $ext) {
@@ -142,10 +138,5 @@ class Module extends \yii\base\Module implements BootstrapInterface
             }
         }
         return $count;
-    }
-
-    protected function getEnabledExtensions()
-    {
-        return ExtensionHelper::allEnabled();
     }
 }

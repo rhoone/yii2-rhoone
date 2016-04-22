@@ -27,7 +27,7 @@ class Rhoone extends ServiceLocator
     {
         parent::__construct($config);
         $count = $this->registerComponents();
-        Yii::info("$count rhoone components registered.", __METHOD__);
+        Yii::info("$count rhoone component(s) registered.", __METHOD__);
     }
 
     /**
@@ -52,7 +52,7 @@ class Rhoone extends ServiceLocator
     public function coreComponents()
     {
         return [
-            'extensionManager' => ['class' => 'rhoone\base\ExtensionManager'],
+            'ext' => ['class' => 'rhoone\base\ExtensionManager'],
         ];
     }
 }
