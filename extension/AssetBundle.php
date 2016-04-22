@@ -12,9 +12,6 @@
 
 namespace rhoone\extension;
 
-use Yii;
-use yii\helpers\ArrayHelper;
-
 /**
  * Description of AssetBundle
  *
