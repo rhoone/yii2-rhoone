@@ -25,6 +25,7 @@ use yii\di\ServiceLocator;
  */
 class ExtensionManager extends ServiceLocator
 {
+    use ExtensionHelperTrait;
 
     public function init()
     {

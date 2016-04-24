@@ -32,11 +32,15 @@ abstract class Extension extends \yii\base\Component
     }
 
     /**
-     * Get dictionaries.
+     * Get dictionary.
      * @return mixed
      */
     public static function getDictionary()
     {
+        if (class_exists(__NAMESPACE__ . '\Dictionary')) {
+            $class = __NAMESPACE__ . '\Dictionary';
+            return new $class();
+        }
         return null;
     }
 

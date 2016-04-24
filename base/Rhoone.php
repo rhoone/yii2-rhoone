@@ -19,9 +19,9 @@ use yii\di\ServiceLocator;
 /**
  * rhoone component.
  *
- * @property-read ExtensionManager $ext
- * @property-read DictionaryManager $dic
- * @property-read Extension[] $extensions
+ * @property-read ExtensionManager $ext Extension Manager.
+ * @property-read DictionaryManager $dic Dictionary Manager.
+ * @property-read Extension[] $extensions Loaded extension instances.
  * @author vistart <i@vistart.name>
  */
 class Rhoone extends ServiceLocator

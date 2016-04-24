@@ -12,15 +12,32 @@
 
 namespace rhoone\extension;
 
+use yii\base\Model;
+
 /**
  * Description of Dictionary
  *
  * @author vistart <i@vistart.name>
  */
-abstract class Dictionary
+abstract class Dictionary extends Model
 {
 
-    public function getDictionaries()
+    /**
+     * Dictionary array example:
+     * ```
+     * [
+     *     [
+     *         0 => 'word1',    // Headword, required, it's key must be 0.
+     *         'word2',         // The others are synonyms to headword.
+     *         ...
+     *     ],
+     *     ...
+     * ]
+     * ```
+     * If your extension don't provide any words, please return null.
+     * @return array
+     */
+    public function getDictionary()
     {
         return null;
     }

@@ -14,6 +14,7 @@ namespace rhoone\controllers;
 
 use rhoone\helpers\ExtensionHelper;
 use rhoone\models\Headword;
+use Yii;
 use yii\console\Controller;
 use yii\console\Exception;
 
@@ -57,15 +58,15 @@ class ExtensionController extends Controller
     }
 
     /**
-     * Add an extension.
+     * Register an extension.
      * @param string $class Full-qualified name of a extension.
      * @param boolean $enable Whether enable the module after adding it.
      * @return int
      */
-    public function actionAdd($class, $enable = false)
+    public function actionRegister($class, $enable = false)
     {
         try {
-            $result = ExtensionHelper::add($class, $enable);
+            $result = Yii::$app->rhoone->ext->register($class, $enable);
         } catch (\Exception $ex) {
             throw new Exception($ex->getMessage());
         }
@@ -81,7 +82,11 @@ class ExtensionController extends Controller
     public function actionEnable($class)
     {
         try {
-            ExtensionHelper::enable($class);
+            if (Yii::$app->rhoone->ext->enable($class)) {
+                echo "Enabled.";
+            } else {
+                echo "Failed to enable.";
+            }
         } catch (\Exception $ex) {
             throw new Exception($ex->getMessage());
         }
@@ -96,10 +101,25 @@ class ExtensionController extends Controller
     public function actionDisable($class)
     {
         try {
-            ExtensionHelper::disable($class);
+            if (Yii::$app->rhoone->ext->disable($class)) {
+                echo "Disabled.";
+            } else {
+                echo "Failed to disable.";
+            }
         } catch (\Exception $ex) {
             throw new Exception($ex->getMessage());
         }
+        return 0;
+    }
+    
+    public function actionValidate($class)
+    {
+        try {
+            Yii::$app->rhoone->ext->validate($class);
+        } catch (\Exception $ex) {
+            throw new Exception($ex->getMessage());
+        }
+        echo "No errors occured.";
         return 0;
     }
 
@@ -113,7 +133,7 @@ class ExtensionController extends Controller
     public function actionRemove($class, $force = false)
     {
         try {
-            $result = ExtensionHelper::remove($class, $force);
+            Yii::$app->rhoone->ext->deregister($class, $force);
         } catch (\Exception $ex) {
             throw new Exception($ex->getMessage());
         }

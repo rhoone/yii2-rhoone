@@ -21,5 +21,5 @@ use yii\di\ServiceLocator;
  */
 class DictionaryManager extends ServiceLocator
 {
-    //put your code here
+    use DictionaryHelperTrait;
 }
