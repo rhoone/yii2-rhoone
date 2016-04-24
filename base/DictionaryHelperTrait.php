@@ -68,6 +68,12 @@ trait DictionaryHelperTrait
         $extension = ExtensionManager::getModel($extension);
         return $extension->setHeadword($word);
     }
+    
+    public static function removeHeadword($extension, $word)
+    {
+        $extension = ExtensionManager::getModel($extension);
+        return $extension->removeHeadword($word);
+    }
 
     /**
      * Add synonyms.
@@ -92,6 +98,21 @@ trait DictionaryHelperTrait
         }
         if ($headword instanceof \rhoone\models\Headword) {
             return $headword->setSynonyms($synonyms);
+        }
+        return false;
+    }
+    
+    public static function removeSynonyms($extension, $headword, $synonyms)
+    {
+        $extension = ExtensionManager::getModel($extension);
+        if (is_string($headword)) {
+            $headword = $extension->getHeadwords()->andWhere(['word' => $headword])->one();
+            if (!$headword) {
+                return false;
+            }
+        }
+        if ($headword instanceof \rhoone\models\Headword) {
+            return $headword->removeSynonyms($synonyms);
         }
         return false;
     }

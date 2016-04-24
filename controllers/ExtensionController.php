@@ -145,23 +145,6 @@ class ExtensionController extends Controller
     }
 
     /**
-     * Validate dictionary of extension.
-     * @param string $class
-     * @return int
-     * @throws Exception
-     */
-    public function actionValidateDictionary($class)
-    {
-        try {
-            Yii::$app->rhoone->dic->validate($class);
-        } catch (\Exception $ex) {
-            throw new Exception($ex->getMessage());
-        }
-        echo "No errors occured.";
-        return 0;
-    }
-
-    /**
      * Remove an extension
      * @param string $class
      * @param boolean $force
