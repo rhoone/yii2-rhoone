@@ -30,12 +30,12 @@ trait DictionaryHelperTrait
     {
         static::validate($dictionary);
     }
-    
+
     public static function addHeadword($word)
     {
         
     }
-    
+
     public static function addSynonyms($headword, $synonyms)
     {
         
@@ -54,14 +54,42 @@ trait DictionaryHelperTrait
      *     ...
      * ]
      * ```
-     * @param array $dictionary
+     * @param array|\rhoone\extension\Dictionary|string|\rhoone\extension\Extension $dictionary
+     * `array`: dictionary array.
+     * `\rhoone\extension\Dictionary`: dictionary model.
+     * `string`: extension class string.
+     * `\rhoone\extension\Extension`: extension model.
      * @return boolean True if validated.
      * @throws InvalidParamException if error occured.
      */
     public static function validate($dictionary)
     {
+        if (is_array($dictionary)) {
+            return static::validateArray($dictionary);
+        }
+        if ($dictionary instanceof \rhoone\extension\Dictionary) {
+            return static::validateArray($dictionary->getDictionary());
+        }
+        if (is_string($dictionary)) {
+            $class = ExtensionManager::normalizeClass($dictionary);
+            $dictionary = new $class();
+        }
+        if ($dictionary instanceof \rhoone\extension\Extension) {
+            return static::validateWithExtension($dictionary);
+        }
+        return false;
+    }
+
+    /**
+     * 
+     * @param array $dictionary
+     * @return boolean
+     * @throws InvalidParamException
+     */
+    public static function validateArray($dictionary)
+    {
         if (!is_array($dictionary)) {
-            throw new InvalidParamException("Invalid dictionary.");
+            throw new InvalidParamException("Invalid dictionary array.");
         }
         foreach ($dictionary as $key => $words) {
             if (!is_array($words)) {
@@ -84,5 +112,15 @@ trait DictionaryHelperTrait
             }
         }
         return true;
+    }
+    
+    /**
+     * 
+     * @param \rhoone\extension\Extension $extension
+     * @return boolean
+     */
+    public static function validateWithExtension($extension)
+    {
+        return static::validateArray($extension->getDictionary()->getDictionary());
     }
 }

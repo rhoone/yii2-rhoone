@@ -33,7 +33,7 @@ abstract class Extension extends \yii\base\Component
 
     /**
      * Get dictionary.
-     * @return mixed
+     * @return Dictionary
      */
     public static function getDictionary()
     {
