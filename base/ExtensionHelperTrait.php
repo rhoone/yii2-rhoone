@@ -36,7 +36,6 @@ trait ExtensionHelperTrait
         $class = $extension->className();
         $name = $extension->name();
         $id = $extension->id();
-        $dic = $extension->getDictionary();
 
         $model = new \rhoone\models\Extension(['id' => $id, 'name' => $name, 'classname' => $class, 'enabled' => $enable]);
         $transaction = Yii::$app->getDb()->beginTransaction();
@@ -44,8 +43,8 @@ trait ExtensionHelperTrait
             if (!$model->save()) {
                 throw new InvalidParamException('`' . $class . '` failed to added.');
             }
-            if (!$model->addDictionary($dic)) {
-                throw new InvalidParamException('`' . $class . '');
+            if (!Yii::$app->rhoone->dic->add($extension)) {
+                throw new InvalidParamException('`' . $class . '` failed to add dictionary.');
             }
             $transaction->commit();
         } catch (\Exception $ex) {
@@ -91,7 +90,7 @@ trait ExtensionHelperTrait
     }
 
     /**
-     * 
+     * Get extension model.
      * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $class
      * @return \rhoone\models\Extension
      */
@@ -176,16 +175,22 @@ trait ExtensionHelperTrait
     }
 
     /**
-     * 
-     * @param string $class
+     * Validate extension class.
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $class
      * @return \rhoone\extension\Extension
      * @throws InvalidParamException
      */
     public static function validate($class)
     {
+        if ($class instanceof \rhoone\extension\Extension) {
+            $class = $class->className();
+        }
+        if ($class instanceof \rhoone\models\Extension) {
+            $class = $class->classname;
+        }
         if (!is_string($class)) {
             Yii::error('the class name is not a string.', __METHOD__);
-            throw new InvalidParamException('the class name is not a string.');
+            throw new InvalidParamException('the class name is not a string. (' . __METHOD__ . ')');
         }
         Yii::trace('validate extension: `' . $class . '`', __METHOD__);
 

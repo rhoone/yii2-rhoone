@@ -122,7 +122,6 @@ class Headword extends BaseEntityModel
         $headword = Headword::find()->where(['word' => $word, 'extension_guid' => $extension->guid])->one();
         if ($headword) {
             throw new InvalidParamException('The word: `' . $word . '` has existed.');
-            return false;
         }
         $headword = new Headword(['word' => $word, 'extension' => $extension]);
         if ($headword->save()) {
@@ -148,9 +147,12 @@ class Headword extends BaseEntityModel
     }
 
     /**
-     * 
      * Add synonyms.
      * @param string|string[]|Synonyms|Synonyms[] $synonyms
+     * `string`: Synonyms string.
+     * `string[]`: Synonyms string array.
+     * `Synonyms`: Synonyms model.
+     * `Synonyms[]`: Synonyms models.
      * String if it is a synonyms string, or Synonyms instance.
      * @return boolean
      * @throws InvalidParamException

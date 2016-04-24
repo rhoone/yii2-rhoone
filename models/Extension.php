@@ -141,6 +141,8 @@ class Extension extends BaseEntityModel
     /**
      * Add headword.
      * @param string|Headword $headword
+     * `string`: Headword string.
+     * `Headword`: Headword model.
      * @return false|Headword
      */
     public function setHeadword($headword)

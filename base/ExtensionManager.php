@@ -37,6 +37,9 @@ class ExtensionManager extends ServiceLocator
     /**
      * Load enabled extension(s).
      * @param ExtModel|string|null $ext
+     * `null` when you want to load all enabled extension(s).
+     * `string` or `ExtModel` when you want to load specified extension.
+     * @return int Sum of loaded extension(s).
      */
     public function load($ext = null)
     {

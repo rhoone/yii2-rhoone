@@ -80,6 +80,9 @@ class ExtensionController extends Controller
         try {
             $result = Yii::$app->rhoone->ext->register($class, $enable);
         } catch (\Exception $ex) {
+            if (YII_ENV != YII_ENV_PROD) {
+                throw $ex;
+            }
             throw new Exception($ex->getMessage());
         }
         echo "The extension `" . $class . "` is added.\n";

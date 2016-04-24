@@ -12,6 +12,7 @@
 
 namespace rhoone\base;
 
+use Yii;
 use yii\base\InvalidParamException;
 
 /**
@@ -23,22 +24,76 @@ trait DictionaryHelperTrait
 {
 
     /**
-     * 
-     * @param array $dictionary
+     * Add dictionary to extension.
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $extension
+     * @param array|\rhoone\extension\Dictionary|string|\rhoone\extension\Extension|null $dictionary
      */
-    public static function add($dictionary)
+    public static function add($extension, $dictionary = null)
     {
-        static::validate($dictionary);
+        $extension = ExtensionManager::validate($extension);
+        if ($dictionary === null) {
+            $dictionary = $extension->getDictionary();
+        }
+        $dictionary = static::validate($dictionary);
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($dictionary as $words) {
+                $headword = $words[0];
+                $headword = static::addHeadword($extension, $headword);
+                if (!($headword instanceof \rhoone\models\Headword) || !$headword) {
+                    throw new InvalidParamException("Failed to add headword.");
+                }
+                foreach ($words as $key => $synonyms) {
+                    if (!$headword->setSynonyms($synonyms)) {
+                        throw new InvalidParamException("Failed to add synonyms. It's headword is `" . $headword->word . "`.");
+                    }
+                }
+            }
+            $transaction->commit();
+        } catch (\Exception $ex) {
+            $transaction->rollBack();
+            throw $ex;
+        }
+        return true;
     }
 
-    public static function addHeadword($word)
+    /**
+     * Add headword.
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $extension
+     * @param string|\rhoone\models\Headword $word
+     * @return false|\rhoone\models\Headword
+     */
+    public static function addHeadword($extension, $word)
     {
-        
+        $extension = ExtensionManager::getModel($extension);
+        return $extension->setHeadword($word);
     }
 
-    public static function addSynonyms($headword, $synonyms)
+    /**
+     * Add synonyms.
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $extension
+     * `string`: Extension class name.
+     * `\rhoone\extension\Extension`: Extension model.
+     * `\rhoone\models\Extension`: Extension
+     * @param string|\rhoone\models\Headword $headword
+     * `string`: Headword string.
+     * `\rhoone\models\Headword`: Headword model.
+     * @param string|string[]|Synonyms|Synonyms[] $synonyms
+     * @return boolean
+     */
+    public static function addSynonyms($extension, $headword, $synonyms)
     {
-        
+        $extension = ExtensionManager::getModel($extension);
+        if (is_string($headword)) {
+            $headword = $extension->getHeadwords()->andWhere(['word' => $headword])->one();
+            if (!$headword) {
+                return false;
+            }
+        }
+        if ($headword instanceof \rhoone\models\Headword) {
+            return $headword->setSynonyms($synonyms);
+        }
+        return false;
     }
 
     /**
@@ -59,7 +114,7 @@ trait DictionaryHelperTrait
      * `\rhoone\extension\Dictionary`: dictionary model.
      * `string`: extension class string.
      * `\rhoone\extension\Extension`: extension model.
-     * @return boolean True if validated.
+     * @return array|false Dictionary array if validated, or false if invalid.
      * @throws InvalidParamException if error occured.
      */
     public static function validate($dictionary)
@@ -83,7 +138,7 @@ trait DictionaryHelperTrait
     /**
      * 
      * @param array $dictionary
-     * @return boolean
+     * @return array
      * @throws InvalidParamException
      */
     public static function validateArray($dictionary)
@@ -111,13 +166,13 @@ trait DictionaryHelperTrait
                 throw new InvalidParamException("Invalid headword.");
             }
         }
-        return true;
+        return $dictionary;
     }
-    
+
     /**
      * 
      * @param \rhoone\extension\Extension $extension
-     * @return boolean
+     * @return array
      */
     public static function validateWithExtension($extension)
     {
