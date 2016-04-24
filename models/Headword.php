@@ -114,20 +114,31 @@ class Headword extends BaseEntityModel
      * Add a headword.
      * @param string $word
      * @param Extension $extension
-     * @return false|\static
+     * @param boolean $addSynonyms
+     * @return true|\static
      * @throws InvalidParamException
      */
-    public static function add($word, $extension)
+    public static function add($word, $extension, $addSynonyms = false)
     {
         $headword = Headword::find()->where(['word' => $word, 'extension_guid' => $extension->guid])->one();
         if ($headword) {
             throw new InvalidParamException('The word: `' . $word . '` has existed.');
         }
         $headword = new Headword(['word' => $word, 'extension' => $extension]);
-        if ($headword->save()) {
-            return $headword;
+        $transaction = $headword->getDb()->beginTransaction();
+        try {
+            if (!$headword->save()) {
+                throw new InvalidParamException("Failed to add headword.");
+            }
+            if ($addSynonyms && !$headword->setSynonyms($word)) {
+                throw new InvalidParamException("Failed to add synonyms.");
+            }
+            $transaction->commit();
+        } catch (\Exception $ex) {
+            $transaction->rollBack();
+            throw $ex;
         }
-        return false;
+        return $headword;
     }
 
     /**

@@ -207,6 +207,9 @@ trait ExtensionHelperTrait
     public static function deregister($class, $force = false)
     {
         $model = static::getModel($class);
+        if (!$model) {
+            throw new InvalidParamException("`$class` does not exist.");
+        }
         if ($model->isEnabled && !$force) {
             throw new InvalidParamException("Unable to remove the enabled extensions.");
         }

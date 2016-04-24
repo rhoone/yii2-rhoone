@@ -187,12 +187,15 @@ class ExtensionController extends Controller
      */
     public function actionAddHeadword($class, $word)
     {
-        $model = ExtensionHelper::getModel($class);
+        $extMgr = Yii::$app->rhoone->ext;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
+        $model = $extMgr->getModel($class);
         if (!$model) {
             throw new Exception('`' . $class . '` does not exist.');
         }
         try {
-            $model->headword = $word;
+            $result = $model->setHeadword($word, true);
+            echo ($result ? "$word added." : "Failed to add.");
         } catch (\Exception $ex) {
             throw new Exception($ex->getMessage());
         }
@@ -206,7 +209,23 @@ class ExtensionController extends Controller
      */
     public function actionRemoveHeadword($class, $word)
     {
-        
+        $extMgr = Yii::$app->rhoone->ext;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
+        $model = $extMgr->getModel($class);
+        if (!$model) {
+            throw new Exception('`' . $class . '` does not exist.');
+        }
+        try {
+            $headword = $model->getHeadwords()->andWhere(['word' => $word])->one();
+            if (!$headword) {
+                echo "`$word` does not exist.";
+                return 0;
+            }
+            echo ($headword->delete() ? "$word deleted." : "Failed to delete.");
+        } catch (\Exception $ex) {
+            throw new Exception($ex->getMessage());
+        }
+        return 0;
     }
 
     /**
@@ -218,7 +237,9 @@ class ExtensionController extends Controller
      */
     public function actionAddSynonyms($class, $headword, $word, $addMissing = true)
     {
-        $model = ExtensionHelper::getModel($class);
+        $extMgr = Yii::$app->rhoone->ext;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
+        $model = $extMgr->getModel($class);
         if (!$model) {
             throw new Exception('`' . $class . '` does not exist.');
         }
