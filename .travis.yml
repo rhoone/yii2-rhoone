@@ -6,6 +6,15 @@ php:
     - nightly
     - hhvm
 
+sudo: required
+
+addons:
+  apt:
+    packages:
+    - mysql-server-5.6
+    - mysql-client-core-5.6
+    - mysql-client-5.6
+
 matrix:
     allow_failures:
         - php: hhvm
