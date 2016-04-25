@@ -21,6 +21,7 @@ use yii\base\NotSupportedException;
  */
 abstract class Extension extends \yii\base\Component
 {
+
     public static function id()
     {
         throw new NotSupportedException('The extension\'s id has not been specified.');
@@ -32,12 +33,26 @@ abstract class Extension extends \yii\base\Component
     }
 
     /**
-     * Get dictionaries.
-     * @return mixed
+     * Get dictionary.
+     * @return Dictionary
      */
     public static function getDictionary()
     {
+        if (class_exists(__NAMESPACE__ . '\Dictionary')) {
+            $class = __NAMESPACE__ . '\Dictionary';
+            return new $class();
+        }
         return null;
+    }
+
+    /**
+     * 
+     * @param string|string[] $keywords
+     * @return boolean
+     */
+    public function match($keywords)
+    {
+        return false;
     }
 
     /**

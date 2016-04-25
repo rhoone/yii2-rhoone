@@ -19,9 +19,9 @@ use yii\di\ServiceLocator;
 /**
  * rhoone component.
  *
- * @property-read ExtensionManager $ext
- * @property-read DictionaryManager $dic
- * @property-read Extension[] $extensions
+ * @property-read ExtensionManager $ext Extension Manager.
+ * @property-read DictionaryManager $dic Dictionary Manager.
+ * @property-read Extension[] $extensions Loaded extension instances.
  * @author vistart <i@vistart.name>
  */
 class Rhoone extends ServiceLocator
@@ -94,13 +94,22 @@ class Rhoone extends ServiceLocator
     }
 
     /**
+     * 
+     * @param type $keywords
+     */
+    public function match($keywords = "")
+    {
+        
+    }
+
+    /**
      * Search for result to the keywords.
      * @param string|string[] $keywords
      */
     public function search($keywords = "")
     {
         Yii::trace("Begin searching...", __METHOD__);
-        if ((is_string($keywords) && strlen($keywords) == 0) || (is_array($keywords) && empty($keywords)) || !is_numeric($keywords)){
+        if ((is_string($keywords) && strlen($keywords) == 0) || (is_array($keywords) && empty($keywords)) || !is_numeric($keywords)) {
             Yii::warning('Empty keywords!', __METHOD__);
             return null;
         }

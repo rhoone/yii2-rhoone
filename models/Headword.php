@@ -38,6 +38,7 @@ class Headword extends BaseEntityModel
     public function init()
     {
         $this->queryClass = HeadwordQuery::className();
+        $this->on(self::EVENT_AFTER_INSERT, [$this, 'onInsertHeadword']);
         parent::init();
     }
 
@@ -114,7 +115,7 @@ class Headword extends BaseEntityModel
      * Add a headword.
      * @param string $word
      * @param Extension $extension
-     * @return false|\static
+     * @return true|\static
      * @throws InvalidParamException
      */
     public static function add($word, $extension)
@@ -122,13 +123,22 @@ class Headword extends BaseEntityModel
         $headword = Headword::find()->where(['word' => $word, 'extension_guid' => $extension->guid])->one();
         if ($headword) {
             throw new InvalidParamException('The word: `' . $word . '` has existed.');
-            return false;
         }
         $headword = new Headword(['word' => $word, 'extension' => $extension]);
-        if ($headword->save()) {
-            return $headword;
+        $transaction = $headword->getDb()->beginTransaction();
+        try {
+            if (!$headword->save()) {
+                if (YII_ENV !== YII_ENV_PROD) {
+                    var_dump($headword->errors);
+                }
+                throw new InvalidParamException("Failed to add headword.");
+            }
+            $transaction->commit();
+        } catch (\Exception $ex) {
+            $transaction->rollBack();
+            throw $ex;
         }
-        return false;
+        return $headword;
     }
 
     /**
@@ -148,9 +158,12 @@ class Headword extends BaseEntityModel
     }
 
     /**
-     * 
      * Add synonyms.
      * @param string|string[]|Synonyms|Synonyms[] $synonyms
+     * `string`: Synonyms string.
+     * `string[]`: Synonyms string array.
+     * `Synonyms`: Synonyms model.
+     * `Synonyms[]`: Synonyms models.
      * String if it is a synonyms string, or Synonyms instance.
      * @return boolean
      * @throws InvalidParamException
@@ -189,6 +202,9 @@ class Headword extends BaseEntityModel
     public function removeSynonyms($synonyms)
     {
         if (is_string($synonyms)) {
+            if ($synonyms === $this->word) {
+                throw new InvalidParamException("`$synonyms` is same as headword, it cannot be deleted.");
+            }
             $model = Synonyms::find()->where(['word' => $synonyms, 'headword_guid' => $this->guid])->one();
             if (!$model) {
                 Yii::warning($synonyms . ' does not exist.', __METHOD__);
@@ -197,8 +213,12 @@ class Headword extends BaseEntityModel
             return $model->delete() == 1;
         }
         if ($synonyms instanceof Synonyms && $synonyms->headword == $this) {
+            if ($synonyms->word === $this->word) {
+                throw new InvalidParamException("Synonyms `" . $synonyms->word . "` is same as headword, it cannot be deleted.");
+            }
             return $synonyms->delete() == 1;
         }
+        return false;
     }
 
     /**
@@ -218,5 +238,16 @@ class Headword extends BaseEntityModel
     public static function find()
     {
         return parent::find();
+    }
+
+    /**
+     * 
+     * @param \yii\db\AfterSaveEvent $event
+     */
+    public function onInsertHeadword($event)
+    {
+        $sender = $event->sender;
+        /* @var $sender static */
+        return $sender->setSynonyms($sender->word);
     }
 }

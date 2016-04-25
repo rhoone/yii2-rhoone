@@ -44,7 +44,7 @@ class BaseDictionaryHelper
     }
 
     /**
-     * 
+     * The first element of dictionary array is headword, and the others are regared as its synonyms.
      * @param mixed $dictionary
      * @return boolean
      */

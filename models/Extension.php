@@ -141,15 +141,17 @@ class Extension extends BaseEntityModel
     /**
      * Add headword.
      * @param string|Headword $headword
+     * `string`: Headword string.
+     * `Headword`: Headword model.
      * @return false|Headword
      */
-    public function setHeadword($headword)
+    public function setHeadword($headword, $addSynonyms = false)
     {
         if (is_string($headword)) {
-            return Headword::add($headword, $this);
+            return Headword::add($headword, $this, $addSynonyms);
         }
         if ($headword instanceof Headword) {
-            return Headword::add($headword->word, $this);
+            return Headword::add($headword->word, $this, $addSynonyms);
         }
     }
 
