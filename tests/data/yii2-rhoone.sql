@@ -19,6 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `rho.one`
 --
+DROP DATABASE IF EXISTS `rho.one`;
 CREATE DATABASE IF NOT EXISTS `rho.one` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `rho.one`;
 
