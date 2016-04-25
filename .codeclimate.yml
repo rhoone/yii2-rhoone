@@ -1,0 +1,19 @@
+exclude_paths:
+    - docs/**/*
+    - tests/**/*
+    
+ratings:
+    paths:
+        - assets/**
+        - base/**
+        - controllers/**
+        - extension/**
+        - helpers/**
+        - models/**
+        - widgets/**
+        
+engines:
+    phpmd:
+        enabled: true
+    phpcodesniffer:
+        enabled: true

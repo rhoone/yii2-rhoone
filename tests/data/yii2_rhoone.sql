@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 15, 2016 at 12:46 PM
--- Server version: 5.7.11
+-- Generation Time: Apr 25, 2016 at 02:53 PM
+-- Server version: 5.7.12
 -- PHP Version: 5.6.20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -19,21 +19,25 @@ SET time_zone = "+00:00";
 --
 -- Database: `rho.one`
 --
+CREATE DATABASE IF NOT EXISTS `rho.one` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `rho.one`;
 
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `extension`
 --
--- Creation: Apr 10, 2016 at 12:31 PM
--- Last update: Apr 15, 2016 at 02:13 AM
+-- Creation: Apr 22, 2016 at 05:39 AM
+-- Last update: Apr 24, 2016 at 09:02 AM
 --
 
 DROP TABLE IF EXISTS `extension`;
 CREATE TABLE IF NOT EXISTS `extension` (
-  `guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Module GUID',
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'Module Name',
+  `guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Extension GUID',
+  `id` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Extension ID',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'Extension Name',
   `classname` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'classname',
+  `config_array` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Configuration Array',
   `enabled` bit(1) NOT NULL DEFAULT b'0' COMMENT 'Enabled',
   `monopolized` bit(1) NOT NULL DEFAULT b'0' COMMENT 'Monopolized',
   `default` bit(1) NOT NULL DEFAULT b'0' COMMENT 'Default',
@@ -41,7 +45,8 @@ CREATE TABLE IF NOT EXISTS `extension` (
   `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT 'Update Time',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'Description',
   PRIMARY KEY (`guid`),
-  UNIQUE KEY `extension_classname_unique` (`classname`) USING BTREE
+  UNIQUE KEY `extension_classname_unique` (`classname`) USING BTREE,
+  UNIQUE KEY `extension_id_unique` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -50,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `extension` (
 -- Table structure for table `headword`
 --
 -- Creation: Apr 10, 2016 at 12:39 PM
+-- Last update: Apr 25, 2016 at 06:48 AM
 --
 
 DROP TABLE IF EXISTS `headword`;
@@ -92,6 +98,7 @@ CREATE TABLE IF NOT EXISTS `profile` (
 -- Table structure for table `synonyms`
 --
 -- Creation: Apr 10, 2016 at 12:40 PM
+-- Last update: Apr 25, 2016 at 06:48 AM
 --
 
 DROP TABLE IF EXISTS `synonyms`;
@@ -105,6 +112,40 @@ CREATE TABLE IF NOT EXISTS `synonyms` (
   UNIQUE KEY `synonyms_headword_unique` (`word`,`headword_guid`),
   KEY `synonyms_headword_fkey` (`headword_guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+-- Creation: Apr 07, 2016 at 08:25 AM
+--
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT 'GUID',
+  `id` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'ID',
+  `pass_hash` varchar(80) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Password Hash',
+  `ip_1` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'IP 1',
+  `ip_2` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'IP 2',
+  `ip_3` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'IP 3',
+  `ip_4` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'IP 4',
+  `ip_type` tinyint(3) UNSIGNED NOT NULL DEFAULT '4' COMMENT 'IP Address Type',
+  `create_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT 'Create Time',
+  `update_time` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' COMMENT 'Update Time',
+  `auth_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Authentication Key',
+  `access_token` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Access Token',
+  `password_reset_token` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Password Reset Token',
+  `status` tinyint(3) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'Status',
+  `type` tinyint(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Type',
+  `source` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '' COMMENT 'Source',
+  PRIMARY KEY (`guid`),
+  UNIQUE KEY `user_id_unique` (`id`),
+  KEY `user_auth_key_normal` (`auth_key`),
+  KEY `user_access_token_normal` (`access_token`),
+  KEY `user_password_reset_token` (`password_reset_token`),
+  KEY `user_create_time_normal` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='User';
 
 --
 -- Constraints for dumped tables
