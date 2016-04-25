@@ -38,6 +38,7 @@ class Headword extends BaseEntityModel
     public function init()
     {
         $this->queryClass = HeadwordQuery::className();
+        $this->on(self::EVENT_AFTER_INSERT, [$this, 'onInsertHeadword']);
         parent::init();
     }
 
@@ -114,11 +115,10 @@ class Headword extends BaseEntityModel
      * Add a headword.
      * @param string $word
      * @param Extension $extension
-     * @param boolean $addSynonyms
      * @return true|\static
      * @throws InvalidParamException
      */
-    public static function add($word, $extension, $addSynonyms = false)
+    public static function add($word, $extension)
     {
         $headword = Headword::find()->where(['word' => $word, 'extension_guid' => $extension->guid])->one();
         if ($headword) {
@@ -128,10 +128,10 @@ class Headword extends BaseEntityModel
         $transaction = $headword->getDb()->beginTransaction();
         try {
             if (!$headword->save()) {
+                if (YII_ENV !== YII_ENV_PROD) {
+                    var_dump($headword->errors);
+                }
                 throw new InvalidParamException("Failed to add headword.");
-            }
-            if ($addSynonyms && !$headword->setSynonyms($word)) {
-                throw new InvalidParamException("Failed to add synonyms.");
             }
             $transaction->commit();
         } catch (\Exception $ex) {
@@ -202,6 +202,9 @@ class Headword extends BaseEntityModel
     public function removeSynonyms($synonyms)
     {
         if (is_string($synonyms)) {
+            if ($synonyms === $this->word) {
+                throw new InvalidParamException("`$synonyms` is same as headword, it cannot be deleted.");
+            }
             $model = Synonyms::find()->where(['word' => $synonyms, 'headword_guid' => $this->guid])->one();
             if (!$model) {
                 Yii::warning($synonyms . ' does not exist.', __METHOD__);
@@ -210,8 +213,12 @@ class Headword extends BaseEntityModel
             return $model->delete() == 1;
         }
         if ($synonyms instanceof Synonyms && $synonyms->headword == $this) {
+            if ($synonyms->word === $this->word) {
+                throw new InvalidParamException("Synonyms `" . $synonyms->word . "` is same as headword, it cannot be deleted.");
+            }
             return $synonyms->delete() == 1;
         }
+        return false;
     }
 
     /**
@@ -231,5 +238,16 @@ class Headword extends BaseEntityModel
     public static function find()
     {
         return parent::find();
+    }
+
+    /**
+     * 
+     * @param \yii\db\AfterSaveEvent $event
+     */
+    public function onInsertHeadword($event)
+    {
+        $sender = $event->sender;
+        /* @var $sender static */
+        return $sender->setSynonyms($sender->word);
     }
 }

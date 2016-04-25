@@ -74,4 +74,111 @@ class DictionaryController extends Controller
         }
         return 0;
     }
+
+    /**
+     * Add headword to class.
+     * @param string $class
+     * @param string $word
+     * @throws Exception
+     */
+    public function actionAddHeadword($class, $word)
+    {
+        $extMgr = Yii::$app->rhoone->ext;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
+        $model = $extMgr->getModel($class);
+        if (!$model) {
+            throw new Exception('`' . $class . '` does not exist.');
+        }
+        try {
+            $result = $model->setHeadword($word, true);
+            echo ($result ? "$word added." : "Failed to add.");
+        } catch (\Exception $ex) {
+            throw new Exception($ex->getMessage());
+        }
+        return 0;
+    }
+
+    /**
+     * Remove headword.
+     * @param string $class
+     * @param string $word
+     */
+    public function actionRemoveHeadword($class, $word)
+    {
+        $extMgr = Yii::$app->rhoone->ext;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
+        $model = $extMgr->getModel($class);
+        if (!$model) {
+            throw new Exception('`' . $class . '` does not exist.');
+        }
+        try {
+            $headword = $model->getHeadwords()->andWhere(['word' => $word])->one();
+            if (!$headword) {
+                echo "`$word` does not exist.";
+                return 0;
+            }
+            echo ($headword->delete() ? "$word deleted." : "Failed to delete.");
+        } catch (\Exception $ex) {
+            throw new Exception($ex->getMessage());
+        }
+        return 0;
+    }
+
+    /**
+     * Add synonyms to class.
+     * @param string $class
+     * @param string $headword
+     * @param string $word
+     * @param boolean $addMissing
+     */
+    public function actionAddSynonyms($class, $headword, $word, $addMissing = true)
+    {
+        $extMgr = Yii::$app->rhoone->ext;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
+        $model = $extMgr->getModel($class);
+        $headwordModel = $model->getHeadwords()->andWhere(['word' => $headword])->one();
+        if (!$headwordModel) {
+            if ($addMissing) {
+                $headwordModel = $model->setHeadword(new Headword(['word' => $headword]));
+            } else {
+                throw new Exception("The headword: `" . $headword . "` does not exist.");
+            }
+        }
+        try {
+            if (!$headwordModel->setSynonyms($word)) {
+                throw new Exception("Failed to add synonyms: `" . $word . "`");
+            }
+        } catch (\Exception $ex) {
+            throw new Exception($ex->getMessage());
+        }
+        echo "The synonyms `" . $word . "` is added to `" . $class . "`";
+        return 0;
+    }
+
+    /**
+     * Remove synonyms.
+     * @param string $class
+     * @param string $headword
+     * @param string $word
+     */
+    public function actionRemoveSynonyms($class, $headword, $word)
+    {
+        $extMgr = Yii::$app->rhoone->ext;
+        /* @var $extMgr \rhoone\base\ExtensionManager */
+        $model = $extMgr->getModel($class);
+        $headwordModel = $model->getHeadwords()->andWhere(['word' => $headword])->one();
+        /* @var $headwordModel \rhoone\models\Headword */
+        if (!$headwordModel) {
+            throw new Exception('The headword: `' . $headword . '` does not exist.');
+        }
+        try {
+            if (!$headwordModel->removeSynonyms($word)) {
+                throw new Exception("Failed to remove synonyms: `" . $word . "'");
+            }
+        } catch (\Exception $ex) {
+            throw new Exception($ex->getMessage());
+        }
+        echo "The synonyms `$word` removed.";
+        return 0;
+    }
 }

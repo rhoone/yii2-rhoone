@@ -19,6 +19,7 @@ use Yii;
  * Description of Synonyms
  * 
  * @property string $headword_guid
+ * @property string $word
  * 
  * @property Headword $headword
  * @property-read Extension $extension
@@ -89,6 +90,7 @@ class Synonyms extends BaseEntityModel
     public function init()
     {
         $this->queryClass = SynonymsQuery::className();
+        $this->on(self::EVENT_BEFORE_DELETE, [$this, 'onDeleteSynonyms']);
         parent::init();
     }
 
@@ -99,5 +101,20 @@ class Synonyms extends BaseEntityModel
     public static function find()
     {
         return parent::find();
+    }
+
+    /**
+     * 
+     * @param \yii\base\ModelEvent $event
+     */
+    public function onDeleteSynonyms($event)
+    {
+        $sender = $event->sender;
+        /* @var $sender static */
+        $headword = $sender->headword;
+        if ($sender->word == $headword->word) {
+            $sender->addError('word', 'The synonyms cannot be deleted.');
+            $event->isValid = false;
+        }
     }
 }
