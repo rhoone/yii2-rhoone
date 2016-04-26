@@ -17,11 +17,12 @@ use Yii;
 use yii\di\ServiceLocator;
 
 /**
- * rhoone component.
+ * Rhoone component.
  *
  * @property-read ExtensionManager $ext Extension Manager.
  * @property-read DictionaryManager $dic Dictionary Manager.
- * @property-read Extension[] $extensions Loaded extension instances.
+ * @property-read Extension[] $extensions Loaded extension instances,
+ * if ExtensionManager is one of the core components and it was loaded correctly.
  * @author vistart <i@vistart.name>
  */
 class Rhoone extends ServiceLocator
@@ -95,7 +96,7 @@ class Rhoone extends ServiceLocator
 
     /**
      * 
-     * @param type $keywords
+     * @param string|string[] $keywords
      */
     public function match($keywords = "")
     {

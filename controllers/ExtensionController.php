@@ -12,8 +12,7 @@
 
 namespace rhoone\controllers;
 
-use rhoone\helpers\ExtensionHelper;
-use rhoone\models\Headword;
+use rhoone\models\Extension;
 use Yii;
 use yii\console\Controller;
 use yii\console\Exception;
@@ -32,7 +31,7 @@ class ExtensionController extends Controller
      */
     public function actionIndex()
     {
-        $extensions = ExtensionHelper::all();
+        $extensions = Extension::find()->all();
         if (empty($extensions)) {
             echo "<empty list>";
         }

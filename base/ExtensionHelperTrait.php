@@ -16,7 +16,7 @@ use Yii;
 use yii\base\InvalidParamException;
 
 /**
- * Description of ExtensionHelperTrait
+ * ExtensionHelperTrait is designed for register/deregister/validate/enable/disable extension(s).
  *
  * @author vistart <i@vistart.name>
  */
@@ -24,8 +24,18 @@ trait ExtensionHelperTrait
 {
 
     /**
+     * Register extension.
+     * @param string $class Extension class name.
+     * The following class name patterns are acceptable:
+     * 1. `rhoone\task\Extension`: Full qualified name.
+     * 2. `rhoone\task`: except `\Extension` class name.
+     * 3. `rhoone\task\`: except `Extension` class name.
+     * @see static::normalizeClass()
      * 
-     * @param string $class
+     * @param boolean $enable Enable it after been registered.
+     * @return boolean Whether the extension registered or enabled.
+     * @throws InvalidParamException
+     * @throws \Exception
      */
     public static function register($class, $enable = false)
     {
@@ -71,6 +81,11 @@ trait ExtensionHelperTrait
     /**
      * 
      * @param string $class
+     * The following class name patterns are acceptable:
+     * 1. `rhoone\task\Extension`: Full qualified name.
+     * 2. `rhoone\task`: except `\Extension` class name.
+     * 3. `rhoone\task\`: except `Extension` class name.
+     * 
      * @return string
      * @throws InvalidParamException
      */
@@ -132,6 +147,11 @@ trait ExtensionHelperTrait
         return \rhoone\models\Extension::find()->where(['classname' => $extension->className()])->exists();
     }
 
+    /**
+     * Check whether the extension enabled.
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $class
+     * @return boolean
+     */
     public static function checkEnabled($class)
     {
         $model = static::getModel($class);
@@ -154,7 +174,7 @@ trait ExtensionHelperTrait
         }
         $class = $extension->className();
         if (!($extension instanceof \rhoone\extension\Extension)) {
-            throw new InvalidParamException('the class `' . $class . '` is not an extension.');
+            throw new InvalidExtensionException('the class `' . $class . '` is not an extension.');
         }
         $extension = static::validateExtensionConfig($extension);
         return $extension;
@@ -177,53 +197,41 @@ trait ExtensionHelperTrait
     public static function validateExtensionConfig($extension)
     {
         if (!($extension instanceof \rhoone\extension\Extension)) {
-            throw new InvalidParamException("Not an extension.");
+            throw new InvalidExtensionException("Not an extension.");
         }
         try {
             $id = $extension->id();
             if (empty($id) || !is_string($id) || strlen($id) > 255) {
-                throw new InvalidParamException("Invalid Extension ID.\nID should be a string, and it's length should be less than 255.");
+                throw new InvalidExtensionException("Invalid Extension ID.\nID should be a string, and it's length should be less than 255.");
             }
         } catch (\Exception $ex) {
             try {
                 $id = $extension->config()['id'];
             } catch (\Exception $ex) {
-                throw new InvalidParamException("Extension ID not specified.\nEither ID static method or config array should be specified.");
+                throw new InvalidExtensionException("Extension ID not specified.\nEither ID static method or config array should be specified.");
             }
         }
         try {
             $name = $extension->name();
             if (empty($name) || !is_string($name) || strlen($name) > 255) {
-                throw new InvalidParamException("Invalid Extension Name.\nName should be a string, and it's length should be less than 255.");
+                throw new InvalidExtensionException("Invalid Extension Name.\nName should be a string, and it's length should be less than 255.");
             }
         } catch (\Exception $ex) {
             try {
                 $name = $extension->config()['name'];
             } catch (\Exception $ex) {
-                throw new InvalidParamException("Extension name not specified.\nEither Name static method or config array should be specified.");
+                throw new InvalidExtensionException("Extension name not specified.\nEither Name static method or config array should be specified.");
             }
         }
         return $extension;
     }
 
     /**
-     * 
-     * @param \rhoone\extension\Extension $extension
-     * @return \rhoone\extension\Dictionary
-     */
-    public static function validateDictionary($extension)
-    {
-        $dic = $extension->getDictionary();
-        $class = $extension->className();
-        if (empty($dic) || !is_array($dic)) {
-            Yii::warning("`$class` does not contain a dictionary.\n", __METHOD__);
-        }
-        return $dic;
-    }
-
-    /**
      * Validate extension class.
      * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $class
+     * `string` if extension class name.
+     * `\rhoone\extension\Extension` if extension instance.
+     * `\rhoone\models\Extension` if extension record.
      * @return \rhoone\extension\Extension
      * @throws InvalidParamException
      */
@@ -243,13 +251,14 @@ trait ExtensionHelperTrait
 
         $class = static::normalizeClass($class);
         $extension = static::validateExtension($class);
-        $dic = static::validateDictionary($extension);
+        $dic = DictionaryManager::validate($extension);
         return $extension;
     }
 
     /**
-     * 
-     * @param string $class
+     * Deregister extension.
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $class
+     * @return boolean True if extension deregistered.
      */
     public static function deregister($class, $force = false)
     {

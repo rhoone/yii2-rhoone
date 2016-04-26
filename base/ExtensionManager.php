@@ -18,15 +18,32 @@ use Yii;
 use yii\di\ServiceLocator;
 
 /**
- * Description of ExtensionManager
- *
- * @property-read ExtModel[] $extensions
+ * Extension Manager.
+ * This manager will be attached as a component of Rhoone automatically,
+ * You can access this as the following way:
+ * ```
+ * Yii::$app->rhoone->ext;
+ * ```
+ * 
+ * We do not recommend that use it as seperated instances, unless you know the consequenses.
+ * 
+ * This manager will load all enabled rhoone extension(s).
+ * 
+ * If you want to register new extension(s), you can access `register()` method like following:
+ * ```
+ * $extMgr = Yii::$app->rhoone->ext;
+ * $extMgr->register(<class name>);
+ * ```
+ * 
  * @author vistart <i@vistart.name>
  */
 class ExtensionManager extends ServiceLocator
 {
     use ExtensionHelperTrait;
 
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         parent::init();
@@ -36,6 +53,7 @@ class ExtensionManager extends ServiceLocator
 
     /**
      * Load enabled extension(s).
+     * If you call this method without any parameter, it will load all enabled extension(s).
      * @param ExtModel|string|null $ext
      * `null` when you want to load all enabled extension(s).
      * `string` or `ExtModel` when you want to load specified extension.
