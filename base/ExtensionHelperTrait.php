@@ -156,6 +156,53 @@ trait ExtensionHelperTrait
         if (!($extension instanceof \rhoone\extension\Extension)) {
             throw new InvalidParamException('the class `' . $class . '` is not an extension.');
         }
+        $extension = static::validateExtensionConfig($extension);
+        return $extension;
+    }
+
+    /**
+     * Validate Extension Configuration.
+     * The extension configuration should follow the rules:
+     * 1. ID should be specified in either ID static method or config array ('id').
+     * 2. Name should be specified in either Name static method or config array ('name').
+     * 3. `Default` and `Monopolized` are logical value, specified in config array, not required, default to false.
+     * 
+     * If you violate above rules:
+     * 1. throw exception if ID is invalid.
+     * 2. throw exception if Name is invalid.
+     * 3. convert to logical value if `Default` or `Monopolized` is not logical value.
+     * @param \rhoone\extension\Extension $extension
+     * @return \rhoone\extension\Extension
+     */
+    public static function validateExtensionConfig($extension)
+    {
+        if (!($extension instanceof \rhoone\extension\Extension)) {
+            throw new InvalidParamException("Not an extension.");
+        }
+        try {
+            $id = $extension->id();
+            if (empty($id) || !is_string($id) || strlen($id) > 255) {
+                throw new InvalidParamException("Invalid Extension ID.\nID should be a string, and it's length should be less than 255.");
+            }
+        } catch (\Exception $ex) {
+            try {
+                $id = $extension->config()['id'];
+            } catch (\Exception $ex) {
+                throw new InvalidParamException("Extension ID not specified.\nEither ID static method or config array should be specified.");
+            }
+        }
+        try {
+            $name = $extension->name();
+            if (empty($name) || !is_string($name) || strlen($name) > 255) {
+                throw new InvalidParamException("Invalid Extension Name.\nName should be a string, and it's length should be less than 255.");
+            }
+        } catch (\Exception $ex) {
+            try {
+                $name = $extension->config()['name'];
+            } catch (\Exception $ex) {
+                throw new InvalidParamException("Extension name not specified.\nEither Name static method or config array should be specified.");
+            }
+        }
         return $extension;
     }
 

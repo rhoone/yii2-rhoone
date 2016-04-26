@@ -22,14 +22,37 @@ use yii\base\NotSupportedException;
 abstract class Extension extends \yii\base\Component
 {
 
+    /**
+     * If you didn't implemented this method, the config array will be taken.
+     * @throws NotSupportedException
+     */
     public static function id()
     {
         throw new NotSupportedException('The extension\'s id has not been specified.');
     }
 
+    /**
+     * If you didn't implemented this method, the config array will be taken.
+     * @throws NotSupportedException
+     */
     public static function name()
     {
         throw new NotSupportedException('The extension\'s name has not been specified.');
+    }
+
+    /**
+     * Configuration array example:
+     * [
+     *     'id' => <id>,           // Required.
+     *     'name' => <name>,       // Required.
+     *     'default' => false,      // Optional, Default to false.
+     *     'monopolized' => false,  // Optional, Default to false.
+     * ]
+     * @return string|null
+     */
+    public static function config()
+    {
+        return null;
     }
 
     /**
@@ -48,11 +71,11 @@ abstract class Extension extends \yii\base\Component
     /**
      * 
      * @param string|string[] $keywords
-     * @return boolean
+     * @return boolean|null
      */
     public function match($keywords)
     {
-        return false;
+        return null;
     }
 
     /**
