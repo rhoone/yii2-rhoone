@@ -23,7 +23,7 @@ SET time_zone = "+00:00";
 
 SET GLOBAL innodb_large_prefix=ON;
 SET GLOBAL innodb_file_format=Barracuda;
-SET GOLBAL innodb_file_format_check=ON;
+SET GLOBAL innodb_file_format_check=ON;
 SET GLOBAL innodb_file_format_max=Barracuda;
 SET GLOBAL innodb_file_per_table=ON;
 --
