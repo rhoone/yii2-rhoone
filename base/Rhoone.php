@@ -13,6 +13,7 @@
 namespace rhoone\base;
 
 use rhoone\extension\Extension;
+use rhoone\models\Keyword;
 use Yii;
 use yii\di\ServiceLocator;
 
@@ -73,6 +74,7 @@ class Rhoone extends ServiceLocator
         return [
             'ext' => ['class' => 'rhoone\base\ExtensionManager'],
             'dic' => ['class' => 'rhoone\base\DictionaryManager'],
+            'splitter' => ['class' => 'rhoone\base\KeywordSplitter'],
         ];
     }
 
@@ -96,27 +98,32 @@ class Rhoone extends ServiceLocator
 
     /**
      * 
-     * @param string|string[] $keywords
+     * @param string $keyword
+     * @return \rhoone\models\Extension[]
      */
-    public function match($keywords = "")
+    public function match($keyword = "")
     {
-        
+        $keyword = new Keyword($keyword);
+        $defaults = \rhoone\models\Extension::findAllDefault(true);
+        $nonDefaults = [];
+        foreach (Yii::$app->rhoone->dic->getSynonyms(null, $keyword->splitted) as $synonym) {
+            $nonDefaults[$synonym->extension->guid] = $synonym->extension;
+        }
+        return array_merge($defaults, $nonDefaults);
+        //die();
     }
 
     /**
      * Search for result to the keywords.
-     * @param string|string[] $keywords
+     * @param string $keyword
      */
-    public function search($keywords = "")
+    public function search($keyword = "")
     {
         Yii::trace("Begin searching...", __METHOD__);
-        if ((is_string($keywords) && strlen($keywords) == 0) || (is_array($keywords) && empty($keywords)) || !is_numeric($keywords)) {
-            Yii::warning('Empty keywords!', __METHOD__);
-            return null;
-        }
+        $matches = $this->match($keyword);
         $result = "";
-        foreach ($this->extensions as $extension) {
-            $result .= $extension->search($keywords);
+        foreach ($matches as $extension) {
+            $result .= $extension->extension->search($keyword);
         }
         return $result;
     }

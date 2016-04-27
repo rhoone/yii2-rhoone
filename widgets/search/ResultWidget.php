@@ -16,7 +16,6 @@ use rhoone\widgets\search\result\FormWidget;
 use rhoone\widgets\search\result\ContainerWidget;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
 
 /**
  * Description of ResultWidget

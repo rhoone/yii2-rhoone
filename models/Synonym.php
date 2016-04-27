@@ -12,11 +12,12 @@
 
 namespace rhoone\models;
 
+use vistart\helpers\Number;
 use vistart\Models\models\BaseEntityModel;
 use Yii;
 
 /**
- * Description of Synonyms
+ * Description of Synonym
  * 
  * @property string $headword_guid
  * @property string $word
@@ -26,7 +27,7 @@ use Yii;
  *
  * @author vistart <i@vistart.name>
  */
-class Synonyms extends BaseEntityModel
+class Synonym extends BaseEntityModel
 {
 
     public $idAttribute = false;
@@ -34,7 +35,7 @@ class Synonyms extends BaseEntityModel
 
     public static function tableName()
     {
-        return '{{%synonyms}}';
+        return '{{%synonym}}';
     }
 
     public function rules()
@@ -89,14 +90,15 @@ class Synonyms extends BaseEntityModel
 
     public function init()
     {
-        $this->queryClass = SynonymsQuery::className();
-        $this->on(self::EVENT_BEFORE_DELETE, [$this, 'onDeleteSynonyms']);
+        $this->queryClass = SynonymQuery::className();
+        $this->on(self::EVENT_BEFORE_DELETE, [$this, 'onDeleteSynonym']);
         parent::init();
     }
 
     /**
-     * 
-     * @return SynonymsQuery
+     * @inheritdoc
+     * Friendly to IDE.
+     * @return SynonymQuery
      */
     public static function find()
     {
@@ -107,14 +109,31 @@ class Synonyms extends BaseEntityModel
      * 
      * @param \yii\base\ModelEvent $event
      */
-    public function onDeleteSynonyms($event)
+    public function onDeleteSynonym($event)
     {
         $sender = $event->sender;
         /* @var $sender static */
         $headword = $sender->headword;
         if ($sender->word == $headword->word) {
-            $sender->addError('word', 'The synonyms cannot be deleted.');
+            $sender->addError('word', 'The synonym cannot be deleted.');
             $event->isValid = false;
         }
+    }
+
+    /**
+     * 
+     * @param string|static $synonym
+     * @return boolean
+     */
+    public function isSynonymous($synonym)
+    {
+        if (is_string($synonym)) {
+            if (preg_match(Number::GUID_REGEX, $synonym)) {
+                $synonym = static::findOne($synonym);
+            } else {
+                $synonym = static::find()->word($synonym)->one();
+            }
+        }
+        return $synonym instanceof static && $synonym->headword_guid == $this->headword_guid;
     }
 }

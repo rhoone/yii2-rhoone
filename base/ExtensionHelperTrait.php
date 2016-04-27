@@ -64,6 +64,11 @@ trait ExtensionHelperTrait
         return true;
     }
 
+    /**
+     * 
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $class
+     * @return boolean
+     */
     public static function enable($class)
     {
         $model = static::getModel($class);
@@ -71,6 +76,11 @@ trait ExtensionHelperTrait
         return $model->save();
     }
 
+    /**
+     * 
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension $class
+     * @return boolean
+     */
     public static function disable($class)
     {
         $model = static::getModel($class);
@@ -121,6 +131,28 @@ trait ExtensionHelperTrait
             return \rhoone\models\Extension::find()->guid($class->guid)->one();
         }
         return null;
+    }
+
+    /**
+     * 
+     * @param string[]|\rhoone\extension\Extension[]|\rhoone\models\Extension[]|mixed $classes
+     * @return rhoone\models\Extension[]
+     */
+    public static function getModels($classes = [])
+    {
+        if (empty($classes)) {
+            return null;
+        }
+        $classes = (array) $classes;
+        $models = [];
+        foreach ($classes as $class) {
+            $model = static::getModel($class);
+            if (empty($model)) {
+                continue;
+            }
+            $models[] = $model;
+        }
+        return $models;
     }
 
     /**

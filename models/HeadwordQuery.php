@@ -12,7 +12,9 @@
 
 namespace rhoone\models;
 
+use vistart\helpers\Number;
 use vistart\Models\queries\BaseEntityQuery;
+use Yii;
 
 /**
  * Description of HeadwordQuery
@@ -33,5 +35,21 @@ class HeadwordQuery extends BaseEntityQuery
             return $this;
         }
         return $this->andWhere(['word' => $word]);
+    }
+    
+    public function extension($extension)
+    {
+        $extension = (array) $extension;
+        $guids = [];
+        foreach ($extension as $k => $e) {
+            if (is_string($e) && !preg_match(Number::GUID_REGEX, $e)) {
+                $e = Yii::$app->rhoone->ext->getModel($e);
+            }
+            if (!is_string($e) || !($e instanceof Extension)) {
+                unset($extension[$k]);
+            }
+            $guids[] = $e->guid;
+        }
+        return $this->andWhere(['extension_guid' => $guids]);
     }
 }

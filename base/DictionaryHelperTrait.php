@@ -12,6 +12,7 @@
 
 namespace rhoone\base;
 
+use rhoone\models\Keyword;
 use Yii;
 use yii\base\InvalidParamException;
 
@@ -68,7 +69,7 @@ trait DictionaryHelperTrait
         $extension = ExtensionManager::getModel($extension);
         return $extension->setHeadword($word);
     }
-    
+
     public static function removeHeadword($extension, $word)
     {
         $extension = ExtensionManager::getModel($extension);
@@ -84,7 +85,7 @@ trait DictionaryHelperTrait
      * @param string|\rhoone\models\Headword $headword
      * `string`: Headword string.
      * `\rhoone\models\Headword`: Headword model.
-     * @param string|string[]|Synonyms|Synonyms[] $synonyms
+     * @param string|string[]|Synonym|Synonym[] $synonyms
      * @return boolean
      */
     public static function addSynonyms($extension, $headword, $synonyms)
@@ -101,7 +102,7 @@ trait DictionaryHelperTrait
         }
         return false;
     }
-    
+
     public static function removeSynonyms($extension, $headword, $synonyms)
     {
         $extension = ExtensionManager::getModel($extension);
@@ -174,7 +175,7 @@ trait DictionaryHelperTrait
             $headword = null;
             foreach ($words as $key => $synonyms) {
                 if (!is_string($synonyms)) {
-                    throw new InvalidParamException("Invalid Synonyms.");
+                    throw new InvalidParamException("Invalid Synonym.");
                 }
                 if (strlen($synonyms) == 0 || strlen($synonyms) > 255) {
                     throw new InvalidParamException("The length of synonyms exceeds the limit.");

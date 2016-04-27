@@ -14,7 +14,7 @@ namespace rhoone\helpers;
 
 use rhoone\models\Extension;
 use rhoone\models\Headword;
-use rhoone\models\Synonyms;
+use rhoone\models\Synonym;
 use yii\base\InvalidParamException;
 use Yii;
 
@@ -79,14 +79,14 @@ class BaseDictionaryHelper
     /**
      * 
      * @param string|string[] $keywords
-     * @return \rhoone\models\Synonyms[]
+     * @return \rhoone\models\Synonym[]
      */
     public static function match($keywords)
     {
         if (is_string($keywords)) {
             $keywords = (array) $keywords;
         }
-        return \rhoone\models\Synonyms::find()->word($keywords)->all();
+        return \rhoone\models\Synonym::find()->word($keywords)->all();
     }
 
     /**

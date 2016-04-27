@@ -23,7 +23,7 @@ use yii\base\Model;
  *
  * @property-read string $raw
  * @property-read array $splitted
- * @property-read SplitterInterface $splitter
+ * @property SplitterInterface $splitter
  * @author vistart <i@vistart.name>
  */
 class Keyword extends Model
@@ -62,9 +62,14 @@ class Keyword extends Model
     public function __construct($config = array())
     {
         if (is_string($config)) {
-            $config = ['keyword' => $config];
+            $config = ['keyword' => $config, 'splitter' => Yii::$app->rhoone->splitter];
         }
         parent::__construct($config);
+    }
+    
+    public function __toString()
+    {
+        return $this->raw;
     }
 
     public function getSplitter()
@@ -85,6 +90,9 @@ class Keyword extends Model
      */
     public function setSplitter($splitter)
     {
+        if (empty($splitter)) {
+            $splitter = Yii::$app->rhoone->splitter;
+        }
         $this->_splitter = $splitter;
     }
 
@@ -100,8 +108,8 @@ class Keyword extends Model
 
     public function getSplitted()
     {
-        if (empty($this->_splitted)) {
-            return $this->_splitted;
+        if (empty($this->raw)) {
+            return $this->_splitted = [];
         }
         return $this->split($this->raw);
     }

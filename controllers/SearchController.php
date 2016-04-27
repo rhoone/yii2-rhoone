@@ -37,8 +37,9 @@ class SearchController extends Controller
      * @todo Retrieve search results cache.
      * @todo Return result.
      */
-    public function actionIndex($keywords = null)
+    public function actionIndex($q = null)
     {
+        $keywords = $q;
         Yii::info("is POST: " . (string) Yii::$app->request->getIsPost(), __METHOD__);
         Yii::info("is AJAX: " . (string) Yii::$app->request->getIsAjax(), __METHOD__);
         Yii::info("is PJAX: " . (string) Yii::$app->request->getIsPjax(), __METHOD__);
@@ -49,7 +50,7 @@ class SearchController extends Controller
             }
             Yii::info("keywords: `" . $model->keywords . "`", __METHOD__);
             if (Yii::$app->request->getIsAjax() && Yii::$app->request->getIsPjax()) {
-                return $this->actionResult($model->keywords, ExtHelper::search($keywords));
+                return $this->actionResult($model->keywords, Yii::$app->rhoone->search($keywords));
             }
         }
         if (!is_string($keywords)) {
@@ -60,7 +61,7 @@ class SearchController extends Controller
         }
         Yii::info("keywords: `" . $keywords . "`", __METHOD__);
         $model->keywords = $keywords;
-        return $this->render('index', ['model' => $model, 'results' => ExtHelper::search($keywords)]);
+        return $this->render('index', ['model' => $model, 'results' => Yii::$app->rhoone->search($keywords)]);
     }
 
     public function actionResult($keywords = null, $results = null)

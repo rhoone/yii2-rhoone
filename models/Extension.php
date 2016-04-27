@@ -31,6 +31,7 @@ use yii\helpers\Json;
  * @property-write string|eadword $headword
  * @property-read Headword[] $headwords
  * @property-write string|Headword[] $headwords
+ * @property-read Synonym[] $synonyms
  * @property-write array $dictionary
  * @author vistart <i@vistart.name>
  */
@@ -111,6 +112,32 @@ class Extension extends BaseEntityModel
     }
 
     /**
+     * 
+     * @param boolean|fnull $enabled
+     * @return static[]
+     */
+    public static function findAllDefault($enabled = null)
+    {
+        if (is_bool($enabled)) {
+            return static::find()->isDefault()->enabled($enabled)->all();
+        }
+        return static::find()->isDefault()->all();
+    }
+
+    /**
+     * 
+     * @param boolean|null $enabled
+     * @return static[]
+     */
+    public static function findAllNonDefault($enabled = null)
+    {
+        if (is_bool($enabled)) {
+            return static::find()->isDefault(false)->enabled($enabled)->all();
+        }
+        return static::find()->isDefault(false)->all();
+    }
+
+    /**
      * @inheritdoc
      * Friendly to IDE.
      * @return ExtensionQuery
@@ -122,7 +149,7 @@ class Extension extends BaseEntityModel
 
     /**
      * 
-     * @return type
+     * @return HeadwordQuery
      */
     public function getHeadwords()
     {
@@ -131,11 +158,11 @@ class Extension extends BaseEntityModel
 
     /**
      * 
-     * @return SynonymsQuery
+     * @return SynonymQuery
      */
     public function getSynonyms()
     {
-        return $this->hasMany(Synonyms::className(), ['headword_guid' => 'guid'])->via('headwords');
+        return $this->hasMany(Synonym::className(), ['headword_guid' => 'guid'])->via('headwords');
     }
 
     /**
@@ -211,5 +238,11 @@ class Extension extends BaseEntityModel
     public function addDictionary($dictionary)
     {
         return $this->setDictionary($dictionary);
+    }
+
+    public function getExtension()
+    {
+        $class = $this->classname;
+        return new $class($this->config);
     }
 }

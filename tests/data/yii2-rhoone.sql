@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 25, 2016 at 02:53 PM
+-- Generation Time: Apr 27, 2016 at 10:23 PM
 -- Server version: 5.7.12
 -- PHP Version: 5.6.20
 
@@ -29,7 +29,6 @@ USE `rho.one`;
 -- Table structure for table `extension`
 --
 -- Creation: Apr 22, 2016 at 05:39 AM
--- Last update: Apr 24, 2016 at 09:02 AM
 --
 
 DROP TABLE IF EXISTS `extension`;
@@ -56,12 +55,11 @@ CREATE TABLE IF NOT EXISTS `extension` (
 -- Table structure for table `headword`
 --
 -- Creation: Apr 10, 2016 at 12:39 PM
--- Last update: Apr 25, 2016 at 06:48 AM
 --
 
 DROP TABLE IF EXISTS `headword`;
 CREATE TABLE IF NOT EXISTS `headword` (
-  `guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Headword GUID',
   `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `extension_guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
   `create_time` datetime NOT NULL,
@@ -96,22 +94,21 @@ CREATE TABLE IF NOT EXISTS `profile` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `synonyms`
+-- Table structure for table `synonym`
 --
 -- Creation: Apr 10, 2016 at 12:40 PM
--- Last update: Apr 25, 2016 at 06:48 AM
 --
 
-DROP TABLE IF EXISTS `synonyms`;
-CREATE TABLE IF NOT EXISTS `synonyms` (
-  `guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+DROP TABLE IF EXISTS `synonym`;
+CREATE TABLE IF NOT EXISTS `synonym` (
+  `guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Synonym GUID',
   `word` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `headword_guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
   PRIMARY KEY (`guid`),
-  UNIQUE KEY `synonyms_headword_unique` (`word`,`headword_guid`),
-  KEY `synonyms_headword_fkey` (`headword_guid`)
+  UNIQUE KEY `synonym_headword_unique` (`word`,`headword_guid`),
+  KEY `synonym_headword_fkey` (`headword_guid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -124,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `synonyms` (
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
-  `guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT 'GUID',
+  `guid` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT 'User GUID',
   `id` varchar(16) COLLATE utf8_unicode_ci NOT NULL COMMENT 'ID',
   `pass_hash` varchar(80) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Password Hash',
   `ip_1` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'IP 1',
@@ -165,10 +162,10 @@ ALTER TABLE `profile`
   ADD CONSTRAINT `user_profile_fkey` FOREIGN KEY (`guid`) REFERENCES `user` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `synonyms`
+-- Constraints for table `synonym`
 --
-ALTER TABLE `synonyms`
-  ADD CONSTRAINT `synonyms_headword_fkey` FOREIGN KEY (`headword_guid`) REFERENCES `headword` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `synonym`
+  ADD CONSTRAINT `synonym_headword_fkey` FOREIGN KEY (`headword_guid`) REFERENCES `headword` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

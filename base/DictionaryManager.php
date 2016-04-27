@@ -14,7 +14,7 @@ namespace rhoone\base;
 
 use rhoone\base\ExtensionManager;
 use rhoone\models\Headword;
-use rhoone\models\Synonyms;
+use rhoone\models\Synonym;
 use yii\base\InvalidParamException;
 use yii\di\ServiceLocator;
 
@@ -22,7 +22,7 @@ use yii\di\ServiceLocator;
  * Dictionary Manager
  *
  * @property-read Headword[] $headwords
- * @property-read Synonyms[] $synonyms
+ * @property-read Synonym[] $synonyms
  * @author vistart <i@vistart.name>
  */
 class DictionaryManager extends ServiceLocator
@@ -31,22 +31,29 @@ class DictionaryManager extends ServiceLocator
 
     /**
      * Headwords generator.
-     * @param string $class
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension|mixed $class
      * `string` if extension class.
+     * @param string[] $words
      * @throws InvalidParamException
      */
-    public function getHeadwords($class = null)
+    public function getHeadwords($class = null, $words = [])
     {
         // Method One:
         if ($class === null || $class === false || (is_string($class) && empty($class))) {
-            foreach (Headword::find()->all() as $headword) {
-                yield $headword->word;
-            }
+            $query = Headword::find();
         } else {
-            $extension = ExtensionManager::getModel($class);
-            foreach ($extension->getHeadwords()->all() as $headword) {
-                yield $headword->word;
+            $extensions = ExtensionManager::getModels($class);
+            $guids = [];
+            foreach ($extensions as $extension) {
+                $guids[] = $extension->guid;
             }
+            $query = Headword::find()->guid($guids);
+        }
+        if (is_array($words) && !empty($words)) {
+            $query = $query->word($words);
+        }
+        foreach ($query->all() as $headword) {
+            yield $headword;
         }
         // Method Two:
         //return Headword::find()->all();
@@ -54,24 +61,44 @@ class DictionaryManager extends ServiceLocator
 
     /**
      * Synonyms generator.
-     * @param string $class
+     * @param string|\rhoone\extension\Extension|\rhoone\models\Extension|mixed $class
      * `string` if extension class.
+     * @param string[] $words
      * @throws InvalidParamException
      */
-    public function getSynonyms($class = null)
+    public function getSynonyms($class = null, $words = [])
     {
         // Method One:
-        if ($class === null || $class === false || (is_string($class) && empty($class))) {
-            foreach (Synonyms::find()->all() as $synonyms) {
-                yield $synonyms->word;
-            }
-        } else {
-            $extension = ExtensionManager::getModel($class);
-            foreach ($extension->getSynonyms()->all() as $synonyms) {
-                yield $synonyms->word;
-            }
+        $query = Synonym::find();
+        if (is_array($words) && !empty($words)) {
+            $query = $query->word($words);
+        }
+        if (!($class === null || $class === false || (is_string($class) && empty($class)))) {
+            $query = $query->extension($class);
+        }
+        foreach ($query->all() as $synonyms) {
+            yield $synonyms;
         }
         // Method Two:
-        //return Synonyms::find()->all();
+        //return Synonym::find()->all();
+    }
+
+    /**
+     * 
+     * @param string|string[]|Keyword $keywords
+     */
+    public function match($keywords = "")
+    {
+        if (is_string($keywords)) {
+            $keywords = (array) $keywords;
+        }
+        if ($keywords instanceof Keyword) {
+            $keywords = $keywords->splitted;
+        }
+        foreach ($keywords as $key => $keyword) {
+            if (!is_string($keyword)) {
+                unset($keywords[$key]);
+            }
+        }
     }
 }

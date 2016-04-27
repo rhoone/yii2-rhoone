@@ -20,7 +20,7 @@ use rhoone\widgets\search\result\FormWidget;
 $formId = $formConfig['formConfig']['id'];
 $keywordsInputId = $formConfig['keywordsFieldConfig']['id'];
 $js = <<<EOT
-    var pattern = "/s/{{%keywords}}";
+    var pattern = "/s?q={{%keywords}}";
     $(document).bind("pjax:complete", rhoone.search.end);
     $(document).bind("pjax:timeout", rhoone.search.cancel);
     $(document).bind("rhoone:search_start", {pattern: pattern}, function(e) {
