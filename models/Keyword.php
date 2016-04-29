@@ -62,11 +62,14 @@ class Keyword extends Model
     public function __construct($config = array())
     {
         if (is_string($config)) {
-            $config = ['keyword' => $config, 'segmenter' => Yii::$app->rhoone->segmented];
+            $config = ['keyword' => $config];
+        }
+        if (!isset($config['segmenter'])) {
+            $config['segmenter'] = Yii::$app->rhoone->segmenter;
         }
         parent::__construct($config);
     }
-    
+
     public function __toString()
     {
         return $this->raw;
@@ -103,7 +106,7 @@ class Keyword extends Model
 
     public function getRaw()
     {
-        return $this->_raw;
+        return is_string($this->_raw) ? $this->_raw : "";
     }
 
     public function getSegmented()
@@ -117,13 +120,13 @@ class Keyword extends Model
     public function getKeyword()
     {
         return [
-            'raw' => $this->_raw,
+            'raw' => $this->raw,
             'segmented' => $this->segmented,
         ];
     }
 
     public function setKeyword($keyword)
     {
-        $this->_raw = $keyword;
+        $this->_raw = is_string($keyword) ? $keyword : "";
     }
 }

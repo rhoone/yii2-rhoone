@@ -39,4 +39,12 @@ class ExtensionManagerTest extends TestCase
         $extMgr = Yii::$app->rhoone->ext;
         $this->assertInstanceOf(ExtensionManager::className(), $extMgr);
     }
+
+    /**
+     * @depends testLoad
+     */
+    public function testLoadExtensions()
+    {
+        $exts = Yii::$app->rhoone->extensions;
+    }
 }

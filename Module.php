@@ -122,7 +122,12 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
         $count = 0;
         foreach ($extensions as $ext) {
-            $moduleConfig = $ext->getModule();
+            $moduleConfig = [];
+            try {
+                $moduleConfig = $ext->getModule();
+            } catch (\Exception $ex) {
+                continue;
+            }
             if (empty($moduleConfig)) {
                 continue;
             }
