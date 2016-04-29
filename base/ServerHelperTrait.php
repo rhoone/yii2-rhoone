@@ -10,14 +10,14 @@
  * @license https://vistart.name/license/
  */
 
-namespace rhoone\helpers;
+namespace rhoone\base;
 
 /**
- * Description of ExtensionHelper
+ * Description of ServerHelperTrait
  *
  * @author vistart <i@vistart.name>
  */
-class ExtensionHelper extends BaseExtensionHelper
+trait ServerHelperTrait
 {
     //put your code here
 }

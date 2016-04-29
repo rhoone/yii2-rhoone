@@ -10,26 +10,21 @@
  * @license https://vistart.name/license/
  */
 
-namespace rhoone\base;
-
-use rhoone\extension\SplitterInterface;
-use yii\base\Component;
+namespace rhoone\extension;
 
 /**
- * Description of KeywordSplitter
+ * Segmenter Interface
  *
  * @author vistart <i@vistart.name>
  */
-class KeywordSplitter extends Component implements SplitterInterface
+Interface SegmenterInterface
 {
 
     /**
-     * 
-     * @param string $keyword
-     * @return string[] $keywords
+     * Split the keyword into seperated keywords.
+     * @param string $keyword Raw keyword string.
+     * If it is not a string, please return empty array.
+     * @return string[] Seperated keywords.
      */
-    public function split($keyword)
-    {
-        return (array) $keyword;
-    }
+    public function segment($keyword);
 }

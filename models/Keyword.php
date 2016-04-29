@@ -12,7 +12,7 @@
 
 namespace rhoone\models;
 
-use rhoone\extension\SplitterInterface;
+use rhoone\extension\SegmenterInterface;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -22,8 +22,8 @@ use yii\base\Model;
  * Description of Keyword
  *
  * @property-read string $raw
- * @property-read array $splitted
- * @property SplitterInterface $splitter
+ * @property-read array $segmented
+ * @property SegmenterInterface $segmenter
  * @author vistart <i@vistart.name>
  */
 class Keyword extends Model
@@ -56,13 +56,13 @@ class Keyword extends Model
      * ]
      * @var array
      */
-    private $_splitted;
-    private $_splitter;
+    private $_segmented;
+    private $_segmenter;
 
     public function __construct($config = array())
     {
         if (is_string($config)) {
-            $config = ['keyword' => $config, 'splitter' => Yii::$app->rhoone->splitter];
+            $config = ['keyword' => $config, 'segmenter' => Yii::$app->rhoone->segmented];
         }
         parent::__construct($config);
     }
@@ -72,33 +72,33 @@ class Keyword extends Model
         return $this->raw;
     }
 
-    public function getSplitter()
+    public function getSegmenter()
     {
-        $splitter = $this->_splitter;
-        if (is_array($this->_splitter)) {
-            $splitter = Yii::createObject($splitter);
+        $segmenter = $this->_segmenter;
+        if (is_array($this->_segmenter)) {
+            $segmenter = Yii::createObject($segmenter);
         }
-        if (!($splitter instanceof SplitterInterface && $splitter instanceof Component)) {
-            throw new InvalidConfigException("Splitter should be extends from `Component` and implement `SplitterInterface`.");
+        if (!($segmenter instanceof SegmenterInterface && $segmenter instanceof Component)) {
+            throw new InvalidConfigException("Segmenter should be extends from `Component` and implement `SegmenterInterface`.");
         }
-        return $splitter;
+        return $segmenter;
     }
 
     /**
      * 
-     * @param SplitterInterface|array $splitter
+     * @param SegmenterInterface|array $segmenter
      */
-    public function setSplitter($splitter)
+    public function setSegmenter($segmenter)
     {
-        if (empty($splitter)) {
-            $splitter = Yii::$app->rhoone->splitter;
+        if (empty($segmenter)) {
+            $segmenter = Yii::$app->rhoone->segmenter;
         }
-        $this->_splitter = $splitter;
+        $this->_segmenter = $segmenter;
     }
 
-    protected function split($keyword)
+    protected function segment($keyword)
     {
-        return $this->_splitted = $this->splitter->split($keyword);
+        return $this->_segmented = $this->segmenter->segment($keyword);
     }
 
     public function getRaw()
@@ -106,19 +106,19 @@ class Keyword extends Model
         return $this->_raw;
     }
 
-    public function getSplitted()
+    public function getSegmented()
     {
         if (empty($this->raw)) {
-            return $this->_splitted = [];
+            return $this->_segmented = [];
         }
-        return $this->split($this->raw);
+        return $this->segment($this->raw);
     }
 
     public function getKeyword()
     {
         return [
             'raw' => $this->_raw,
-            'splitted' => $this->splitted,
+            'segmented' => $this->segmented,
         ];
     }
 

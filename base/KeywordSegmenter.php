@@ -10,18 +10,26 @@
  * @license https://vistart.name/license/
  */
 
-namespace rhoone\helpers;
+namespace rhoone\base;
+
+use rhoone\extension\SegmenterInterface;
+use yii\base\Component;
 
 /**
- * Description of BaseSubordinateHelper
+ * Description of SegmenterInterface
  *
  * @author vistart <i@vistart.name>
  */
-class BaseSubordinateHelper
+class KeywordSegmenter extends Component implements SegmenterInterface
 {
 
-    public static function getRegistered()
+    /**
+     * 
+     * @param string $keyword
+     * @return string[] $keywords
+     */
+    public function segment($keyword)
     {
-        
+        return (array) $keyword;
     }
 }

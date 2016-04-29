@@ -10,21 +10,16 @@
  * @license https://vistart.name/license/
  */
 
-namespace rhoone\extension;
+namespace rhoone\base;
+
+use yii\di\ServiceLocator;
 
 /**
- * Splitter Interface
+ * Description of ServerManager
  *
  * @author vistart <i@vistart.name>
  */
-Interface SplitterInterface
+class ServerManager extends ServiceLocator
 {
-
-    /**
-     * Split the keyword into seperated keywords.
-     * @param string $keyword Raw keyword string.
-     * If it is not a string, please return empty array.
-     * @return string[] Seperated keywords.
-     */
-    public function split($keyword);
+    use ServerHelperTrait;
 }

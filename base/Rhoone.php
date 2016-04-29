@@ -22,6 +22,7 @@ use yii\di\ServiceLocator;
  *
  * @property-read ExtensionManager $ext Extension Manager.
  * @property-read DictionaryManager $dic Dictionary Manager.
+ * @property-read KeywordSegmenter $segmenter
  * @property-read Extension[] $extensions Loaded extension instances,
  * if ExtensionManager is one of the core components and it was loaded correctly.
  * @author vistart <i@vistart.name>
@@ -74,7 +75,8 @@ class Rhoone extends ServiceLocator
         return [
             'ext' => ['class' => 'rhoone\base\ExtensionManager'],
             'dic' => ['class' => 'rhoone\base\DictionaryManager'],
-            'splitter' => ['class' => 'rhoone\base\KeywordSplitter'],
+            'server' => ['class' => 'rhoone\base\ServerManager'],
+            'segmented' => ['class' => 'rhoone\base\KeywordSegmenter'],
         ];
     }
 
@@ -98,6 +100,24 @@ class Rhoone extends ServiceLocator
 
     /**
      * 
+     * @return KeywordSegmenter
+     */
+    public function getSegmenter()
+    {
+        return $this->get('segmenter');
+    }
+
+    /**
+     * 
+     * @return ServerManager
+     */
+    public function getServer()
+    {
+        return $this->get('server');
+    }
+
+    /**
+     * 
      * @param string $keyword
      * @return \rhoone\models\Extension[]
      */
@@ -106,7 +126,7 @@ class Rhoone extends ServiceLocator
         $keyword = new Keyword($keyword);
         $defaults = \rhoone\models\Extension::findAllDefault(true);
         $nonDefaults = [];
-        foreach (Yii::$app->rhoone->dic->getSynonyms(null, $keyword->splitted) as $synonym) {
+        foreach (Yii::$app->rhoone->dic->getSynonyms(null, $keyword->segmented) as $synonym) {
             $nonDefaults[$synonym->extension->guid] = $synonym->extension;
         }
         return array_merge($defaults, $nonDefaults);
