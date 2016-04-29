@@ -16,11 +16,12 @@ use rhoone\widgets\search\result\FormWidget;
 /* @var $pjaxConfig array */
 /* @var $containerConfig array */
 /* @var $formConfig array */
+/* @var $searchUrlPattern string */
 /* @var $this yii\web\View */
 $formId = $formConfig['formConfig']['id'];
 $keywordsInputId = $formConfig['keywordsFieldConfig']['id'];
 $js = <<<EOT
-    var pattern = "/s?q={{%keywords}}";
+    var pattern = "$searchUrlPattern";
     $(document).bind("pjax:complete", rhoone.search.end);
     $(document).bind("pjax:timeout", rhoone.search.cancel);
     $(document).bind("rhoone:search_start", {pattern: pattern}, function(e) {

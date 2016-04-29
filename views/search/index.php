@@ -18,6 +18,6 @@ $this->title = 'Search';
 
 <div class="row">
     <div class="col-md-12">
-        <?= SearchWidget::widget(['model' => $model, 'resultConfig' => ['searchUrlPattern' => '/s/{{%keywords}}', 'containerConfig' => ['results' => $results]]]) ?>
+        <?= SearchWidget::widget(['model' => $model, 'resultConfig' => ['containerConfig' => ['results' => $results]]]) ?>
     </div>
 </div>

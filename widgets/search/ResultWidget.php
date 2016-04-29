@@ -16,6 +16,7 @@ use rhoone\widgets\search\result\FormWidget;
 use rhoone\widgets\search\result\ContainerWidget;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /**
  * Description of ResultWidget
@@ -81,6 +82,9 @@ class ResultWidget extends Widget
         if (!isset($this->pjaxConfig['formSelector'])) {
             $this->pjaxConfig['formSelector'] = "#" . $this->formConfig['formConfig']['id'];
         }
+        if (empty($this->searchUrlPattern) || !is_string($this->searchUrlPattern)) {
+            $this->searchUrlPattern = Url::home() . "s?q={{%keywords}}";
+        }
     }
 
     public static function getPjaxConfig()
@@ -98,7 +102,8 @@ class ResultWidget extends Widget
                 'pjaxConfig' => $this->pjaxConfig,
                 'containerConfig' => $this->containerConfig,
                 'formConfig' => $this->formConfig,
-                'keywordsFieldConfig' => $this->keywordsFieldConfig
+                'keywordsFieldConfig' => $this->keywordsFieldConfig,
+                'searchUrlPattern' => $this->searchUrlPattern,
         ]);
     }
 }
