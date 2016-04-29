@@ -50,6 +50,18 @@ class ResultWidget extends Widget
      * @see FormWidget
      */
     public $keywordsFieldConfig;
+    
+    /**
+     * @var string Search URL Pattern. This pattern should contain `{{%keywords}}` anchor,
+     * which will be replaced with actual keywords. For example:
+     * ```
+     * $this->searchUrlPattern = 's?q={{%keywords}}';
+     * ```
+     * It is not necessary to add the leading slash to the pattern string.
+     * 
+     * If your search URL pattern does not contain the `{{%keywords}}` anchor,
+     * it will attach `?q={{%keywords}}` to the end.
+     */
     public $searchUrlPattern;
     public $results;
 
@@ -83,7 +95,10 @@ class ResultWidget extends Widget
             $this->pjaxConfig['formSelector'] = "#" . $this->formConfig['formConfig']['id'];
         }
         if (empty($this->searchUrlPattern) || !is_string($this->searchUrlPattern)) {
-            $this->searchUrlPattern = Url::home() . "s?q={{%keywords}}";
+            $this->searchUrlPattern = Url::home() . "s";
+        }
+        if (strpos($this->searchUrlPattern, '{{%keywords}}') === false) {
+            $this->searchUrlPattern .= "?q={{%keywords}}";
         }
     }
 
