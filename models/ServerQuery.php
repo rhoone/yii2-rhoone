@@ -10,14 +10,17 @@
  * @license https://vistart.name/license/
  */
 
-namespace rhoone\base;
+namespace rhoone\models;
+
+use vistart\Models\queries\BaseEntityQuery;
 
 /**
- * Description of ServerHelperTrait
+ * This is the ActiveQuery class for [[Server]].
  *
+ * @see Server
  * @author vistart <i@vistart.name>
  */
-trait ServerHelperTrait
+class ServerQuery extends BaseEntityQuery
 {
-    
+    //put your code here
 }

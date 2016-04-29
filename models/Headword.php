@@ -57,7 +57,7 @@ class Headword extends BaseEntityModel
     {
         return array_merge(parent::rules(), [
             [['word', 'extension_guid'], 'required'],
-            [['word'], 'string', 'max' => 255],
+            [['word'], 'string', 'max' => 512],
             [['extension_guid'], 'string', 'max' => 36],
             [['word', 'extension_guid'], 'unique', 'targetAttribute' => ['word', 'extension_guid'], 'message' => 'The combination of Word and Extension Guid has already been taken.'],
             [['extension_guid'], 'exist', 'skipOnError' => true, 'targetClass' => Extension::className(), 'targetAttribute' => ['extension_guid' => 'guid']],

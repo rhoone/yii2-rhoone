@@ -23,6 +23,7 @@ use yii\di\ServiceLocator;
  * @property-read ExtensionManager $ext Extension Manager.
  * @property-read DictionaryManager $dic Dictionary Manager.
  * @property-read KeywordSegmenter $segmenter
+ * @property-read ServerManager $server
  * @property-read Extension[] $extensions Loaded extension instances,
  * if ExtensionManager is one of the core components and it was loaded correctly.
  * @author vistart <i@vistart.name>
@@ -76,7 +77,7 @@ class Rhoone extends ServiceLocator
             'ext' => ['class' => 'rhoone\base\ExtensionManager'],
             'dic' => ['class' => 'rhoone\base\DictionaryManager'],
             'server' => ['class' => 'rhoone\base\ServerManager'],
-            'segmented' => ['class' => 'rhoone\base\KeywordSegmenter'],
+            'segmenter' => ['class' => 'rhoone\base\KeywordSegmenter'],
         ];
     }
 

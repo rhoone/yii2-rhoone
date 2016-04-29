@@ -43,7 +43,7 @@ class Synonym extends BaseEntityModel
         return array_merge(parent::rules(), [
             [['word', 'headword_guid'], 'required'],
             [['headword_guid'], 'string', 'max' => 36],
-            [['word'], 'string', 'max' => 255],
+            [['word'], 'string', 'max' => 512],
             [['word', 'headword_guid'], 'unique', 'targetAttribute' => ['word', 'headword_guid'], 'message' => 'The combination of Word and Headword Guid has already been taken.'],
             [['headword_guid'], 'exist', 'skipOnError' => true, 'targetClass' => Headword::className(), 'targetAttribute' => ['headword_guid' => 'guid']],
         ]);

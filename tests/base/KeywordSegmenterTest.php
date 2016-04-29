@@ -12,17 +12,17 @@
 
 namespace rhoone\tests\base;
 
-use rhoone\base\DictionaryManager;
+use rhoone\base\KeywordSegmenter;
 use rhoone\base\Rhoone;
 use rhoone\tests\TestCase;
 use Yii;
 
 /**
- * Description of DictionaryManager
+ * Description of KeywordSegmenterTest
  *
  * @author vistart <i@vistart.name>
  */
-class DictionaryManagerTest extends TestCase
+class KeywordSegmenterTest extends TestCase
 {
 
     public function testRhoone()
@@ -36,7 +36,7 @@ class DictionaryManagerTest extends TestCase
      */
     public function testLoad()
     {
-        $dicMgr = Yii::$app->rhoone->dic;
-        $this->assertInstanceOf(DictionaryManager::className(), $dicMgr);
+        $segmenter = Yii::$app->rhoone->segmenter;
+        $this->assertInstanceOf(KeywordSegmenter::className(), $segmenter);
     }
 }

@@ -12,17 +12,17 @@
 
 namespace rhoone\tests\base;
 
-use rhoone\base\DictionaryManager;
+use rhoone\base\ServerManager;
 use rhoone\base\Rhoone;
 use rhoone\tests\TestCase;
 use Yii;
 
 /**
- * Description of DictionaryManager
+ * Description of ServerManagerTest
  *
  * @author vistart <i@vistart.name>
  */
-class DictionaryManagerTest extends TestCase
+class ServerManagerTest extends TestCase
 {
 
     public function testRhoone()
@@ -36,7 +36,7 @@ class DictionaryManagerTest extends TestCase
      */
     public function testLoad()
     {
-        $dicMgr = Yii::$app->rhoone->dic;
-        $this->assertInstanceOf(DictionaryManager::className(), $dicMgr);
+        $serverMgr = Yii::$app->rhoone->server;
+        $this->assertInstanceOf(ServerManager::className(), $serverMgr);
     }
 }

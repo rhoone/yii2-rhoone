@@ -13,6 +13,7 @@
 namespace rhoone\tests\base;
 
 use rhoone\base\ExtensionManager;
+use rhoone\base\Rhoone;
 use rhoone\tests\TestCase;
 use Yii;
 
@@ -26,7 +27,8 @@ class ExtensionManagerTest extends TestCase
 
     public function testRhoone()
     {
-        Yii::$app->rhoone;
+        $rhoone = Yii::$app->rhoone;
+        $this->assertInstanceOf(Rhoone::className(), $rhoone);
     }
 
     /**
