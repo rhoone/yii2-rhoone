@@ -1,5 +1,6 @@
 <?php
-/* *
+
+/**
  *  _   __ __ _____ _____ ___  ____  _____
  * | | / // // ___//_  _//   ||  __||_   _|
  * | |/ // /(__  )  / / / /| || |     | |
@@ -8,11 +9,16 @@
  * @copyright Copyright (c) 2016 vistart
  * @license https://vistart.name/license/
  */
-
+use rhoone\widgets\search\assets\SearchAsset;
 use rhoone\widgets\search\panel\FormWidget;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
+
+/**
+ * This view requires the `SearchAsset`.
+ */
+SearchAsset::register($this);
 
 /* @var $formConfig array */
 /* @var $inputConfig array */
@@ -23,7 +29,10 @@ $form_id = $formConfig['id'];
 $input_id = $inputConfig['id'];
 $submit_id = $submitConfig['id'];
 /**
- * 
+ * Once search input field changes, the `rhoone.search.keywords` will be assigned to the new keywords.
+ * And the search process will be initiated after 500 milliseconds, if the keywords
+ * has not changed and not empty.
+ * @todo permit to custom delay time.
  */
 $js = <<<EOT
     function html_encode(str) {
@@ -66,6 +75,12 @@ $form = ActiveForm::begin($formConfig);
 ?>
 <div class="form-group form-group-search">
     <?= $form->field($model, 'keywords', ['template' => '{input}'])->textInput($inputConfig) ?>
+    <?php
+    /**
+     * @todo Translation to other languages.
+     * We need everyone's help.
+     */
+    ?>
     <?= Html::submitButton(FormWidget::t('Search'), $submitConfig); ?>
 </div>
 <?php

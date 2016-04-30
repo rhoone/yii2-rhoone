@@ -12,18 +12,23 @@
 
 namespace rhoone\widgets\search\panel;
 
+use rhoone\models\SearchForm;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 
 /**
- * Description of FormWidget
+ * Form widget used for panel widget.
+ * This form is only used for receiving the keywords, not submitting them.
  *
  * @author vistart <i@vistart.name>
  */
 class FormWidget extends Widget
 {
 
+    /**
+     * @var SearchFrom 
+     */
     public $model;
     public $formConfig;
     public $inputConfig;
@@ -50,7 +55,7 @@ class FormWidget extends Widget
             $this->submitConfig = ArrayHelper::merge(static::getSubmitConfig(), $this->submitConfig);
         }
         if (empty($this->model) && class_exists('\rhoone\models\SearchForm')) {
-            $this->model = new \rhoone\models\SearchForm();
+            $this->model = new SearchForm();
         }
         $this->registerTranslations();
     }

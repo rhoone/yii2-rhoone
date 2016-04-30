@@ -10,5 +10,5 @@
  * @license https://vistart.name/license/
  */
 return [
-    'Search' => '検索',
+    'Search' => 'Suche',
 ];

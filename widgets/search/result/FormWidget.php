@@ -12,6 +12,7 @@
 
 namespace rhoone\widgets\search\result;
 
+use rhoone\models\SearchForm;
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
@@ -28,19 +29,19 @@ class FormWidget extends Widget
 {
 
     /**
-     * @var array The configuration array of form.
+     * @var array The config array used for form.
      * You must set the ID attribute.
      * @see ActiveForm
      */
     public $formConfig;
 
     /**
-     * @var array The configuration array of keywords field.
+     * @var array The config array used for keywords field.
      */
     public $keywordsFieldConfig;
 
     /**
-     * @var string 
+     * @var SearchForm The model used for search form. This model must contain `keywords` field.
      */
     public $model;
 

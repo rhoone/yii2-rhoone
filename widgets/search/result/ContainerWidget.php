@@ -25,7 +25,7 @@ class ContainerWidget extends Widget
 {
 
     /**
-     * @var array 
+     * @var array The config array used for container widget.
      */
     public $containerConfig;
 

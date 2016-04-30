@@ -16,6 +16,7 @@ use rhoone\widgets\search\result\FormWidget;
 use rhoone\widgets\search\result\ContainerWidget;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
+use yii\widgets\Pjax;
 use yii\helpers\Url;
 
 /**
@@ -27,19 +28,21 @@ class ResultWidget extends Widget
 {
 
     /**
-     * @var array 
+     * @var array The config array used for pjax widget.
+     * @see Pjax
      */
     public $pjaxConfig;
 
     /**
-     * @var array 
+     * @var array The config array used for container widget.
      * @see ContainerWidget
      */
     public $containerConfig;
 
     /**
-     * @var array The configuration array of form.
-     * You must set the ID attribute.
+     * @var array The config array used for search form.
+     * This form is actually used for keywords submission.
+     * You must set the ID attribute and ensure it unique overall the whole page.
      * @see FormWidget
      * @see ActiveForm
      */
@@ -50,20 +53,24 @@ class ResultWidget extends Widget
      * @see FormWidget
      */
     public $keywordsFieldConfig;
-    
+
     /**
-     * @var string Search URL Pattern. This pattern should contain `{{%keywords}}` anchor,
+     * @var string Search URL Pattern. This pattern should contain `{{%keywords}}`
+     * anchor, or specified by {{$this->searchUrlPatternAnchor}},
      * which will be replaced with actual keywords. For example:
      * ```
      * $this->searchUrlPattern = 's?q={{%keywords}}';
      * ```
      * It is not necessary to add the leading slash to the pattern string.
      * 
-     * If your search URL pattern does not contain the `{{%keywords}}` anchor,
-     * it will attach `?q={{%keywords}}` to the end.
+     * If your search URL pattern does not contain the anchor, it will be attached to the end automatically.
      */
-    public $searchUrlPattern;
-    public $results;
+    public $searchUrlPattern = 's?q={{%keywords}}';
+
+    /**
+     * @var string Search URL Pattern Anchor. 
+     */
+    public $searchUrlPatternAnchor = '{{%keywords}}';
 
     const INIT_PJAX_ID = "pjax-search-result";
     const INIT_PJAX_TIMEOUT = 5000;
@@ -94,11 +101,14 @@ class ResultWidget extends Widget
         if (!isset($this->pjaxConfig['formSelector'])) {
             $this->pjaxConfig['formSelector'] = "#" . $this->formConfig['formConfig']['id'];
         }
+        if (empty($this->searchUrlPatternAnchor) || !is_string($this->searchUrlPatternAnchor)) {
+            $this->searchUrlPatternAnchor = '{{%keywords}}';
+        }
         if (empty($this->searchUrlPattern) || !is_string($this->searchUrlPattern)) {
             $this->searchUrlPattern = Url::home() . "s";
         }
-        if (strpos($this->searchUrlPattern, '{{%keywords}}') === false) {
-            $this->searchUrlPattern .= "?q={{%keywords}}";
+        if (strpos($this->searchUrlPattern, $this->searchUrlPatternAnchor) === false) {
+            $this->searchUrlPattern .= "?q=" . $this->searchUrlPatternAnchor;
         }
     }
 

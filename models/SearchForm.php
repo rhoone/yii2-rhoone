@@ -1,6 +1,6 @@
 <?php
 
-/* *
+/**
  *  _   __ __ _____ _____ ___  ____  _____
  * | | / // // ___//_  _//   ||  __||_   _|
  * | |/ // /(__  )  / / / /| || |     | |
@@ -22,6 +22,9 @@ use yii\base\Model;
 class SearchForm extends Model
 {
 
+    /**
+     * @var string Store the keyword.
+     */
     public $keywords = '';
 
     public function rules()

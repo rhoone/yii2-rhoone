@@ -15,6 +15,7 @@ namespace rhoone\tests\models;
 use rhoone\base\KeywordSegmenter;
 use rhoone\models\Keyword;
 use rhoone\tests\TestCase;
+use Yii;
 
 /**
  * Description of KeywordTest
@@ -46,11 +47,33 @@ class KeywordTest extends TestCase
     /**
      * @depends testNonKeyword
      */
-    public function testNonKeywodSegmenter()
+    public function testNonKeywordSegment()
     {
         $keyword = new Keyword();
         $this->assertInstanceOf(KeywordSegmenter::className(), $keyword->segmenter);
         $this->assertEquals([], $keyword->segmented);
         $this->assertEquals(['raw' => "", "segmented" => []], $keyword->keyword);
+    }
+
+    /**
+     * @depends testInit
+     */
+    public function testRandomKeyword()
+    {
+        $randomKeyword = Yii::$app->security->generateRandomString(12);
+        $keyword = new Keyword($randomKeyword);
+        $this->assertEquals($randomKeyword, (string) $keyword);
+        $this->assertEquals($randomKeyword, $keyword->raw);
+    }
+
+    /**
+     * @depends testRandomKeyword
+     */
+    public function testRandomKeywordSegment()
+    {
+        $randomKeyword = Yii::$app->security->generateRandomString(12);
+        $keyword = new Keyword($randomKeyword);
+        $this->assertEquals([$randomKeyword], $keyword->segmented);
+        $this->assertEquals(['raw' => $randomKeyword, 'segmented' => [$randomKeyword]], $keyword->keyword);
     }
 }
