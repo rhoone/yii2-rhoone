@@ -30,6 +30,6 @@ class KeywordSegmenter extends Component implements SegmenterInterface
      */
     public function segment($keyword)
     {
-        return (array) $keyword;
+        return explode(" ", $keyword);
     }
 }
