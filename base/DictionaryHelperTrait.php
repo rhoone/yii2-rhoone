@@ -36,6 +36,9 @@ trait DictionaryHelperTrait
             $dictionary = $extension->getDictionary();
         }
         $dictionary = static::validate($dictionary);
+        if (empty($dictionary)) {
+            return true;
+        }
         $transaction = Yii::$app->db->beginTransaction();
         try {
             foreach ($dictionary as $words) {
@@ -194,10 +197,14 @@ trait DictionaryHelperTrait
     /**
      * 
      * @param \rhoone\extension\Extension $extension
-     * @return array
+     * @return array|false
      */
     public static function validateWithExtension($extension)
     {
+        $dictionary = $extension->getDictionary();
+        if (empty($dictionary) || !($dictionary instanceof \rhoone\extension\Dictionary)) {
+            return false;
+        }
         return static::validateArray($extension->getDictionary()->getDictionary());
     }
 }

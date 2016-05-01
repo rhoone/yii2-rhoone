@@ -46,8 +46,9 @@ trait ExtensionHelperTrait
         $class = $extension->className();
         $name = $extension->name();
         $id = $extension->id();
+        $default = isset($extension->config()['default']) ? $extension->config()['default'] : false;
 
-        $model = new \rhoone\models\Extension(['id' => $id, 'name' => $name, 'classname' => $class, 'enabled' => $enable]);
+        $model = new \rhoone\models\Extension(['id' => $id, 'name' => $name, 'classname' => $class, 'enabled' => $enable, 'isDefault' => (bool) $default]);
         $transaction = Yii::$app->getDb()->beginTransaction();
         try {
             if (!$model->save()) {

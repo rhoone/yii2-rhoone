@@ -24,11 +24,15 @@ use yii\helpers\Json;
  * @property string $classname
  * @property string $config_array Configuration Array in JSON.
  * Please DO NOT access it directly, use $config instead.
+ * @property integer $enabled
+ * @property integer $monopolized
+ * @property integer $default
  * @property string $description
  * 
  * @property array $config
  * @property boolean $isEnabled
- * @property-write string|eadword $headword
+ * @property boolean $isDefault
+ * @property-write string|Headword $headword
  * @property-read Headword[] $headwords
  * @property-write string|Headword[] $headwords
  * @property-read Synonym[] $synonyms
@@ -100,6 +104,16 @@ class Extension extends BaseEntityModel
     public function setIsEnabled($enabled)
     {
         $this->enabled = $enabled == true ? 1 : 0;
+    }
+
+    public function getIsDefault()
+    {
+        return $this->default == true;
+    }
+
+    public function setIsDefault($default)
+    {
+        $this->default = $default == true ? 1 : 0;
     }
 
     /**

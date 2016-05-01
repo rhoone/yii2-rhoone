@@ -142,10 +142,10 @@ class Rhoone extends ServiceLocator
     {
         Yii::trace("Begin searching...", __METHOD__);
         $matches = $this->match($keyword);
-        $result = "";
+        $results = [];
         foreach ($matches as $extension) {
-            $result .= $extension->extension->search($keyword);
+            $results[] = $extension->extension->search($keyword);
         }
-        return $result;
+        return $results;
     }
 }

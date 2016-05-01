@@ -63,6 +63,9 @@ abstract class Extension extends \yii\base\Component
     {
         if (class_exists(__NAMESPACE__ . '\Dictionary')) {
             $class = __NAMESPACE__ . '\Dictionary';
+            if ($class == 'rhoone\extension\Dictionary') {
+                return null;
+            }
             return new $class();
         }
         return null;
