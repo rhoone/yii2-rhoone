@@ -20,7 +20,12 @@ use yii\widgets\Pjax;
 use yii\helpers\Url;
 
 /**
- * Description of ResultWidget
+ * Result Widget.
+ * This widget consists of two sub widgets: `ContainerWidget` and `FormWidget`.
+ * @see ContainerWidget
+ * @see FormWidget
+ * 
+ * 
  *
  * @author vistart <i@vistart.name>
  */
@@ -47,12 +52,6 @@ class ResultWidget extends Widget
      * @see ActiveForm
      */
     public $formConfig;
-
-    /**
-     * @var array The configuration array of keywords field.
-     * @see FormWidget
-     */
-    public $keywordsFieldConfig;
 
     /**
      * @var string Search URL Pattern. This pattern should contain `{{%keywords}}`
@@ -112,6 +111,10 @@ class ResultWidget extends Widget
         }
     }
 
+    /**
+     * ID must be set.
+     * @return array PJAX widget config
+     */
     public static function getPjaxConfig()
     {
         return [
@@ -127,7 +130,6 @@ class ResultWidget extends Widget
                 'pjaxConfig' => $this->pjaxConfig,
                 'containerConfig' => $this->containerConfig,
                 'formConfig' => $this->formConfig,
-                'keywordsFieldConfig' => $this->keywordsFieldConfig,
                 'searchUrlPattern' => $this->searchUrlPattern,
         ]);
     }

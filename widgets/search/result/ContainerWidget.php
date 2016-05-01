@@ -50,6 +50,10 @@ class ContainerWidget extends Widget
         }
     }
 
+    /**
+     * ID must be set.
+     * @return array container config
+     */
     public static function getContainerConfig()
     {
         return [

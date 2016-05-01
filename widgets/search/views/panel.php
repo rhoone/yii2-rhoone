@@ -10,8 +10,9 @@
  * @license https://vistart.name/license/
  */
 use rhoone\assets\NprogressAsset;
+use rhoone\widgets\search\assets\SearchAsset;
 use rhoone\widgets\search\panel\FormWidget;
-
+SearchAsset::register($this);
 NprogressAsset::register($this);
 $js = <<<EOT
     NProgress.configure({ showSpinner: false , parent:'.panel-heading'});

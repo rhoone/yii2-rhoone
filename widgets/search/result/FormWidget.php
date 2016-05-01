@@ -73,6 +73,10 @@ class FormWidget extends Widget
         }
     }
 
+    /**
+     * ID must be set.
+     * @return array from config
+     */
     public static function getFormConfig()
     {
         return [
@@ -83,6 +87,10 @@ class FormWidget extends Widget
         ];
     }
 
+    /**
+     * ID must be set.
+     * @return array keywords field config
+     */
     public static function getKeywordsFieldConfig()
     {
         return [
@@ -92,6 +100,10 @@ class FormWidget extends Widget
 
     public function run()
     {
-        return $this->render('form', ['formConfig' => $this->formConfig, 'keywordsFieldConfig' => $this->keywordsFieldConfig, 'model' => $this->model]);
+        return $this->render('form', [
+                'formConfig' => $this->formConfig,
+                'keywordsFieldConfig' => $this->keywordsFieldConfig,
+                'model' => $this->model
+        ]);
     }
 }

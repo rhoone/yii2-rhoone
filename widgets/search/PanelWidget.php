@@ -12,16 +12,26 @@
 
 namespace rhoone\widgets\search;
 
+use rhoone\widgets\search\panel\FormWidget;
 use yii\base\Widget;
 
 /**
- * Description of PanelWidget
+ * Panel Widget
  *
  * @author vistart <i@vistart.name>
  */
 class PanelWidget extends Widget
 {
 
+    /**
+     * @var array From widget config.
+     * This config array contains four elements:
+     * `model`
+     * `formConfig`
+     * `inputConfig`
+     * `submitConfig`
+     * @see FormWidget
+     */
     public $formConfig;
 
     public function init()

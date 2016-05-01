@@ -27,7 +27,7 @@ class FormWidget extends Widget
 {
 
     /**
-     * @var SearchFrom 
+     * @var SearchFrom The model used for search form. This model must contain `keywords` field.
      */
     public $model;
     public $formConfig;
@@ -54,12 +54,16 @@ class FormWidget extends Widget
         if (is_array($this->submitConfig)) {
             $this->submitConfig = ArrayHelper::merge(static::getSubmitConfig(), $this->submitConfig);
         }
-        if (empty($this->model) && class_exists('\rhoone\models\SearchForm')) {
+        if (empty($this->model)) {
             $this->model = new SearchForm();
         }
         $this->registerTranslations();
     }
 
+    /**
+     * ID must be set.
+     * @return array input field config
+     */
     public static function getInputConfig()
     {
         return [
@@ -69,6 +73,11 @@ class FormWidget extends Widget
         ];
     }
 
+    /**
+     * ID must be set.
+     * We do not recommend that enabling the client script and validation.
+     * @return array form config
+     */
     public static function getFormConfig()
     {
         return [
@@ -78,6 +87,10 @@ class FormWidget extends Widget
         ];
     }
 
+    /**
+     * ID must be set.
+     * @return array submit button config
+     */
     public static function getSubmitConfig()
     {
         return [

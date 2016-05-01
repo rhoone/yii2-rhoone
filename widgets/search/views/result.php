@@ -10,9 +10,10 @@
  * @license https://vistart.name/license/
  */
 use yii\widgets\Pjax;
+use rhoone\widgets\search\assets\SearchAsset;
 use rhoone\widgets\search\result\ContainerWidget;
 use rhoone\widgets\search\result\FormWidget;
-
+SearchAsset::register($this);
 /* @var $pjaxConfig array */
 /* @var $containerConfig array */
 /* @var $formConfig array */
@@ -31,6 +32,10 @@ $js = <<<EOT
     });
 EOT;
 $this->registerJs($js);
+
+/**
+ * If current request is PJAX one, the above content wrapped in `Pjax` only will be returned, the other will be ignored.
+ */
 $pjax = Pjax::begin($pjaxConfig);
 echo ContainerWidget::widget($containerConfig);
 echo FormWidget::widget($formConfig);
