@@ -14,7 +14,7 @@
         "php": ">=5.5.9",
         "yiisoft/yii2": ">=2.0.8",
         "bower-asset/nprogress": "^0.2.0",
-        "vistart/yii2-models": "^2.0.0",
+        "vistart/yii2-models": "dev-master",
         "vistart/helpers": "*"
     },
     "autoload": {
