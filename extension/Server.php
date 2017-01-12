@@ -5,9 +5,9 @@
  * | | / // // ___//_  _//   ||  __||_   _|
  * | |/ // /(__  )  / / / /| || |     | |
  * |___//_//____/  /_/ /_/ |_||_|     |_|
- * @link https://vistart.name/
- * @copyright Copyright (c) 2016 vistart
- * @license https://vistart.name/license/
+ * @link https://vistart.me/
+ * @copyright Copyright (c) 2016 - 2017 vistart
+ * @license https://vistart.me/license/
  */
 
 namespace rhoone\extension;
@@ -17,7 +17,7 @@ use yii\base\NotSupportedException;
 /**
  * Description of Server
  *
- * @author vistart <i@vistart.name>
+ * @author vistart <i@vistart.me>
  */
 abstract class Server extends Extension
 {
@@ -61,7 +61,7 @@ abstract class Server extends Extension
     const INFO_KEY_NAME = 'name';
     const INFO_KEY_HOSTS = 'hosts';
     const INFO_KEY_SEARCH_ENDPOINTS = 'search_endpoints';
-    const INFO_KEY_ADMIN_ENDPOINT = 'admin-endpoint';
+    const INFO_KEY_ADMIN_ENDPOINT = 'admin_endpoint';
 
     /**
      * 

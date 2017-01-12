@@ -5,9 +5,9 @@
  * | | / // // ___//_  _//   ||  __||_   _|
  * | |/ // /(__  )  / / / /| || |     | |
  * |___//_//____/  /_/ /_/ |_||_|     |_|
- * @link https://vistart.name/
- * @copyright Copyright (c) 2016 vistart
- * @license https://vistart.name/license/
+ * @link https://vistart.me/
+ * @copyright Copyright (c) 2016 - 2017 vistart
+ * @license https://vistart.me/license/
  */
 
 namespace rhoone\controllers;
@@ -19,7 +19,7 @@ use yii\console\Exception;
 /**
  * Manage Dictionaries.
  *
- * @author vistart <i@vistart.name>
+ * @author vistart <i@vistart.me>
  */
 class DictionaryController extends Controller
 {

@@ -5,9 +5,9 @@
  * | | / // // ___//_  _//   ||  __||_   _|
  * | |/ // /(__  )  / / / /| || |     | |
  * |___//_//____/  /_/ /_/ |_||_|     |_|
- * @link https://vistart.name/
- * @copyright Copyright (c) 2016 vistart
- * @license https://vistart.name/license/
+ * @link https://vistart.me/
+ * @copyright Copyright (c) 2016 - 2017 vistart
+ * @license https://vistart.me/license/
  */
 
 namespace rhoone\widgets\search\panel;
@@ -21,7 +21,7 @@ use yii\helpers\ArrayHelper;
  * Form widget used for panel widget.
  * This form is only used for receiving the keywords, not submitting them.
  *
- * @author vistart <i@vistart.name>
+ * @author vistart <i@vistart.me>
  */
 class FormWidget extends Widget
 {
