@@ -12,7 +12,7 @@
 
 namespace rhoone\models;
 
-use vistart\Models\models\BaseEntityModel;
+use rhosocial\base\models\models\BaseEntityModel;
 use Yii;
 
 /**
@@ -36,7 +36,7 @@ class Server extends BaseEntityModel
 
     public function init()
     {
-        $this->queryClass = ServerQuery::className();
+        $this->queryClass = ServerQuery::class;
         parent::init();
     }
 

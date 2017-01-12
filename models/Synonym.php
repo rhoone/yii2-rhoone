@@ -12,8 +12,8 @@
 
 namespace rhoone\models;
 
-use vistart\helpers\Number;
-use vistart\Models\models\BaseEntityModel;
+use rhosocial\helpers\Number;
+use rhosocial\base\models\models\BaseEntityModel;
 use Yii;
 
 /**
@@ -45,7 +45,7 @@ class Synonym extends BaseEntityModel
             [['headword_guid'], 'string', 'max' => 36],
             [['word'], 'string', 'max' => 512],
             [['word', 'headword_guid'], 'unique', 'targetAttribute' => ['word', 'headword_guid'], 'message' => 'The combination of Word and Headword Guid has already been taken.'],
-            [['headword_guid'], 'exist', 'skipOnError' => true, 'targetClass' => Headword::className(), 'targetAttribute' => ['headword_guid' => 'guid']],
+            [['headword_guid'], 'exist', 'skipOnError' => true, 'targetClass' => Headword::class, 'targetAttribute' => ['headword_guid' => 'guid']],
         ]);
     }
 
@@ -68,7 +68,7 @@ class Synonym extends BaseEntityModel
      */
     public function getHeadword()
     {
-        return $this->hasOne(Headword::className(), ['guid' => 'headword_guid']);
+        return $this->hasOne(Headword::class, ['guid' => 'headword_guid']);
     }
 
     /**
@@ -85,12 +85,12 @@ class Synonym extends BaseEntityModel
      */
     public function getExtension()
     {
-        return $this->hasOne(Extension::className(), ['guid' => 'extension_guid'])->via('headword');
+        return $this->hasOne(Extension::class, ['guid' => 'extension_guid'])->via('headword');
     }
 
     public function init()
     {
-        $this->queryClass = SynonymQuery::className();
+        $this->queryClass = SynonymQuery::class;
         $this->on(self::EVENT_BEFORE_DELETE, [$this, 'onDeleteSynonym']);
         parent::init();
     }

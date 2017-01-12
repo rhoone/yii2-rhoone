@@ -12,7 +12,7 @@
 
 namespace rhoone\models;
 
-use vistart\Models\models\BaseEntityModel;
+use rhosocial\base\models\models\BaseEntityModel;
 
 /**
  * Description of Segmenter

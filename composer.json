@@ -12,10 +12,10 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "yiisoft/yii2": ">=2.0.8",
+        "yiisoft/yii2": ">=2.0.10",
         "bower-asset/nprogress": "^0.2.0",
-        "vistart/yii2-models": "dev-master",
-        "vistart/helpers": "*"
+        "rhosocial/yii2-base-models": "dev-master",
+        "rhosocial/helpers": ">=1.0.0"
     },
     "autoload": {
         "psr-4": {

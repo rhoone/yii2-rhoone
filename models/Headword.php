@@ -12,8 +12,8 @@
 
 namespace rhoone\models;
 
-use vistart\Models\models\BaseEntityModel;
-use vistart\helpers\Number;
+use rhosocial\base\models\models\BaseEntityModel;
+use rhosocial\helpers\Number;
 use yii\base\InvalidParamException;
 use Yii;
 
@@ -37,7 +37,7 @@ class Headword extends BaseEntityModel
 
     public function init()
     {
-        $this->queryClass = HeadwordQuery::className();
+        $this->queryClass = HeadwordQuery::class;
         $this->on(self::EVENT_AFTER_INSERT, [$this, 'onInsertHeadword']);
         parent::init();
     }
@@ -60,7 +60,7 @@ class Headword extends BaseEntityModel
             [['word'], 'string', 'max' => 512],
             [['extension_guid'], 'string', 'max' => 36],
             [['word', 'extension_guid'], 'unique', 'targetAttribute' => ['word', 'extension_guid'], 'message' => 'The combination of Word and Extension Guid has already been taken.'],
-            [['extension_guid'], 'exist', 'skipOnError' => true, 'targetClass' => Extension::className(), 'targetAttribute' => ['extension_guid' => 'guid']],
+            [['extension_guid'], 'exist', 'skipOnError' => true, 'targetClass' => Extension::class, 'targetAttribute' => ['extension_guid' => 'guid']],
         ]);
     }
 
@@ -84,7 +84,7 @@ class Headword extends BaseEntityModel
      */
     public function getExtension()
     {
-        return $this->hasOne(Extension::className(), ['guid' => 'extension_guid']);
+        return $this->hasOne(Extension::class, ['guid' => 'extension_guid']);
     }
 
     /**
@@ -108,7 +108,7 @@ class Headword extends BaseEntityModel
      */
     public function getSynonyms()
     {
-        return $this->hasMany(Synonym::className(), ['headword_guid' => 'guid'])->inverseOf('headword');
+        return $this->hasMany(Synonym::class, ['headword_guid' => 'guid'])->inverseOf('headword');
     }
 
     /**

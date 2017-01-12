@@ -31,7 +31,7 @@ class KeywordTest extends TestCase
     public function testInit()
     {
         $keyword = new Keyword();
-        $this->assertInstanceOf(Keyword::className(), $keyword);
+        $this->assertInstanceOf(Keyword::class, $keyword);
     }
 
     /**
@@ -50,7 +50,7 @@ class KeywordTest extends TestCase
     public function testNonKeywordSegment()
     {
         $keyword = new Keyword();
-        $this->assertInstanceOf(KeywordSegmenter::className(), $keyword->segmenter);
+        $this->assertInstanceOf(KeywordSegmenter::class, $keyword->segmenter);
         $this->assertEquals([], $keyword->segmented);
         $this->assertEquals(['raw' => "", "segmented" => []], $keyword->keyword);
     }

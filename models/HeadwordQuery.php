@@ -12,8 +12,8 @@
 
 namespace rhoone\models;
 
-use vistart\helpers\Number;
-use vistart\Models\queries\BaseEntityQuery;
+use rhosocial\helpers\Number;
+use rhosocial\base\models\queries\BaseEntityQuery;
 use Yii;
 
 /**

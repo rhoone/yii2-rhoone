@@ -12,7 +12,7 @@
 
 namespace rhoone\models;
 
-use vistart\Models\queries\BaseEntityQuery;
+use rhosocial\base\models\queries\BaseEntityQuery;
 
 /**
  * Query for Extension

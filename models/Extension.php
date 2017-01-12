@@ -13,7 +13,7 @@
 namespace rhoone\models;
 
 use rhoone\helpers\DictionaryHelper;
-use vistart\Models\models\BaseEntityModel;
+use rhosocial\base\models\models\BaseEntityModel;
 use Yii;
 use yii\helpers\Json;
 
@@ -48,7 +48,7 @@ class Extension extends BaseEntityModel
 
     public function init()
     {
-        $this->queryClass = ExtensionQuery::className();
+        $this->queryClass = ExtensionQuery::class;
         parent::init();
     }
 
@@ -167,7 +167,7 @@ class Extension extends BaseEntityModel
      */
     public function getHeadwords()
     {
-        return $this->hasMany(Headword::className(), ['extension_guid' => 'guid'])->inverseOf('extension');
+        return $this->hasMany(Headword::class, ['extension_guid' => 'guid'])->inverseOf('extension');
     }
 
     /**
@@ -176,7 +176,7 @@ class Extension extends BaseEntityModel
      */
     public function getSynonyms()
     {
-        return $this->hasMany(Synonym::className(), ['headword_guid' => 'guid'])->via('headwords');
+        return $this->hasMany(Synonym::class, ['headword_guid' => 'guid'])->via('headwords');
     }
 
     /**
