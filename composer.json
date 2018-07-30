@@ -3,7 +3,7 @@
     "description": "Search-in-one.",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","rho","one","search"],
-    "license": "BSD-3-Clause",
+    "license": "AGPLv3",
     "authors": [
         {
             "name": "rhoone",
@@ -11,10 +11,10 @@
         }
     ],
     "require": {
-        "php": ">=5.5.9",
-        "yiisoft/yii2": ">=2.0.10",
+        "php": ">=7.2.7",
+        "yiisoft/yii2": ">=2.0.15",
         "bower-asset/nprogress": "^0.2.0",
-        "rhosocial/yii2-base-models": "dev-master",
+        "rhosocial/yii2-base-models": ">=1.1.0",
         "rhosocial/helpers": ">=1.0.0"
     },
     "autoload": {
