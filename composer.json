@@ -3,7 +3,7 @@
     "description": "Search-in-one.",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","rho","one","search"],
-    "license": "AGPLv3",
+    "license": "AGPL-3.0-or-later",
     "authors": [
         {
             "name": "rhoone",
