@@ -84,9 +84,10 @@ abstract class Extension extends \yii\base\Component
     /**
      * Search, according to the keywords.
      * @param mixed $keywords
+     * @param mixed $config
      * @return string search result.
      */
-    abstract public function search($keywords);
+    abstract public function search($keywords, $config = []);
 
     /**
      * Get module configuration array.
