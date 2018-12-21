@@ -144,7 +144,7 @@ class Rhoone extends ServiceLocator
         $matches = $this->match($keyword);
         $results = [];
         foreach ($matches as $extension) {
-            $results[] = $extension->extension->search($keyword);
+            $results[$extension->extension->id()] = $extension->extension->search($keyword);
         }
         return $results;
     }
