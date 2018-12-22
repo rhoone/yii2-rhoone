@@ -21,6 +21,17 @@ SearchAsset::register($this);
 /* @var $this yii\web\View */
 $formId = $formConfig['formConfig']['id'];
 $keywordsInputId = $formConfig['keywordsFieldConfig']['id'];
+if (isset(Yii::$app->params['cnzz']['ajaxTrackPageView']) && Yii::$app->params['cnzz']['ajaxTrackPageView'] == true)
+{
+    $jsCnzz = <<<EOT
+        var _currentPage = $("#$formId").attr("action");
+        if (typeof document.referrer == "undefined" || document.referrer == null || document.referrer == "") {
+            _czc.push(﻿["_trackPageview", _currentPage]);
+        } else {
+            _czc.push(﻿["_trackPageview", _currentPage, document.referrer]);
+        }
+EOT;
+}
 $js = <<<EOT
     var pattern = "$searchUrlPattern";
     $(document).bind("pjax:complete", rhoone.search.end);
@@ -29,7 +40,9 @@ $js = <<<EOT
         $("#$keywordsInputId").attr("value", rhoone.search.keywords);
         $("#$formId").attr("action", e.data.pattern.replace("{{%keywords}}",$("#$keywordsInputId").val()));
         $("#$formId").submit();
+        $jsCnzz
     });
+    
 EOT;
 $this->registerJs($js);
 
