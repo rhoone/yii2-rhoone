@@ -38,7 +38,7 @@ $js = <<<EOT
     $(document).bind("pjax:timeout", rhoone.search.cancel);
     $(document).bind("rhoone:search_start", {pattern: pattern}, function(e) {
         $("#$keywordsInputId").attr("value", rhoone.search.keywords);
-        $("#$formId").attr("action", e.data.pattern.replace("{{%keywords}}",$("#$keywordsInputId").val()));
+        $("#$formId").attr("action", e.data.pattern.replace("{{%keywords}}",$("#$keywordsInputId").val()).replace(/#/g, "%23"));
         $("#$formId").submit();
         $jsCnzz
     });
