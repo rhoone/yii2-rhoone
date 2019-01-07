@@ -6,7 +6,7 @@
  * | |/ // /(__  )  / / / /| || |     | |
  * |___//_//____/  /_/ /_/ |_||_|     |_|
  * @link https://vistart.me/
- * @copyright Copyright (c) 2016 - 2017 vistart
+ * @copyright Copyright (c) 2016 - 2019 vistart
  * @license https://vistart.me/license/
  */
 
@@ -15,7 +15,7 @@ namespace rhoone\assets;
 use yii\web\AssetBundle;
 
 /**
- * Description of RhooneAsset
+ * RhooneAsset is primarily used to describe the essential assets of Rhoone.
  *
  * @author vistart <i@vistart.me>
  */

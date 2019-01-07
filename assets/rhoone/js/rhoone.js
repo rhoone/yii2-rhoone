@@ -43,7 +43,7 @@ rhoone = (function ($) {
             return posting;
         },
         /**
-         * Load parameter from variable defined in anyother place. You should
+         * Load parameter from variable defined in another place. You should
          * ensure the external variable defined, otherwise it will not work.
          * @param {variable} external External variable to be loaded. If this
          * variable is undefined, the internal will not be affected.
