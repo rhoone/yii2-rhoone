@@ -33,12 +33,15 @@ if (isset(Yii::$app->params['cnzz']['ajaxTrackPageView']) && Yii::$app->params['
 EOT;
 }
 $js = <<<EOT
+    function replace_html_chars(subject) {
+        return subject.replace(/%/g, "%25").replace(/[+]/g, "%2b").replace(/#/g, "%23").replace(/&/g, "%26");
+    }
     var pattern = "$searchUrlPattern";
     $(document).bind("pjax:complete", rhoone.search.end);
     $(document).bind("pjax:timeout", rhoone.search.cancel);
     $(document).bind("rhoone:search_start", {pattern: pattern}, function(e) {
         $("#$keywordsInputId").attr("value", rhoone.search.keywords);
-        $("#$formId").attr("action", e.data.pattern.replace("{{%keywords}}",$("#$keywordsInputId").val()).replace(/#/g, "%23"));
+        $("#$formId").attr("action", replace_html_chars(e.data.pattern.replace("{{%keywords}}",$("#$keywordsInputId").val())));
         $("#$formId").submit();
         $jsCnzz
     });
